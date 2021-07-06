@@ -5,11 +5,11 @@
 # Site
 title: Monuo'World
 subtitle: ''
-description: ''
+description: '人生正因没有意义，就更值得一过'
 keywords:
 author: monuo
 language: zh-CN
-timezone: ''
+timezone: Asia/Shanghai
 
 # URL
 ## Set your site url here. For example, if you use GitHub Page, set url as 'https://username.github.io/project'
