@@ -121,3 +121,15 @@ say:
   api: https://el-bot-api.vercel.app/api/words/young
   hitokoto:
     enable: false
+
+banner:
+  enable: true
+  title: Monuo'World
+  src: /js/banner.js
+  border: true
+  cloud:
+    enable: true
+    color: "white"
+  go_down:
+    enable: true
+    icon: icon-arrow-down-s-line
