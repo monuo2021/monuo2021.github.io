@@ -5,6 +5,10 @@
   max-width: $site-author-image-width;
   padding: 2px;
 
+  /* 头像圆形 */
+  border-radius: 50%; # 新增
+  transition: 2s all; # 新增
+
   if (hexo-config('avatar.rounded')) {
     border-radius: 50%;
   }
