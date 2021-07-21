@@ -103,6 +103,6 @@ theme: next
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
   type: git
-  repo: https://github.com/monuo2021/monuo2021.github.io # 比如：https://github.com/YunYouJun/yunyoujun.github.io
+  repo: git@github.com:monuo2021/monuo2021.github.io.git # 比如：https://github.com/YunYouJun/yunyoujun.github.io
   branch: main # 默认使用 master 分支
   message: Update Hexo Static Content # 你可以自定义此次部署更新的说明
