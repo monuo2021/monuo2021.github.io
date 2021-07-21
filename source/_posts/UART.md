@@ -4,7 +4,7 @@ title: UART
 date: 2021-07-21 13:33:48
 tags: 通信协议
 categories: 计算机体系结构
-descriptions: UART（Universal Asynchronous Receiver/Transmitter），即通用异步接收器/发送器，是最常用的设备间通信协议之一。
+description: UART（Universal Asynchronous Receiver/Transmitter），即通用异步接收器/发送器，是最常用的设备间通信协议之一。
 ---
 
 转载总结自[UART：了解通用异步接收器/发送器的硬件通信协议](https://www.analog.com/cn/analog-dialogue/articles/uart-a-hardware-communication-protocol.html#)
