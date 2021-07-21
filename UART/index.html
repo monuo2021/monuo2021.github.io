@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"monuo2021.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="UART（Universal Asynchronous Receiver&#x2F;Transmitter），即通用异步接收器&#x2F;发送器，是最常用的设备间通信协议之一。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="UART">
+<meta property="og:url" content="https://monuo2021.github.io/UART/index.html">
+<meta property="og:site_name" content="Monuo&#39;World">
+<meta property="og:description" content="UART（Universal Asynchronous Receiver&#x2F;Transmitter），即通用异步接收器&#x2F;发送器，是最常用的设备间通信协议之一。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gitee.com/tanliang-TL/blogpic/raw/master/img/335962-fig-01.svg">
+<meta property="og:image" content="https://www.analog.com/-/media/images/analog-dialogue/en/volume-54/number-4/articles/uart-a-hardware-communication-protocol/335962-fig-02.svg?w=900">
+<meta property="og:image" content="https://gitee.com/tanliang-TL/blogpic/raw/master/img/335962-fig-03.svg">
+<meta property="og:image" content="https://gitee.com/tanliang-TL/blogpic/raw/master/img/335962-fig-08.svg">
+<meta property="og:image" content="https://gitee.com/tanliang-TL/blogpic/raw/master/img/335962-fig-09.svg">
+<meta property="og:image" content="https://gitee.com/tanliang-TL/blogpic/raw/master/img/335962-fig-10.svg">
+<meta property="og:image" content="https://gitee.com/tanliang-TL/blogpic/raw/master/img/335962-fig-11.svg">
+<meta property="og:image" content="https://gitee.com/tanliang-TL/blogpic/raw/master/img/335962-fig-12.svg">
+<meta property="og:image" content="https://www.analog.com/-/media/images/analog-dialogue/en/volume-54/number-4/articles/uart-a-hardware-communication-protocol/335962-fig-15.jpg?w=900">
+<meta property="article:published_time" content="2021-07-21T05:33:48.000Z">
+<meta property="article:modified_time" content="2021-07-21T05:45:03.736Z">
+<meta property="article:author" content="monuo">
+<meta property="article:tag" content="通信协议">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/tanliang-TL/blogpic/raw/master/img/335962-fig-01.svg">
+
+<link rel="canonical" href="https://monuo2021.github.io/UART/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>UART | Monuo'World</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Monuo'World</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://monuo2021.github.io/UART/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="monuo">
+      <meta itemprop="description" content="人生正因没有意义，就更值得一过">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Monuo'World">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          UART
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-07-21 13:33:48 / 修改时间：13:45:03" itemprop="dateCreated datePublished" datetime="2021-07-21T13:33:48+08:00">2021-07-21</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">计算机体系结构</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description">UART（Universal Asynchronous Receiver/Transmitter），即通用异步接收器/发送器，是最常用的设备间通信协议之一。</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>转载总结自<a target="_blank" rel="noopener" href="https://www.analog.com/cn/analog-dialogue/articles/uart-a-hardware-communication-protocol.html#">UART：了解通用异步接收器/发送器的硬件通信协议</a></p>
+<p>“沟通最大的问题在于，人们想当然地认为已经沟通了。”  ——乔治·萧伯纳</p>
+<h2 id="一、UART特点"><a href="#一、UART特点" class="headerlink" title="一、UART特点"></a>一、UART特点</h2><ul>
+<li><p><strong>串行</strong></p>
+<p>串行是按位来进行传递，即一位一位的发送和接受。</p>
+</li>
+<li><p><strong>异步</strong></p>
+<p>异步数据传输过程中，不需要时钟线，直接接发数据，但需要约定通讯协议格式</p>
+</li>
+<li><p><strong>全双工</strong></p>
+<p>指可以同时进行收发两方向的数据传递。</p>
+</li>
+</ul>
+<h2 id="二、接口"><a href="#二、接口" class="headerlink" title="二、接口"></a>二、接口</h2><p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/335962-fig-01.svg" alt="Figure 1. Two UARTs directly communicate with each other.">  </p>
+<p>上图是<strong>两个UART彼此直接通信</strong>，其中：</p>
+<ul>
+<li>发送器（TX）</li>
+<li>接收器（RX）</li>
+</ul>
+<p>TX、RX两个信号主要作用是用于串行通信的串行数据的发送和接收。</p>
+<p><img src="https://www.analog.com/-/media/images/analog-dialogue/en/volume-54/number-4/articles/uart-a-hardware-communication-protocol/335962-fig-02.svg?w=900">   </p>
+<p>如上图<strong>带数据总线的UART</strong>，发送UART连接到以并行形式发送数据的控制数据总线。然后，数据将在传输线路（导线）上一位一位地串行传输到接收UART。反过来，对于接收设备，串行数据会被转换为并行数据。</p>
+<h2 id="三、数据传输"><a href="#三、数据传输" class="headerlink" title="三、数据传输"></a>三、数据传输</h2><h3 id="3-1-数据包形式"><a href="#3-1-数据包形式" class="headerlink" title="3.1 数据包形式"></a>3.1 数据包形式</h3><p>UART中，传输模式为数据包形式。数据包由<strong>起始位</strong>、<strong>数据帧</strong>、<strong>奇偶校验位</strong>和<strong>停止位</strong>组成。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/335962-fig-03.svg" alt="Figure 3. UART packet.">  </p>
+<ul>
+<li><p><strong>起始位</strong></p>
+<p>当不传输数据时，UART数据传输线通常保持高电压电平”1“。若要开始数据传输，发送UART会将传输线从高电平拉到<strong>低电平</strong>并保持1个时钟周期。当接收UART检测到高到低电压跃迁时，便开始以波特率对应的频率读取数据帧中的位。</p>
+</li>
+<li><p><strong>数据帧</strong></p>
+<p>数据帧包含所传输的实际数据。如果使用奇偶校验位，数据帧长度可以是5位到8位。如果不使用奇偶校验位，数据帧长度可以是9位。</p>
+</li>
+<li><p><strong>奇偶校验码</strong></p>
+</li>
+<li><p><strong>停止位</strong></p>
+<p>数据结束标志。发送UART将数据传输线保持<strong>高电平</strong>1到2位时间。</p>
+</li>
+</ul>
+<h3 id="3-2-UART传输步骤"><a href="#3-2-UART传输步骤" class="headerlink" title="3.2 UART传输步骤"></a>3.2 UART传输步骤</h3><ol>
+<li><p>发送UART从数据总线并行接收数据。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/335962-fig-08.svg" alt="Figure 8. Data bus to the transmitting UART.">  </p>
+</li>
+<li><p>发送UART将起始位、奇偶校验位和停止位添加到数据帧。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/335962-fig-09.svg" alt="Figure 9. UART data frame at the Tx side."></p>
+</li>
+<li><p>从起始位到结束位，整个数据包以串行方式从发送UART送至接收UART。接收UART以预配置的波特率对数据线进行采样。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/335962-fig-10.svg" alt="Figure 10. UART transmission.">  </p>
+</li>
+<li><p>接收UART丢弃数据帧中的起始位、奇偶校验位和停止位。  <img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/335962-fig-11.svg" alt="Figure 11. The UART data frame at the Rx side.">  </p>
+</li>
+<li><p>接收UART将串行数据转换回并行数据，并将其传输到接收端的数据总线。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/335962-fig-12.svg" alt="Figure 12. Receiving UART to data bus.">  !</p>
+</li>
+</ol>
+<h2 id="UART工作原理"><a href="#UART工作原理" class="headerlink" title="UART工作原理"></a>UART工作原理</h2><p>使用任何硬件通信协议时，首先必须检查数据手册和硬件参考手册。以下是要遵循的步骤：</p>
+<ol>
+<li><p>检查设备的数据手册接口。</p>
+</li>
+<li><p>在存储器映射下面检查UART地址。</p>
+<p><img src="https://www.analog.com/-/media/images/analog-dialogue/en/volume-54/number-4/articles/uart-a-hardware-communication-protocol/335962-fig-15.jpg?w=900" alt="微控制器存储器映射"></p>
+</li>
+<li><p>检查UART端口的具体信息，例如工作模式、数据位长度、奇偶校验位和停止位。</p>
+</li>
+<li><p>检查UART操作的详细信息，包括波特率计算。波特率通过以下示例公式进行配置。</p>
+</li>
+<li><p>对于波特率，务必检查要使用的外设时钟(PCLK)。此示例有26 MHz PCLK和16 MHz PCLK可用。</p>
+</li>
+<li><p>检查UART配置的详细寄存器。了解计算波特率时的参数.</p>
+</li>
+<li><p>检查每个寄存器下的详细信息，代入值以计算波特率，然后开始实现UART。</p>
+</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE/" rel="tag"># 通信协议</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/%E5%A4%84%E7%90%86%E5%99%A8%E6%B5%81%E6%B0%B4%E7%BA%BF%E9%87%8D%E7%82%B9/" rel="prev" title="处理器流水线重点">
+      <i class="fa fa-chevron-left"></i> 处理器流水线重点
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81UART%E7%89%B9%E7%82%B9"><span class="nav-number">1.</span> <span class="nav-text">一、UART特点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E6%8E%A5%E5%8F%A3"><span class="nav-number">2.</span> <span class="nav-text">二、接口</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E6%95%B0%E6%8D%AE%E4%BC%A0%E8%BE%93"><span class="nav-number">3.</span> <span class="nav-text">三、数据传输</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E6%95%B0%E6%8D%AE%E5%8C%85%E5%BD%A2%E5%BC%8F"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 数据包形式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-UART%E4%BC%A0%E8%BE%93%E6%AD%A5%E9%AA%A4"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 UART传输步骤</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#UART%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="nav-number">4.</span> <span class="nav-text">UART工作原理</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="monuo"
+      src="/images/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">monuo</p>
+  <div class="site-description" itemprop="description">人生正因没有意义，就更值得一过</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/monuo2021" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;monuo2021" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">monuo</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
