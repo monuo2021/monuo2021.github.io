@@ -157,6 +157,144 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://monuo2021.github.io/%E7%AC%A6%E5%8F%B7%E4%B8%8E%E7%AC%A6%E5%8F%B7%E8%A1%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="monuo">
+      <meta itemprop="description" content="人生正因没有意义，就更值得一过">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Monuo'World">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/%E7%AC%A6%E5%8F%B7%E4%B8%8E%E7%AC%A6%E5%8F%B7%E8%A1%A8/" class="post-title-link" itemprop="url">符号与符号表</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-07-24 10:47:13 / 修改时间：10:48:06" itemprop="dateCreated datePublished" datetime="2021-07-24T10:47:13+08:00">2021-07-24</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E9%93%BE%E6%8E%A5%E3%80%81%E8%A3%85%E8%BD%BD%E4%B8%8E%E5%BA%93/" itemprop="url" rel="index"><span itemprop="name">链接、装载与库</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>我们知道链接操作的第一步：</p>
+<p><strong>符号解析</strong></p>
+<ul>
+<li>程序中有定义和引用的符号</li>
+<li>编译器将定义的符号存放在一个符号表（symbol table）中</li>
+<li>编译器将符号引用存放在重定位节（.rel.text和.rel.data）中</li>
+<li>链接器将每个符号引用都与一个确定的符号定义建立关联</li>
+</ul>
+<h2 id="符号"><a href="#符号" class="headerlink" title="符号"></a>符号</h2><p><strong>符号就是其实程序中的变量名、函数名。</strong></p>
+<h3 id="符号定义与符号引用"><a href="#符号定义与符号引用" class="headerlink" title="符号定义与符号引用"></a>符号定义与符号引用</h3><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210724091642042.png" alt="image-20210724091642042" style="zoom: 33%;" />
+
+<h4 id="符号定义的本质"><a href="#符号定义的本质" class="headerlink" title="符号定义的本质"></a>符号定义的本质</h4><blockquote>
+<p>指被分配了存储空间。如果是函数名则指代码所在区；如果是变量名则指其所在的静态数据区。</p>
+</blockquote>
+<h3 id="链接符号的类型"><a href="#链接符号的类型" class="headerlink" title="链接符号的类型"></a>链接符号的类型</h3><p>每个可重定位目标模块都有一个符号表，它包含了定义和引用的符号。有三种链接器符号：</p>
+<ul>
+<li><p>Global symbols（<strong>全局符号</strong>）</p>
+<blockquote>
+<p>定义在本目标文件的全局符号，可以被其他目标文件引用。</p>
+</blockquote>
+</li>
+<li><p>External symbols（<strong>外部符号</strong>）</p>
+<blockquote>
+<p>在本目标文件中引用的全局变量，却没有定义在本目标文件。</p>
+</blockquote>
+</li>
+<li><p>Local symbols（<strong>局部符号</strong>）</p>
+<blockquote>
+<p>只在编译单元内部。</p>
+</blockquote>
+</li>
+</ul>
+<img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210724095744156.png" alt="image-20210724095744156" style="zoom:33%;" />
+
+<h2 id="目标文件中的符号表"><a href="#目标文件中的符号表" class="headerlink" title="目标文件中的符号表"></a>目标文件中的符号表</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">   Elf32_Word st_name;	<span class="comment">/*符号对应宇符串在 strtab节中的偏移量*/</span></span><br><span class="line">	Elf32_Addr st_value; 	<span class="comment">/*在对应节中的偏移量,或虚拟地址*/</span></span><br><span class="line">	Elf32_Word st_size;		<span class="comment">/*符号对应目标字节数，函数大小或变量长度*/</span></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">char</span> st_info;<span class="comment">/*指出符号的类型(Type)和绑定属性(Bind)*/</span></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">char</span> st_other;</span><br><span class="line">	Elf32_Half st_shndx;	<span class="comment">/*符号对应目标所在的节,或其他倩况*/</span></span><br><span class="line">&#125; Elf32_Sym;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210723165921745.png" alt="image-20210723165921745"></p>
+<h2 id="符号解析"><a href="#符号解析" class="headerlink" title="符号解析"></a>符号解析</h2><blockquote>
+<p>将每个模块中引用的符号与某个目标模块中的定义符号建立关联。</p>
+</blockquote>
+<p>每个定义符号在代码段或数据段中都被分配了存储空间，将引用符号与定义符号建立关联后，就可在重定位时将引用符号的地址重定位为相关联的定义符号的地址。</p>
+<p>本地符号在本模块内定义并引用，因此其解析较简单，只要与本模块內唯一的定义符号关联即可。</p>
+<p>全局符号(外部定义的、内部定义的)的解析涉及多个模块，故较复杂。</p>
+<h2 id="全局符号的强、弱"><a href="#全局符号的强、弱" class="headerlink" title="全局符号的强、弱"></a>全局符号的强、弱</h2><p>全局符号有强、弱的特性。</p>
+<ul>
+<li>强符号：函数名和已初始化的全局变量名。</li>
+<li>弱符号：未初始化的全局变量名。</li>
+</ul>
+<img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210724104209132.png" alt="image-20210724104209132" style="zoom:33%;" />
+
+<h2 id="链接器对符号的解析规则"><a href="#链接器对符号的解析规则" class="headerlink" title="链接器对符号的解析规则"></a>链接器对符号的解析规则</h2><p>符号解析时，只能有一个确定的定义（即每个符号仅占一处存储空间）。如果碰到符号存在多重定义时，就得有相应的处理规则：</p>
+<ul>
+<li><p>Rule 1：强符号不能多次定义</p>
+</li>
+<li><p>Rule 2：若一个符号被定义为一次强符号和多次弱符号，则按强符号定义为准。</p>
+</li>
+<li><p>Rule 3：若有多个弱符号定义，则任选其中一个。</p>
+</li>
+</ul>
+<p>关于全局符号的多重定义的问题：</p>
+<ul>
+<li>尽量避免使用全局变量</li>
+<li>一定要使用的话，就按以下规则使用</li>
+</ul>
+<blockquote>
+<ul>
+<li>尽量使用本地变量（static）</li>
+<li>全局变量要赋初值</li>
+<li>外部全局变量要使用extern<br> 多重定义全局变量会造成一些意想不到的错误，而且是默默发生的，编译系统不会警告，并会在程序执行很久后才能表现出来，且远离错误处。特别是在模块很多的大型软件中，这类错误很难修正。</li>
+</ul>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://monuo2021.github.io/%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%EF%BC%9A%E8%BF%9E%E7%BB%AD%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -752,7 +890,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-count">8</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
