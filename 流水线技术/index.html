@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.lug.ustc.edu.cn/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic|Roboto Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"monuo2021.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="流水线是实现多条指令重叠执行的技术，其目的是在硬件尽可能的情况下增加吞吐量。一条指令的执行需要多个操作，流水线技术充分利用了这些操作之间的并行性。流水线是加快CPU速度的关键实现技术。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="流水线技术">
+<meta property="og:url" content="https://monuo2021.github.io/%E6%B5%81%E6%B0%B4%E7%BA%BF%E6%8A%80%E6%9C%AF/index.html">
+<meta property="og:site_name" content="飞光">
+<meta property="og:description" content="流水线是实现多条指令重叠执行的技术，其目的是在硬件尽可能的情况下增加吞吐量。一条指令的执行需要多个操作，流水线技术充分利用了这些操作之间的并行性。流水线是加快CPU速度的关键实现技术。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211013131217427.png">
+<meta property="og:image" content="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211013131302027.png">
+<meta property="og:image" content="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211013083408358.png">
+<meta property="og:image" content="https://gitee.com/tanliang-TL/blogpic/raw/master/img/structural-dependency-scenario.png">
+<meta property="og:image" content="https://gitee.com/tanliang-TL/blogpic/raw/master/img/control-hazard-scenario.png">
+<meta property="og:image" content="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211013155921245.png">
+<meta property="og:image" content="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211013160016394.png">
+<meta property="og:image" content="https://gitee.com/tanliang-TL/blogpic/raw/master/img/20190401202913338.png">
+<meta property="og:image" content="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211013161449294.png">
+<meta property="article:published_time" content="2022-01-17T14:05:59.000Z">
+<meta property="article:modified_time" content="2022-01-17T14:08:24.665Z">
+<meta property="article:author" content="monuo">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211013131217427.png">
+
+<link rel="canonical" href="https://monuo2021.github.io/%E6%B5%81%E6%B0%B4%E7%BA%BF%E6%8A%80%E6%9C%AF/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>流水线技术 | 飞光</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">飞光</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://monuo2021.github.io/%E6%B5%81%E6%B0%B4%E7%BA%BF%E6%8A%80%E6%9C%AF/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="monuo">
+      <meta itemprop="description" content="悲莫悲兮生别离，乐莫乐兮新相知">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="飞光">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          流水线技术
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-01-17 22:05:59 / 修改时间：22:08:24" itemprop="dateCreated datePublished" datetime="2022-01-17T22:05:59+08:00">2022-01-17</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">计算机体系结构</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description">流水线是实现多条指令重叠执行的技术，其目的是在硬件尽可能的情况下增加吞吐量。一条指令的执行需要多个操作，流水线技术充分利用了这些操作之间的并行性。流水线是加快CPU速度的关键实现技术。</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="一、流水线技术介绍"><a href="#一、流水线技术介绍" class="headerlink" title="一、流水线技术介绍"></a>一、流水线技术介绍</h2><h3 id="1-1-什么是流水线"><a href="#1-1-什么是流水线" class="headerlink" title="1.1 什么是流水线"></a>1.1 什么是流水线</h3><p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211013131217427.png"></p>
+<p>流水线是实现<strong>多条指令重叠执行</strong>的技术，其目的是在硬件尽可能的情况下<strong>增加吞吐量</strong>。一条指令的执行需要多个操作，流水线技术充分利用了这些操作之间的<strong>并行性</strong>。<strong>流水线是加快 CPU 速度的关键实现技术</strong>。</p>
+<p>拿洗衣服来举例子，假设洗衣服有四个步骤（每个步骤用时相同）：</p>
+<ul>
+<li>洗衣机洗衣</li>
+<li>烘干机烘干</li>
+<li>叠好衣服</li>
+<li>放进衣柜</li>
+</ul>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211013131302027.png"></p>
+<p>如上图一所示，每个人洗完自己的衣服，下一个人才可以开始洗自己的衣服，总共需要花费 16 个步骤时间；上图二所示，每个人并行洗衣。当一个人洗衣机用完时，进入烘干机阶段，另一人立刻进入洗衣机阶段。此时总共只要花费 7 个步骤时间。</p>
+<h3 id="1-2-经典的五级流水线"><a href="#1-2-经典的五级流水线" class="headerlink" title="1.2 经典的五级流水线"></a>1.2 经典的五级流水线</h3><p>流水线是指将计算机指令过程分为多个步骤，并通过多个硬件处理单元并行执行来加快指令执行速度。其中有两个关键点：</p>
+<ul>
+<li>拆分过程</li>
+<li>并行</li>
+</ul>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211013083408358.png" alt="image-20211013083408358"></p>
+<ul>
+<li><p><strong>取指令（fetch）</strong></p>
+<p>根据 PC 将指令从存储器中读取出来的过程。</p>
+</li>
+<li><p><strong>译码（decode）</strong></p>
+<p>对指令进行译码，从通用寄存器堆（Regfile）中将操作数读出。</p>
+</li>
+<li><p><strong>执行（execute）</strong></p>
+<p>对指令进行真正运算的过程。</p>
+</li>
+<li><p><strong>访存（memory access）</strong></p>
+<p>指存储器访问指令将数据从存储器中读出，或者写入存储器的过程</p>
+</li>
+<li><p><strong>写回（write back）</strong></p>
+<p>指将指令执行的结果写回通用寄存器组的过程。如果是普通运算指令，该结果值来自于“执行”阶段计算的结果：如果是存储器读指令，该结果来自于“访存”阶段从存储器中读取出来的数据。</p>
+</li>
+</ul>
+<h3 id="1-3-流水线划分"><a href="#1-3-流水线划分" class="headerlink" title="1.3 流水线划分"></a>1.3 流水线划分</h3><p>流水线划分条件：</p>
+<ul>
+<li>流水线中每个阶段所需的时间近乎相等。</li>
+<li>流水线中每个阶段的操作都会被重复执行。</li>
+<li>流水线中每个阶段的操作都与其他流水段相互独立。</li>
+</ul>
+<p>不同的指令集，流水线实现的难易也是不同的。对于复杂的 CISC 指令集，如 x86，指令长度不同，并且执行时间 也不同，所以直接实现流水线是比较复杂的；对 RISC 来说，如 MIPS 和 ARM，由于指令的长度相等，并且每条指令所完成的任务比较规整，所以较容易用流水线实现。</p>
+<h3 id="1-4-流水线的深度"><a href="#1-4-流水线的深度" class="headerlink" title="1.4 流水线的深度"></a>1.4 流水线的深度</h3><ul>
+<li>在两级寄存器（每一级流水线由寄存器组成〉之间的硬件逻辑越少，就意味能够运行到更高的主频。因此， 现代的处理器流水线极深主要是由于处理器追求高频的指标所驱使。主频越高也意味着流水线的吞吐率越高，从而性能越高。</li>
+<li>由于每一级流水线都由寄存器组成，更多的流水线级数要消耗更多的寄存器，以及更多的面积开销。</li>
+<li>较深的处理器流水线还有一个问题，那就是由于在流水线的取指令阶段无法得知条件跳转的结果是到底跳还是不跳，因此只能进行预测，而到了流水线的末端才能够通过实际的运算得知该分支是真的该跳还是不该跳。如果发现真实的结果与之前预测的结果不相符，则意味着预测失败，需要将所有预取的错误指令流全部丢弃掉。重新取正确的指令流，这个过程叫作“流水线冲刷（ Pipeline Flush ）” 。那么，流水线的深度越深，意味着己经预取了更多的错误指令流，需要将其全部抛弃然后重启，不仅白白浪费了功耗，还造成了性能的损失。</li>
+</ul>
+<h2 id="二、流水线冲突"><a href="#二、流水线冲突" class="headerlink" title="二、流水线冲突"></a>二、流水线冲突</h2><h3 id="2-1-结构冒险"><a href="#2-1-结构冒险" class="headerlink" title="2.1 结构冒险"></a>2.1 结构冒险</h3><p><strong>同一个部件同时被不同指令所使用。</strong>比如说，当处理器是冯诺依曼结构时，只有一个存储器。在访存阶段，一条需要读出一条数据，而另一条指令需要写入一条数据，这时就会产生结构冒险。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/structural-dependency-scenario.png" alt="Structural dependency scenario"></p>
+<h3 id="2-2-数据冒险"><a href="#2-2-数据冒险" class="headerlink" title="2.2 数据冒险"></a>2.2 数据冒险</h3><ul>
+<li><p><strong>WAR（Write After Read）</strong></p>
+<p>假设指令 j 是在指令 i 后面执行的指令，WAR 表示指令 i 读出数据后，指令 j 才能写这个寄存器。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ADD R2, R1, R0</span><br><span class="line">SUB R0, R3, R4</span><br></pre></td></tr></table></figure></li>
+<li><p><strong>WAW（Write After Write）</strong></p>
+<p>假设指令 j 是在指令 i 后面执行的指令，WAW 表示指令 i 将数据写入寄存器后，指令 j 才能将数据写入这个寄存器。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ADD R0, R1, R2</span><br><span class="line">SUB R0, R4, R5</span><br></pre></td></tr></table></figure></li>
+<li><p><strong>RAW（Read After Write）</strong></p>
+<p>假设指令 j 是在指令 i 后面执行的指令，RAW 表示指令 i 将数据写入寄存器后，指令 j 才能从这个寄存器读取数据。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ADD r1,r2,r3</span><br><span class="line">SUB r4,r5,r1</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="2-3-控制冒险"><a href="#2-3-控制冒险" class="headerlink" title="2.3 控制冒险"></a>2.3 控制冒险</h3><p>转移或异常改变执行流程，顺序执行指令在目标地址产生前已被取出。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/control-hazard-scenario.png" alt="Control Hazard scenario"></p>
+<h2 id="三、流水线冲突解决方法"><a href="#三、流水线冲突解决方法" class="headerlink" title="三、流水线冲突解决方法"></a>三、流水线冲突解决方法</h2><h3 id="3-1-结构冒险"><a href="#3-1-结构冒险" class="headerlink" title="3.1 结构冒险"></a>3.1 结构冒险</h3><ul>
+<li>采用哈弗结构，指令存储器和数据存储器分离。</li>
+<li>多级缓存</li>
+</ul>
+<h3 id="3-2-数据冒险"><a href="#3-2-数据冒险" class="headerlink" title="3.2 数据冒险"></a>3.2 数据冒险</h3><ul>
+<li><p>流水线阻塞(stall)</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211013155921245.png" alt="image-20211013155921245"></p>
+</li>
+<li><p>软件插入“NOP”指令</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211013160016394.png" alt="image-20211013160016394"></p>
+</li>
+<li><p>寄存器重命名</p>
+</li>
+<li><p>编译优化：调整指令顺序</p>
+</li>
+<li><p>旁路(Bypassing)技术</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/20190401202913338.png" alt="img"></p>
+<p>但是，Bypassing 并不能解决所以的数据冒险问题，它不能解决 Load-use data hazard。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211013161449294.png" alt="image-20211013161449294"></p>
+</li>
+</ul>
+<h3 id="3-3-控制冒险"><a href="#3-3-控制冒险" class="headerlink" title="3.3 控制冒险"></a>3.3 控制冒险</h3><ul>
+<li><strong>动态分支预测</strong></li>
+<li>硬件阻塞(stall)</li>
+<li>插入三条“NOP”指令</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/%E5%88%86%E6%94%AF%E9%A2%84%E6%B5%8B/" rel="prev" title="分支预测">
+      <i class="fa fa-chevron-left"></i> 分支预测
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E6%B5%81%E6%B0%B4%E7%BA%BF%E6%8A%80%E6%9C%AF%E4%BB%8B%E7%BB%8D"><span class="nav-text">一、流水线技术介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E4%BB%80%E4%B9%88%E6%98%AF%E6%B5%81%E6%B0%B4%E7%BA%BF"><span class="nav-text">1.1 什么是流水线</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-%E7%BB%8F%E5%85%B8%E7%9A%84%E4%BA%94%E7%BA%A7%E6%B5%81%E6%B0%B4%E7%BA%BF"><span class="nav-text">1.2 经典的五级流水线</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-%E6%B5%81%E6%B0%B4%E7%BA%BF%E5%88%92%E5%88%86"><span class="nav-text">1.3 流水线划分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-%E6%B5%81%E6%B0%B4%E7%BA%BF%E7%9A%84%E6%B7%B1%E5%BA%A6"><span class="nav-text">1.4 流水线的深度</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E6%B5%81%E6%B0%B4%E7%BA%BF%E5%86%B2%E7%AA%81"><span class="nav-text">二、流水线冲突</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E7%BB%93%E6%9E%84%E5%86%92%E9%99%A9"><span class="nav-text">2.1 结构冒险</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E6%95%B0%E6%8D%AE%E5%86%92%E9%99%A9"><span class="nav-text">2.2 数据冒险</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-%E6%8E%A7%E5%88%B6%E5%86%92%E9%99%A9"><span class="nav-text">2.3 控制冒险</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E6%B5%81%E6%B0%B4%E7%BA%BF%E5%86%B2%E7%AA%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95"><span class="nav-text">三、流水线冲突解决方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E7%BB%93%E6%9E%84%E5%86%92%E9%99%A9"><span class="nav-text">3.1 结构冒险</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E6%95%B0%E6%8D%AE%E5%86%92%E9%99%A9"><span class="nav-text">3.2 数据冒险</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-%E6%8E%A7%E5%88%B6%E5%86%92%E9%99%A9"><span class="nav-text">3.3 控制冒险</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="monuo"
+      src="/images/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">monuo</p>
+  <div class="site-description" itemprop="description">悲莫悲兮生别离，乐莫乐兮新相知</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/monuo2021" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;monuo2021" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">monuo</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/medium-zoom@1/dist/medium-zoom.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
