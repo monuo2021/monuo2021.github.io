@@ -264,6 +264,86 @@
       </tags>
   </entry>
   <entry>
+    <title>中断与异常</title>
+    <url>/%E4%B8%AD%E6%96%AD%E4%B8%8E%E5%BC%82%E5%B8%B8/</url>
+    <content><![CDATA[<h2 id="一、什么是中断-异常"><a href="#一、什么是中断-异常" class="headerlink" title="一、什么是中断/异常"></a>一、什么是中断/异常</h2><p>中断和异常是指系统、处理器在执行指令过程中突然被别的请求打断而终止当前的程序，转而去处理其他程序。待该中断处理程序处理完后回到该程序中断点继续执行之前程序。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211103133721468.png" alt="image-20211103133721468"></p>
+<h2 id="二、异常与中断向量"><a href="#二、异常与中断向量" class="headerlink" title="二、异常与中断向量"></a>二、异常与中断向量</h2><p>为了有助于处理异常和中断，每个需要被处理的异常和中断条件被赋予一个<strong>标识号</strong>，这个标识号就是<strong>向量</strong>。处理器将这些向量用作<strong>中断描述符 IDT</strong> 中的一个<strong>索引号</strong>，来定位一个异常或中断的处理入口点位置。</p>
+<p>允许的向量号范围是 0 到 255。其中 0 到 31 保留用作 80X86 处理器定义的异常与中断。范围在 32 到 255 的向量号用于用户定义的中断。对于每个异常，该表给出了异常类型以及是否产生一个错误码并保存在堆栈上。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211103144752644.png" alt="image-20211103144752644"></p>
+<h2 id="三、中断和异常源及其分类"><a href="#三、中断和异常源及其分类" class="headerlink" title="三、中断和异常源及其分类"></a>三、中断和异常源及其分类</h2><h3 id="3-1-中断源"><a href="#3-1-中断源" class="headerlink" title="3.1 中断源"></a>3.1 中断源</h3><ul>
+<li><p><strong>外部(硬件)中断</strong></p>
+<p>外部中断通过处理器芯片上两个引脚(INTR 和 NMI)接收。其中，NMI 为不可屏蔽中断，INTR 为可屏蔽中断。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211103190820229.png" alt="image-20211103190820229"></p>
+<p>可屏蔽中断受标志寄存器 EFLAGS 的中断标志 IF(Interrupt enable Flag)控制。当 IF=0 时，处理器禁止发送到 INTR 引脚的的中断；当 IF=1 时。则发送到 INTR 引脚的中断信号会被处理器进行处理。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211104101736800.png" alt="image-20211104101736800"></p>
+<p>IF 标志可以使用指令 STI 和 CLI 来设置或清除。</p>
+</li>
+<li><p><strong>软件中断</strong></p>
+<p>通过在指令操作数中提供中断向量号。INT n 指令可用于从软件中产生中断。</p>
+</li>
+</ul>
+<h3 id="3-2-异常分类"><a href="#3-2-异常分类" class="headerlink" title="3.2 异常分类"></a>3.2 异常分类</h3><ul>
+<li><p><strong>Fault(故障)</strong></p>
+<p>一种通常可以被纠正的异常，并且一旦被纠正，程序可以继续执行。</p>
+<p>当出现一个 Fault，处理器会把机器状态恢复到产生 Fault 的指令之前的状态。此时异常处理程序的<strong>返回地址会指向产生 Fault 的指令</strong>，而不是其后面一条指令。</p>
+</li>
+<li><p><strong>Trap(陷阱)</strong></p>
+<p>陷阱通常认为是“有意”的异常。陷阱通常由处理器正在执行的现行指令引起。陷阱处理程序提供的服务为当前进程所用。<strong>返回执行下一条指令</strong>。</p>
+</li>
+<li><p><strong>Abort(中止)</strong></p>
+<p>一种不会总是报告导致异常的指令的精确位置的异常，并且不允许导致异常的程序重新继续执行。</p>
+<p>Abort 用于报告严重错误，例如硬件错误以及系统表存在不一致性或非法值。</p>
+</li>
+</ul>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210803103711166.png" alt="image-20210803103711166"></p>
+<h3 id="3-3-异常和中断的优先级"><a href="#3-3-异常和中断的优先级" class="headerlink" title="3.3 异常和中断的优先级"></a>3.3 异常和中断的优先级</h3><p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211104102854790.png" alt="image-20211104102854790"></p>
+<h2 id="四、中断描述符表"><a href="#四、中断描述符表" class="headerlink" title="四、中断描述符表"></a>四、中断描述符表</h2><h3 id="4-1-IDT"><a href="#4-1-IDT" class="headerlink" title="4.1 IDT"></a>4.1 IDT</h3><p><strong>中断描述符表 IDT</strong>(Interrupt Description Table)将每个异常或中断向量分别与它们的处理过程联系起来。向量号*8 就可以找到相应的门描述符。由于只有 256 个中断会异常，所以 IDT 不必包含多于 256 个描述符。</p>
+<p>由于 IDT 可以驻留在地址空间的任何位置，处理器使用 <strong>IDTR 寄存器</strong>来定位 IDT 的位置，IDTR 寄存器结构如下。它包含 32 位的基地址和 16 位的限长值。限长值表示 IDT 的长度。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211103145649903.png" alt="image-20211103145649903"></p>
+<h3 id="4-2-IDT-描述符"><a href="#4-2-IDT-描述符" class="headerlink" title="4.2 IDT 描述符"></a>4.2 IDT 描述符</h3><p>IDT 表中可以存放三种类型的门描述符：</p>
+<ul>
+<li>中断门描述符</li>
+<li>陷阱门描述符</li>
+<li>任务门描述符</li>
+</ul>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211103145752929.png" alt="image-20211103145752929"></p>
+<p>当相应一个异常或中断时，处理器使用异常或中断的向量表作为 IDT 表的索引。对应的门描述符中的段选择符指向 GDT 或者 LDT 中可执行的代码描述符。偏移字段指向异常或中断处理过程的开始处。这个过程有很多保护模式的知识，在这里就不赘述。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211104112045450.png" alt="image-20211104112045450"></p>
+<h2 id="五、中断与异常处理过程"><a href="#五、中断与异常处理过程" class="headerlink" title="五、中断与异常处理过程"></a>五、中断与异常处理过程</h2><p>对于整个中断处理，我们可以总结出以下几个步骤：</p>
+<ul>
+<li><strong>中断请求阶段</strong></li>
+<li><strong>中断响应阶段</strong></li>
+<li><strong>中断服务阶段</strong></li>
+<li><strong>中断返回阶段</strong></li>
+</ul>
+<h3 id="5-1-中断请求阶段"><a href="#5-1-中断请求阶段" class="headerlink" title="5.1 中断请求阶段"></a>5.1 中断请求阶段</h3><p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211104152720329.png" alt="image-20211104152720329"></p>
+<h4 id="5-1-1-硬件中断请求"><a href="#5-1-1-硬件中断请求" class="headerlink" title="5.1.1 硬件中断请求"></a>5.1.1 硬件中断请求</h4><p>当设备向处理器提出(中断)服务请求时，处理器会在执行完当前的一条指令后立刻应答设备的请求，并转而执行该设备的相关服务程序。当服务程序执行完成后，处理器会接着去做刚才被中断的程序。这种处理方式就叫做中断( nterrupt)方法，而设备向处理器发出的服务请求则称为<strong>中断请求(IRQ- Interrupt Reqμuest)<strong>。处理器响应请求而执行的设备相关程序则被称为</strong>中断服务程序</strong>或中断服务过程(ISR- Interrupt Service routine)。<br><strong>可编程中断控制器</strong>(PIC- Programmable Interrupt Controller)是用来管理设备中断请求的。它负责接收设备中断请求并将其发送给处理器。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211104150329525.png" alt="image-20211104150329525"></p>
+<h4 id="5-1-2-软件中断请求"><a href="#5-1-2-软件中断请求" class="headerlink" title="5.1.2 软件中断请求"></a>5.1.2 软件中断请求</h4><p>发生在 CPU 内部的中断，不需要中断请求，CPU 内部的中断控制逻辑直接接收处理。</p>
+<h3 id="5-2-中断响应阶段"><a href="#5-2-中断响应阶段" class="headerlink" title="5.2 中断响应阶段"></a>5.2 中断响应阶段</h3><ul>
+<li>关中断；</li>
+<li>保护断点；</li>
+<li>获得中断服务程序的入口地址。</li>
+</ul>
+<p>处理器根据中断向量在中断描述符表找到相应的门描述符，并通过描述符表 GDT/LDT 找到对应的异常或中断处理过程。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211104112045450.png" alt="image-20211104112045450"></p>
+<h3 id="5-3-中断服务过程"><a href="#5-3-中断服务过程" class="headerlink" title="5.3 中断服务过程"></a>5.3 中断服务过程</h3><ul>
+<li>保护现场。在中断服务程序的起始部分安排若干条入栈指令，将各寄存器的内容压入堆栈保存。</li>
+<li>开中断。 在中断服务程序执行期间允许级别更高的中断请求中断现 行的中断服务程序，实现中断嵌套。</li>
+<li>中断服务。 完成中断源的具体要求。</li>
+<li>恢复现场。 中断服务程序结束前，必须恢复主程序的中断现场。通常是将保存在堆栈中的现场信息弹出到原来的寄存器中。</li>
+<li>中断返回。 返回到原程序的断点处，继续执行原程序。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">_divide_error:</span><br><span class="line">	pushl $_do_divide_error</span><br><span class="line">no_error_code:</span><br><span class="line">	xchgl %eax,(%esp)</span><br><span class="line">	pushl %ebx</span><br><span class="line">	pushl %ecx</span><br><span class="line">	pushl %edx</span><br><span class="line">	pushl %edi</span><br><span class="line">	pushl %esi</span><br><span class="line">	pushl %ebp</span><br><span class="line">	push %ds</span><br><span class="line">	push %es</span><br><span class="line">	push %fs</span><br><span class="line">	pushl $0		# &quot;error code&quot;</span><br><span class="line">	lea 44(%esp),%edx</span><br><span class="line">	pushl %edx</span><br><span class="line">	movl $0x10,%edx</span><br><span class="line">	mov %dx,%ds</span><br><span class="line">	mov %dx,%es</span><br><span class="line">	mov %dx,%fs</span><br><span class="line">	call *%eax</span><br><span class="line">	addl $8,%esp</span><br><span class="line">	pop %fs</span><br><span class="line">	pop %es</span><br><span class="line">	pop %ds</span><br><span class="line">	popl %ebp</span><br><span class="line">	popl %esi</span><br><span class="line">	popl %edi</span><br><span class="line">	popl %edx</span><br><span class="line">	popl %ecx</span><br><span class="line">	popl %ebx</span><br><span class="line">	popl %eax</span><br><span class="line">	iret</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211104142921657.png" alt="image-20211104142921657"></p>
+]]></content>
+      <categories>
+        <category>计算机体系结构</category>
+      </categories>
+  </entry>
+  <entry>
     <title>UART</title>
     <url>/UART/</url>
     <content><![CDATA[<p>转载总结自<a href="https://www.analog.com/cn/analog-dialogue/articles/uart-a-hardware-communication-protocol.html#">UART：了解通用异步接收器/发送器的硬件通信协议</a></p>
@@ -344,112 +424,6 @@
       <tags>
         <tag>通信协议</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>分支预测</title>
-    <url>/%E5%88%86%E6%94%AF%E9%A2%84%E6%B5%8B/</url>
-    <content><![CDATA[<p>分支预测解决流水线冲突中的控制冒险。在指令集中，分支指令包括条件指令和非条件指令。对无条件指令来说，无需进行条件判断，就可以获得跳转后的地址；但是对条件跳转指令，无论是条件直接跳转还是条件间接跳转指令（RISC-V 无此类指令），都需要在执行阶段才可以确定是否跳转，这样会影响取值阶段的效率。</p>
-<p><strong>举个简陋的例子说明分支预测的可行性：</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">if (data[c] &gt;= 128)</span><br><span class="line">    sum += data[c];</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">T = branch taken</span><br><span class="line">N = branch not taken</span><br><span class="line"></span><br><span class="line">data[] = 0, 1, 2, 3, 4, ... 126, 127, 128, 129, 130, ... 250, 251, 252, ...</span><br><span class="line">branch = N  N  N  N  N  ...   N    N    T    T    T  ...   T    T    T  ...</span><br><span class="line">       = NNNNNNNNNNNN ... NNNNNNNTTTTTTTTT ... TTTTTTTTTT  (easy to predict)</span><br></pre></td></tr></table></figure>
-
-<p>可以发现，由于分支指令之间的相关性，根据分支历史可以预测出当前分支指令的方向与地址。</p>
-<p>不过要注意一点，即使分支预测成功率达到 90% 也是非常糟糕的。因为现代处理器流水线深度太深了，出错一次就要 flush 整个流水线，造成了性能的损失。</p>
-<h2 id="一、基本部件"><a href="#一、基本部件" class="headerlink" title="一、基本部件"></a>一、基本部件</h2><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210807143814880.png" alt="image-20210807143814880" style="zoom:50%;" />
-
-<ul>
-<li><p><strong>BTB</strong>（Branch Target Buffer, 分支目标缓冲器）</p>
-<p>用于<strong>预测目标地址</strong>。缓存保存了最近执行过的分支指令的 PC 值，以及它们的跳转目标地址。</p>
-</li>
-<li><p><strong>两比特饱和计数器</strong></p>
-<p><img src="https://hitsz-cslab.gitee.io/arch/lab2/assets/3-2.png" alt="img"></p>
-<p>四个状态：</p>
-<ul>
-<li>强跳转</li>
-<li>弱跳转</li>
-<li>强不跳转</li>
-<li>弱不跳转</li>
-</ul>
-<p>当执行一条分支指令时，会根据指令是否跳转来更新两比特饱和计数器。一个 2bit 状态机的核心思路就是：<strong>这次预测错了不要紧，再给你一次机会，还是预测错了的话那再改变预测结果</strong>。</p>
-</li>
-</ul>
-<h2 id="二、预测方向"><a href="#二、预测方向" class="headerlink" title="二、预测方向"></a>二、预测方向</h2><h3 id="2-1-静态预测"><a href="#2-1-静态预测" class="headerlink" title="2.1 静态预测"></a>2.1 静态预测</h3><p>静态预测不依赖任何过去执行过的指令和历史信息。</p>
-<ul>
-<li><p><strong>总预测接下来的指令都（不）跳转</strong>。</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/8f114fa7d5d2558cab31be6030bda790_1440w.jpg" alt="img"></p>
-<p>可以看出，这种预测准确率都在 50%以上，最高的还达到了 99.4%。</p>
-</li>
-<li><p><strong>BTFN 跳转</strong>（Back Taken, Forward Not Taken），如果所跳转的目标地址位于跳转指令的前方（比当前指令晚执行），则不跳转；如果所跳转的目标地址位图跳转指令的后方（比当前指令早执行）则跳转。</p>
-</li>
-<li><p>某些指令一律预测跳转，其他指令一律预测不跳转</p>
-</li>
-</ul>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/421096-20171106023943446-433328795.png" alt="image"></p>
-<h3 id="2-2-动态预测"><a href="#2-2-动态预测" class="headerlink" title="2.2 动态预测"></a>2.2 动态预测</h3><p>动态分支预测使用运行时收集的关于跳转或未跳转的分支信息来预测分支结果。</p>
-<h4 id="2-2-1-一级预测器"><a href="#2-2-1-一级预测器" class="headerlink" title="2.2.1 一级预测器"></a>2.2.1 一级预测器</h4><p>直接将“两比特饱和计数器”组织成一维表格，称为预测器表格，并直接使用 PC 值的一部分进行索引。譬如使用 PC 的后 10 位作为索引，则仅需要维护 1000 个表项的表格。</p>
-<p>“一级”是指其索引仅仅采用指令本身的 PC 值。</p>
-<p>该方法简单，但索引机制过于简单。像低 10 位相同但高位不相同的 PC，就会指向同样的表项。</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/5a0becc8ebd91ccfd43b74383c729075_1440w.jpg" alt="img"></p>
-<h4 id="2-2-2-二级预测器"><a href="#2-2-2-二级预测器" class="headerlink" title="2.2.2 二级预测器"></a>2.2.2 二级预测器</h4><p>也称为<strong>相关预测器</strong>，如其名字所述，分为两级：Branch history 以及 Pattern history table。</p>
-  <img src="D:\Users\图片\Saved Pictures\840px-Two-level_branch_prediction.svg.png" alt="840px-Two-level_branch_prediction.svg" style="zoom: 33%;" />
-
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/74364714907197a556de2895dc62027a_1440w.jpg" alt="img"></p>
-<p>图中每两条虚线之间是 4%。可以看到大部分预测的准确率都已经达到了 <strong>96%</strong> 以上了。</p>
-<h5 id="基于分支历史的分支预测器"><a href="#基于分支历史的分支预测器" class="headerlink" title="基于分支历史的分支预测器"></a>基于分支历史的分支预测器</h5><p>Branch history 可分为局部历史和全局历史。全局历史是指每个分支指令自己的分支跳转历史，全局历史是指所有分支指令的指令跳转历史。</p>
-<ul>
-<li><p><strong>全局分支预测器</strong></p>
-<p>基于全局历史的分支预测方法在 BHT 的基础上增加了<strong>GHR（Global History Register，全局历史寄存器）</strong>来将所有分支指令关联起来，即使用一个 k 比特的 GHR 来记录所有最近 k 条分支指令的历史。</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/3-4.png" alt="img"></p>
-<p>最有代表性的全局分支算法是 Gshare 算法和 Gselect 算法。</p>
-<ul>
-<li><p>Gshare 算法</p>
-<p>将分支指令的地址和 GHR 进行<strong>异或</strong>，将结果作为 PHT 的索引。</p>
-</li>
-<li><p>Gselect 算法</p>
-<p>将分支指令的地址和 GHR 直接<strong>拼接</strong>，将结果作为 PHT 的索引。</p>
-</li>
-</ul>
-</li>
-<li><p><strong>局部分支预测器</strong></p>
-<p>基于全局历史的分支预测方法将所有分支指令都关联到一起。然而事实上，并非所有的分支指令都具有关联性。为此，基于局部历史的分支预测方法使用<strong>LHT（Local History Table，局部历史表）</strong>来代替全局历史预测中的 GHR。</p>
-<p>LHT 一般具有 64 条记录，每条记录均包含 Tag 和局部转移历史 2 个字段。其中，Tag 字段是分支指令地址的一部分，局部转移历史字段则是 k 比特的移位寄存器，其作用等同于 GHR。</p>
-<p><img src="https://hitsz-cslab.gitee.io/arch/lab2/assets/3-5.png" alt="img"></p>
-</li>
-</ul>
-<h5 id="锦标赛分支预测"><a href="#锦标赛分支预测" class="headerlink" title="锦标赛分支预测"></a>锦标赛分支预测</h5><p>锦标赛分支预测（又称混合分支预测或组合分支预测）是一种博采众长的分支预测方法，其基本原理是将两个或以上的分支预测方法进行结合，充分发挥各预测方法的优势，以进一步提高分支预测的准确度。</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/3-6.png" alt="img"></p>
-<h2 id="三、预测地址"><a href="#三、预测地址" class="headerlink" title="三、预测地址"></a>三、预测地址</h2><ul>
-<li><p>BTB</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/BTB-NutShell.jpg" alt="BTB"></p>
-<ul>
-<li>使用容量有限的缓存保存最近执行过的分支指 PC 值，以及它们的跳转目标地址。对于后续要取指的每条 PC 值，将其与 BTB 中存储的各个 PC 值进行比较，如果出现匹配，则预测这是 分支指令，并使用其对应存储的跳转目标地址作为预测的跳转地址。</li>
-<li>是其缺点之一是不能将 BTB 容量做到太大， 否则面积和时序都无法接受。</li>
-<li>另一个缺点是对于间接跳转（indirect Jump/Branch ）指令的预测效果并不理想，这主要是由于间接跳转分支的目标地址是使用寄存器索引的操作数（基地址寄存器）计算所得，而寄存器中的值随着程序执行可能每次都不一样，因此 BTB 中存储的上次跳转的目标地址并不一定等于本次跳转的目标值。不过，RISC-V 指令架构无需担心这点，因为 RISC-V 没有条件间接跳转指令。</li>
-</ul>
-</li>
-<li><p>RAS</p>
-<ul>
-<li>使用容量有限的硬件堆栈来存储函数调用的返回地址。</li>
-<li>间接跳转指令可以用于函数的调用和返回，而函数的调用和返回在程序中往往是成对出现的，因此可以在函数调用（使用分支跳转指令）时将当前 PC 值加 4（或者加 2）， 即其顺序执行的下一条指令的 PC 值压入 RAS 中，等到函数返回（使用分支跳转指令〉时将 RAS 中的值弹出，这样就可以快速地为该函数返回的分支跳转指令预测目标地址。</li>
-</ul>
-</li>
-</ul>
-<p>在 NutShell 处理器中，在做分支预测时会用取指 PC 索引 BTB 表项, 如果 PC 高位与读到的 BTB 表项的标签匹配则认为 BTB 命中, 再根据 BTB 中记录的指令类型判断跳转方向和跳转目标. 如果类型为条件分支指令, 则需要访问模式历史表 (PHT) 来判断是否跳转; 如果类型为返回指令, 则选择返回地址栈 (RAS) 的栈顶内容作为跳转目标; 如果类型为直接或间接跳转指令, 则选择 BTB 中记录的跳转目标.</p>
-<h2 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h2><ul>
-<li><p><a href="https://stackoverflow.com/questions/11227809/why-is-processing-a-sorted-array-faster-than-processing-an-unsorted-array#11227902">StackOverflow 回答 What is Branch Prediction?</a></p>
-</li>
-<li><p><a href="https://www.cnblogs.com/TaigaCon/p/7791303.html">Branch Prediction</a></p>
-</li>
-<li><p><a href="https://hitsz-cslab.gitee.io/arch/lab2/1-theory/">哈工大-分支预测器设计</a></p>
-</li>
-<li><p><a href="https://www.wikiwand.com/en/Branch_predictor">wiki-Branch predictor</a></p>
-</li>
-</ul>
-]]></content>
-      <categories>
-        <category>计算机体系结构</category>
-      </categories>
   </entry>
   <entry>
     <title>处理器流水线重点</title>
@@ -563,6 +537,112 @@
 <h2 id="五、写回"><a href="#五、写回" class="headerlink" title="五、写回"></a>五、写回</h2><p>最终写回仲裁、长指令写回仲裁、OITF</p>
 <p>最终写回仲裁：长指令比单指令有更高优先级。如果没有长指令写回，单指令可以比更早位置的长指令写回。</p>
 <p>长指令写回仲裁：根据 OITF 判断长指令的先后关系，严格控制长指令的写回顺序</p>
+]]></content>
+      <categories>
+        <category>计算机体系结构</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>分支预测</title>
+    <url>/%E5%88%86%E6%94%AF%E9%A2%84%E6%B5%8B/</url>
+    <content><![CDATA[<p>分支预测解决流水线冲突中的控制冒险。在指令集中，分支指令包括条件指令和非条件指令。对无条件指令来说，无需进行条件判断，就可以获得跳转后的地址；但是对条件跳转指令，无论是条件直接跳转还是条件间接跳转指令（RISC-V 无此类指令），都需要在执行阶段才可以确定是否跳转，这样会影响取值阶段的效率。</p>
+<p><strong>举个简陋的例子说明分支预测的可行性：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">if (data[c] &gt;= 128)</span><br><span class="line">    sum += data[c];</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">T = branch taken</span><br><span class="line">N = branch not taken</span><br><span class="line"></span><br><span class="line">data[] = 0, 1, 2, 3, 4, ... 126, 127, 128, 129, 130, ... 250, 251, 252, ...</span><br><span class="line">branch = N  N  N  N  N  ...   N    N    T    T    T  ...   T    T    T  ...</span><br><span class="line">       = NNNNNNNNNNNN ... NNNNNNNTTTTTTTTT ... TTTTTTTTTT  (easy to predict)</span><br></pre></td></tr></table></figure>
+
+<p>可以发现，由于分支指令之间的相关性，根据分支历史可以预测出当前分支指令的方向与地址。</p>
+<p>不过要注意一点，即使分支预测成功率达到 90% 也是非常糟糕的。因为现代处理器流水线深度太深了，出错一次就要 flush 整个流水线，造成了性能的损失。</p>
+<h2 id="一、基本部件"><a href="#一、基本部件" class="headerlink" title="一、基本部件"></a>一、基本部件</h2><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210807143814880.png" alt="image-20210807143814880" style="zoom:50%;" />
+
+<ul>
+<li><p><strong>BTB</strong>（Branch Target Buffer, 分支目标缓冲器）</p>
+<p>用于<strong>预测目标地址</strong>。缓存保存了最近执行过的分支指令的 PC 值，以及它们的跳转目标地址。</p>
+</li>
+<li><p><strong>两比特饱和计数器</strong></p>
+<p><img src="https://hitsz-cslab.gitee.io/arch/lab2/assets/3-2.png" alt="img"></p>
+<p>四个状态：</p>
+<ul>
+<li>强跳转</li>
+<li>弱跳转</li>
+<li>强不跳转</li>
+<li>弱不跳转</li>
+</ul>
+<p>当执行一条分支指令时，会根据指令是否跳转来更新两比特饱和计数器。一个 2bit 状态机的核心思路就是：<strong>这次预测错了不要紧，再给你一次机会，还是预测错了的话那再改变预测结果</strong>。</p>
+</li>
+</ul>
+<h2 id="二、预测方向"><a href="#二、预测方向" class="headerlink" title="二、预测方向"></a>二、预测方向</h2><h3 id="2-1-静态预测"><a href="#2-1-静态预测" class="headerlink" title="2.1 静态预测"></a>2.1 静态预测</h3><p>静态预测不依赖任何过去执行过的指令和历史信息。</p>
+<ul>
+<li><p><strong>总预测接下来的指令都（不）跳转</strong>。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/8f114fa7d5d2558cab31be6030bda790_1440w.jpg" alt="img"></p>
+<p>可以看出，这种预测准确率都在 50%以上，最高的还达到了 99.4%。</p>
+</li>
+<li><p><strong>BTFN 跳转</strong>（Back Taken, Forward Not Taken），如果所跳转的目标地址位于跳转指令的前方（比当前指令晚执行），则不跳转；如果所跳转的目标地址位图跳转指令的后方（比当前指令早执行）则跳转。</p>
+</li>
+<li><p>某些指令一律预测跳转，其他指令一律预测不跳转</p>
+</li>
+</ul>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/421096-20171106023943446-433328795.png" alt="image"></p>
+<h3 id="2-2-动态预测"><a href="#2-2-动态预测" class="headerlink" title="2.2 动态预测"></a>2.2 动态预测</h3><p>动态分支预测使用运行时收集的关于跳转或未跳转的分支信息来预测分支结果。</p>
+<h4 id="2-2-1-一级预测器"><a href="#2-2-1-一级预测器" class="headerlink" title="2.2.1 一级预测器"></a>2.2.1 一级预测器</h4><p>直接将“两比特饱和计数器”组织成一维表格，称为预测器表格，并直接使用 PC 值的一部分进行索引。譬如使用 PC 的后 10 位作为索引，则仅需要维护 1000 个表项的表格。</p>
+<p>“一级”是指其索引仅仅采用指令本身的 PC 值。</p>
+<p>该方法简单，但索引机制过于简单。像低 10 位相同但高位不相同的 PC，就会指向同样的表项。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/5a0becc8ebd91ccfd43b74383c729075_1440w.jpg" alt="img"></p>
+<h4 id="2-2-2-二级预测器"><a href="#2-2-2-二级预测器" class="headerlink" title="2.2.2 二级预测器"></a>2.2.2 二级预测器</h4><p>也称为<strong>相关预测器</strong>，如其名字所述，分为两级：Branch history 以及 Pattern history table。</p>
+  <img src="D:\Users\图片\Saved Pictures\840px-Two-level_branch_prediction.svg.png" alt="840px-Two-level_branch_prediction.svg" style="zoom: 33%;" />
+
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/74364714907197a556de2895dc62027a_1440w.jpg" alt="img"></p>
+<p>图中每两条虚线之间是 4%。可以看到大部分预测的准确率都已经达到了 <strong>96%</strong> 以上了。</p>
+<h5 id="基于分支历史的分支预测器"><a href="#基于分支历史的分支预测器" class="headerlink" title="基于分支历史的分支预测器"></a>基于分支历史的分支预测器</h5><p>Branch history 可分为局部历史和全局历史。全局历史是指每个分支指令自己的分支跳转历史，全局历史是指所有分支指令的指令跳转历史。</p>
+<ul>
+<li><p><strong>全局分支预测器</strong></p>
+<p>基于全局历史的分支预测方法在 BHT 的基础上增加了<strong>GHR（Global History Register，全局历史寄存器）</strong>来将所有分支指令关联起来，即使用一个 k 比特的 GHR 来记录所有最近 k 条分支指令的历史。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/3-4.png" alt="img"></p>
+<p>最有代表性的全局分支算法是 Gshare 算法和 Gselect 算法。</p>
+<ul>
+<li><p>Gshare 算法</p>
+<p>将分支指令的地址和 GHR 进行<strong>异或</strong>，将结果作为 PHT 的索引。</p>
+</li>
+<li><p>Gselect 算法</p>
+<p>将分支指令的地址和 GHR 直接<strong>拼接</strong>，将结果作为 PHT 的索引。</p>
+</li>
+</ul>
+</li>
+<li><p><strong>局部分支预测器</strong></p>
+<p>基于全局历史的分支预测方法将所有分支指令都关联到一起。然而事实上，并非所有的分支指令都具有关联性。为此，基于局部历史的分支预测方法使用<strong>LHT（Local History Table，局部历史表）</strong>来代替全局历史预测中的 GHR。</p>
+<p>LHT 一般具有 64 条记录，每条记录均包含 Tag 和局部转移历史 2 个字段。其中，Tag 字段是分支指令地址的一部分，局部转移历史字段则是 k 比特的移位寄存器，其作用等同于 GHR。</p>
+<p><img src="https://hitsz-cslab.gitee.io/arch/lab2/assets/3-5.png" alt="img"></p>
+</li>
+</ul>
+<h5 id="锦标赛分支预测"><a href="#锦标赛分支预测" class="headerlink" title="锦标赛分支预测"></a>锦标赛分支预测</h5><p>锦标赛分支预测（又称混合分支预测或组合分支预测）是一种博采众长的分支预测方法，其基本原理是将两个或以上的分支预测方法进行结合，充分发挥各预测方法的优势，以进一步提高分支预测的准确度。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/3-6.png" alt="img"></p>
+<h2 id="三、预测地址"><a href="#三、预测地址" class="headerlink" title="三、预测地址"></a>三、预测地址</h2><ul>
+<li><p>BTB</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/BTB-NutShell.jpg" alt="BTB"></p>
+<ul>
+<li>使用容量有限的缓存保存最近执行过的分支指 PC 值，以及它们的跳转目标地址。对于后续要取指的每条 PC 值，将其与 BTB 中存储的各个 PC 值进行比较，如果出现匹配，则预测这是 分支指令，并使用其对应存储的跳转目标地址作为预测的跳转地址。</li>
+<li>是其缺点之一是不能将 BTB 容量做到太大， 否则面积和时序都无法接受。</li>
+<li>另一个缺点是对于间接跳转（indirect Jump/Branch ）指令的预测效果并不理想，这主要是由于间接跳转分支的目标地址是使用寄存器索引的操作数（基地址寄存器）计算所得，而寄存器中的值随着程序执行可能每次都不一样，因此 BTB 中存储的上次跳转的目标地址并不一定等于本次跳转的目标值。不过，RISC-V 指令架构无需担心这点，因为 RISC-V 没有条件间接跳转指令。</li>
+</ul>
+</li>
+<li><p>RAS</p>
+<ul>
+<li>使用容量有限的硬件堆栈来存储函数调用的返回地址。</li>
+<li>间接跳转指令可以用于函数的调用和返回，而函数的调用和返回在程序中往往是成对出现的，因此可以在函数调用（使用分支跳转指令）时将当前 PC 值加 4（或者加 2）， 即其顺序执行的下一条指令的 PC 值压入 RAS 中，等到函数返回（使用分支跳转指令〉时将 RAS 中的值弹出，这样就可以快速地为该函数返回的分支跳转指令预测目标地址。</li>
+</ul>
+</li>
+</ul>
+<p>在 NutShell 处理器中，在做分支预测时会用取指 PC 索引 BTB 表项, 如果 PC 高位与读到的 BTB 表项的标签匹配则认为 BTB 命中, 再根据 BTB 中记录的指令类型判断跳转方向和跳转目标. 如果类型为条件分支指令, 则需要访问模式历史表 (PHT) 来判断是否跳转; 如果类型为返回指令, 则选择返回地址栈 (RAS) 的栈顶内容作为跳转目标; 如果类型为直接或间接跳转指令, 则选择 BTB 中记录的跳转目标.</p>
+<h2 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h2><ul>
+<li><p><a href="https://stackoverflow.com/questions/11227809/why-is-processing-a-sorted-array-faster-than-processing-an-unsorted-array#11227902">StackOverflow 回答 What is Branch Prediction?</a></p>
+</li>
+<li><p><a href="https://www.cnblogs.com/TaigaCon/p/7791303.html">Branch Prediction</a></p>
+</li>
+<li><p><a href="https://hitsz-cslab.gitee.io/arch/lab2/1-theory/">哈工大-分支预测器设计</a></p>
+</li>
+<li><p><a href="https://www.wikiwand.com/en/Branch_predictor">wiki-Branch predictor</a></p>
+</li>
+</ul>
 ]]></content>
       <categories>
         <category>计算机体系结构</category>
@@ -983,69 +1063,77 @@
       </categories>
   </entry>
   <entry>
-    <title>程序转换处理过程</title>
-    <url>/%E7%A8%8B%E5%BA%8F%E8%BD%AC%E6%8D%A2%E5%A4%84%E7%90%86%E8%BF%87%E7%A8%8B/</url>
-    <content><![CDATA[<p>一个由高级语言编写的程序，必须转换成二进制代码，才能在机器上运行。这种可以在机器上运行是二进制代码被称为<strong>可执行目标文件</strong>。</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/sp20210723_083211_152.png" alt="源程序处理过程"></p>
-<p>上述过程可分为四步：</p>
+    <title>符号与符号表</title>
+    <url>/%E7%AC%A6%E5%8F%B7%E4%B8%8E%E7%AC%A6%E5%8F%B7%E8%A1%A8/</url>
+    <content><![CDATA[<p>我们知道链接操作的第一步：</p>
+<p><strong>符号解析</strong></p>
 <ul>
-<li><strong>预处理</strong></li>
-<li><strong>编译</strong></li>
-<li><strong>汇编</strong></li>
-<li><strong>链接</strong></li>
+<li>程序中有定义和引用的符号</li>
+<li>编译器将定义的符号存放在一个符号表（symbol table）中</li>
+<li>编译器将符号引用存放在重定位节（.rel.text和.rel.data）中</li>
+<li>链接器将每个符号引用都与一个确定的符号定义建立关联</li>
 </ul>
-<h2 id="一、预处理"><a href="#一、预处理" class="headerlink" title="一、预处理"></a>一、预处理</h2><p>预处理过程主要<strong>处理源文件中以“#”开头的预编译指令</strong>，如：</p>
+<h2 id="符号"><a href="#符号" class="headerlink" title="符号"></a>符号</h2><p><strong>符号就是其实程序中的变量名、函数名。</strong></p>
+<h3 id="符号定义与符号引用"><a href="#符号定义与符号引用" class="headerlink" title="符号定义与符号引用"></a>符号定义与符号引用</h3><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210724091642042.png" alt="image-20210724091642042" style="zoom: 33%;" />
+
+<h4 id="符号定义的本质"><a href="#符号定义的本质" class="headerlink" title="符号定义的本质"></a>符号定义的本质</h4><blockquote>
+<p>指被分配了存储空间。如果是函数名则指代码所在区；如果是变量名则指其所在的静态数据区。</p>
+</blockquote>
+<h3 id="链接符号的类型"><a href="#链接符号的类型" class="headerlink" title="链接符号的类型"></a>链接符号的类型</h3><p>每个可重定位目标模块都有一个符号表，它包含了定义和引用的符号。有三种链接器符号：</p>
 <ul>
-<li>删除“#define”并展开所定义的宏。</li>
-<li>处理所有条件预编译指令，如“#if”,“#ifdef”, “#endif”等。</li>
-<li>插入头文件到“#include”处，可以递归方式进行处理。</li>
-<li>删除所有的注释“//”和“/* */”。</li>
-<li> 添加行号和文件名标识，以便编译时编译器产生调试用的行号信息。</li>
-<li>保留所有#pragma编译指令（编译器需要用）</li>
+<li><p>Global symbols（<strong>全局符号</strong>）</p>
+<blockquote>
+<p>定义在本目标文件的全局符号，可以被其他目标文件引用。</p>
+</blockquote>
+</li>
+<li><p>External symbols（<strong>外部符号</strong>）</p>
+<blockquote>
+<p>在本目标文件中引用的全局变量，却没有定义在本目标文件。</p>
+</blockquote>
+</li>
+<li><p>Local symbols（<strong>局部符号</strong>）</p>
+<blockquote>
+<p>只在编译单元内部。</p>
+</blockquote>
+</li>
 </ul>
-<p>经过预处理后得到的是 <strong>.i 文件</strong>（预处理文件），该文件是一个可读的文本文件 ，但不包含任何宏定义。</p>
-<h3 id="预处理命令"><a href="#预处理命令" class="headerlink" title="预处理命令"></a>预处理命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc –E hello.c –o hello.i</span><br></pre></td></tr></table></figure>
+<img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210724095744156.png" alt="image-20210724095744156" style="zoom:33%;" />
 
-<p>或者</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cpp hello.c &gt; hello.i</span><br></pre></td></tr></table></figure>
+<h2 id="目标文件中的符号表"><a href="#目标文件中的符号表" class="headerlink" title="目标文件中的符号表"></a>目标文件中的符号表</h2><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">   Elf32_Word st_name;	<span class="comment">/*符号对应宇符串在 strtab节中的偏移量*/</span></span><br><span class="line">	Elf32_Addr st_value; 	<span class="comment">/*在对应节中的偏移量,或虚拟地址*/</span></span><br><span class="line">	Elf32_Word st_size;		<span class="comment">/*符号对应目标字节数，函数大小或变量长度*/</span></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">char</span> st_info;<span class="comment">/*指出符号的类型(Type)和绑定属性(Bind)*/</span></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">char</span> st_other;</span><br><span class="line">	Elf32_Half st_shndx;	<span class="comment">/*符号对应目标所在的节,或其他倩况*/</span></span><br><span class="line">&#125; Elf32_Sym;</span><br></pre></td></tr></table></figure>
 
-<h2 id="二、编译"><a href="#二、编译" class="headerlink" title="二、编译"></a>二、编译</h2><p>编译过程就是将预处理后得到的预处理文件（如 hello.i）进行一系列分析，<strong>生成汇编代码文件</strong>的过程。用来进行编译处理的程序称为<strong>编译程序（编译器，Compiler）</strong></p>
-<p>编译包括以下过程：</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210723165921745.png" alt="image-20210723165921745"></p>
+<h2 id="符号解析"><a href="#符号解析" class="headerlink" title="符号解析"></a>符号解析</h2><blockquote>
+<p>将每个模块中引用的符号与某个目标模块中的定义符号建立关联。</p>
+</blockquote>
+<p>每个定义符号在代码段或数据段中都被分配了存储空间，将引用符号与定义符号建立关联后，就可在重定位时将引用符号的地址重定位为相关联的定义符号的地址。</p>
+<p>本地符号在本模块内定义并引用，因此其解析较简单，只要与本模块內唯一的定义符号关联即可。</p>
+<p>全局符号(外部定义的、内部定义的)的解析涉及多个模块，故较复杂。</p>
+<h2 id="全局符号的强、弱"><a href="#全局符号的强、弱" class="headerlink" title="全局符号的强、弱"></a>全局符号的强、弱</h2><p>全局符号有强、弱的特性。</p>
 <ul>
-<li>词法分析</li>
-<li>语法分析</li>
-<li>语义分析</li>
-<li>中间代码生成</li>
-<li>代码优化</li>
+<li>强符号：函数名和已初始化的全局变量名。</li>
+<li>弱符号：未初始化的全局变量名。</li>
 </ul>
-<p>经过编译后，得到**.s文件**（汇编代码文件）还是可读的文本文件，CPU无法理解和执行它。</p>
-<h3 id="编译命令"><a href="#编译命令" class="headerlink" title="编译命令"></a>编译命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc -S hello.i -o hello.s</span><br></pre></td></tr></table></figure>
+<img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210724104209132.png" alt="image-20210724104209132" style="zoom:33%;" />
 
-<p>或</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc -S hello.c -o hello.s</span><br></pre></td></tr></table></figure>
-
-<p>或</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">/user/lib/gcc/i486-linux-gnu/4.1/cc1 hello.c</span><br></pre></td></tr></table></figure>
-
-<h2 id="三、汇编"><a href="#三、汇编" class="headerlink" title="三、汇编"></a>三、汇编</h2><p>汇编是<strong>将汇编语言源程序转换为机器指令序列</strong>，每条汇编语句几乎都对应一条机器指令。汇编过程相比编译较为简单，没有复杂的语法，没有语义，也不需要指令优化，只需根据汇编指令和机器指令的对照表一一翻译即可。</p>
-<p>汇编结果是一个 <strong>.o 文件（可重定位目标文件）</strong>，其中包含的是不可读的二进制代码。</p>
-<h3 id="汇编命令"><a href="#汇编命令" class="headerlink" title="汇编命令"></a>汇编命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc –c hello.s –o hello.o</span><br></pre></td></tr></table></figure>
-
-<p>或</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">gcc –c hello.c –o hello.o</span><br></pre></td></tr></table></figure>
-
-<p>或（as是一个汇编程序）</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">as hello.s –o hello.o</span><br></pre></td></tr></table></figure>
-
-<h2 id="四、链接"><a href="#四、链接" class="headerlink" title="四、链接"></a>四、链接</h2><p>链接过程<strong>将多个可重定位目标文件合并以生成可执行目标文件</strong>。</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/sp20210723_101021_361.png" alt="sp20210723_101021_361"></p>
-<h3 id="链接命令"><a href="#链接命令" class="headerlink" title="链接命令"></a>链接命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc –static –o myproc main.o swap.o</span><br></pre></td></tr></table></figure>
-
-<p>或</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ld –static –o myproc main.o swap.o</span><br></pre></td></tr></table></figure>
-
-<p>其中，static 表示静态链接，如果不指定 -o 选项，则可执行文件名 为“a.out”。</p>
-<p><strong>a.out 就是最终的可执行文件。</strong></p>
+<h2 id="链接器对符号的解析规则"><a href="#链接器对符号的解析规则" class="headerlink" title="链接器对符号的解析规则"></a>链接器对符号的解析规则</h2><p>符号解析时，只能有一个确定的定义（即每个符号仅占一处存储空间）。如果碰到符号存在多重定义时，就得有相应的处理规则：</p>
+<ul>
+<li><p>Rule 1：强符号不能多次定义</p>
+<img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210724105327383.png" alt="image-20210724105327383" style="zoom: 33%;" /></li>
+<li><p>Rule 2：若一个符号被定义为一次强符号和多次弱符号，则按强符号定义为准。</p>
+<img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210724105451041.png" alt="image-20210724105451041" style="zoom: 25%;" /></li>
+<li><p>Rule 3：若有多个弱符号定义，则任选其中一个。</p>
+</li>
+</ul>
+<p>关于全局符号的多重定义的问题：</p>
+<ul>
+<li>尽量避免使用全局变量</li>
+<li>一定要使用的话，就按以下规则使用<ul>
+<li>尽量使用本地变量（static）</li>
+<li>全局变量要赋初值</li>
+<li>外部全局变量要使用extern</li>
+</ul>
+</li>
+</ul>
 ]]></content>
       <categories>
         <category>链接、装载与库</category>
@@ -1165,77 +1253,69 @@
       </tags>
   </entry>
   <entry>
-    <title>符号与符号表</title>
-    <url>/%E7%AC%A6%E5%8F%B7%E4%B8%8E%E7%AC%A6%E5%8F%B7%E8%A1%A8/</url>
-    <content><![CDATA[<p>我们知道链接操作的第一步：</p>
-<p><strong>符号解析</strong></p>
+    <title>程序转换处理过程</title>
+    <url>/%E7%A8%8B%E5%BA%8F%E8%BD%AC%E6%8D%A2%E5%A4%84%E7%90%86%E8%BF%87%E7%A8%8B/</url>
+    <content><![CDATA[<p>一个由高级语言编写的程序，必须转换成二进制代码，才能在机器上运行。这种可以在机器上运行是二进制代码被称为<strong>可执行目标文件</strong>。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/sp20210723_083211_152.png" alt="源程序处理过程"></p>
+<p>上述过程可分为四步：</p>
 <ul>
-<li>程序中有定义和引用的符号</li>
-<li>编译器将定义的符号存放在一个符号表（symbol table）中</li>
-<li>编译器将符号引用存放在重定位节（.rel.text和.rel.data）中</li>
-<li>链接器将每个符号引用都与一个确定的符号定义建立关联</li>
+<li><strong>预处理</strong></li>
+<li><strong>编译</strong></li>
+<li><strong>汇编</strong></li>
+<li><strong>链接</strong></li>
 </ul>
-<h2 id="符号"><a href="#符号" class="headerlink" title="符号"></a>符号</h2><p><strong>符号就是其实程序中的变量名、函数名。</strong></p>
-<h3 id="符号定义与符号引用"><a href="#符号定义与符号引用" class="headerlink" title="符号定义与符号引用"></a>符号定义与符号引用</h3><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210724091642042.png" alt="image-20210724091642042" style="zoom: 33%;" />
+<h2 id="一、预处理"><a href="#一、预处理" class="headerlink" title="一、预处理"></a>一、预处理</h2><p>预处理过程主要<strong>处理源文件中以“#”开头的预编译指令</strong>，如：</p>
+<ul>
+<li>删除“#define”并展开所定义的宏。</li>
+<li>处理所有条件预编译指令，如“#if”,“#ifdef”, “#endif”等。</li>
+<li>插入头文件到“#include”处，可以递归方式进行处理。</li>
+<li>删除所有的注释“//”和“/* */”。</li>
+<li> 添加行号和文件名标识，以便编译时编译器产生调试用的行号信息。</li>
+<li>保留所有#pragma编译指令（编译器需要用）</li>
+</ul>
+<p>经过预处理后得到的是 <strong>.i 文件</strong>（预处理文件），该文件是一个可读的文本文件 ，但不包含任何宏定义。</p>
+<h3 id="预处理命令"><a href="#预处理命令" class="headerlink" title="预处理命令"></a>预处理命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc –E hello.c –o hello.i</span><br></pre></td></tr></table></figure>
 
-<h4 id="符号定义的本质"><a href="#符号定义的本质" class="headerlink" title="符号定义的本质"></a>符号定义的本质</h4><blockquote>
-<p>指被分配了存储空间。如果是函数名则指代码所在区；如果是变量名则指其所在的静态数据区。</p>
-</blockquote>
-<h3 id="链接符号的类型"><a href="#链接符号的类型" class="headerlink" title="链接符号的类型"></a>链接符号的类型</h3><p>每个可重定位目标模块都有一个符号表，它包含了定义和引用的符号。有三种链接器符号：</p>
-<ul>
-<li><p>Global symbols（<strong>全局符号</strong>）</p>
-<blockquote>
-<p>定义在本目标文件的全局符号，可以被其他目标文件引用。</p>
-</blockquote>
-</li>
-<li><p>External symbols（<strong>外部符号</strong>）</p>
-<blockquote>
-<p>在本目标文件中引用的全局变量，却没有定义在本目标文件。</p>
-</blockquote>
-</li>
-<li><p>Local symbols（<strong>局部符号</strong>）</p>
-<blockquote>
-<p>只在编译单元内部。</p>
-</blockquote>
-</li>
-</ul>
-<img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210724095744156.png" alt="image-20210724095744156" style="zoom:33%;" />
+<p>或者</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cpp hello.c &gt; hello.i</span><br></pre></td></tr></table></figure>
 
-<h2 id="目标文件中的符号表"><a href="#目标文件中的符号表" class="headerlink" title="目标文件中的符号表"></a>目标文件中的符号表</h2><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">   Elf32_Word st_name;	<span class="comment">/*符号对应宇符串在 strtab节中的偏移量*/</span></span><br><span class="line">	Elf32_Addr st_value; 	<span class="comment">/*在对应节中的偏移量,或虚拟地址*/</span></span><br><span class="line">	Elf32_Word st_size;		<span class="comment">/*符号对应目标字节数，函数大小或变量长度*/</span></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">char</span> st_info;<span class="comment">/*指出符号的类型(Type)和绑定属性(Bind)*/</span></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">char</span> st_other;</span><br><span class="line">	Elf32_Half st_shndx;	<span class="comment">/*符号对应目标所在的节,或其他倩况*/</span></span><br><span class="line">&#125; Elf32_Sym;</span><br></pre></td></tr></table></figure>
+<h2 id="二、编译"><a href="#二、编译" class="headerlink" title="二、编译"></a>二、编译</h2><p>编译过程就是将预处理后得到的预处理文件（如 hello.i）进行一系列分析，<strong>生成汇编代码文件</strong>的过程。用来进行编译处理的程序称为<strong>编译程序（编译器，Compiler）</strong></p>
+<p>编译包括以下过程：</p>
+<ul>
+<li>词法分析</li>
+<li>语法分析</li>
+<li>语义分析</li>
+<li>中间代码生成</li>
+<li>代码优化</li>
+</ul>
+<p>经过编译后，得到**.s文件**（汇编代码文件）还是可读的文本文件，CPU无法理解和执行它。</p>
+<h3 id="编译命令"><a href="#编译命令" class="headerlink" title="编译命令"></a>编译命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc -S hello.i -o hello.s</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210723165921745.png" alt="image-20210723165921745"></p>
-<h2 id="符号解析"><a href="#符号解析" class="headerlink" title="符号解析"></a>符号解析</h2><blockquote>
-<p>将每个模块中引用的符号与某个目标模块中的定义符号建立关联。</p>
-</blockquote>
-<p>每个定义符号在代码段或数据段中都被分配了存储空间，将引用符号与定义符号建立关联后，就可在重定位时将引用符号的地址重定位为相关联的定义符号的地址。</p>
-<p>本地符号在本模块内定义并引用，因此其解析较简单，只要与本模块內唯一的定义符号关联即可。</p>
-<p>全局符号(外部定义的、内部定义的)的解析涉及多个模块，故较复杂。</p>
-<h2 id="全局符号的强、弱"><a href="#全局符号的强、弱" class="headerlink" title="全局符号的强、弱"></a>全局符号的强、弱</h2><p>全局符号有强、弱的特性。</p>
-<ul>
-<li>强符号：函数名和已初始化的全局变量名。</li>
-<li>弱符号：未初始化的全局变量名。</li>
-</ul>
-<img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210724104209132.png" alt="image-20210724104209132" style="zoom:33%;" />
+<p>或</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc -S hello.c -o hello.s</span><br></pre></td></tr></table></figure>
 
-<h2 id="链接器对符号的解析规则"><a href="#链接器对符号的解析规则" class="headerlink" title="链接器对符号的解析规则"></a>链接器对符号的解析规则</h2><p>符号解析时，只能有一个确定的定义（即每个符号仅占一处存储空间）。如果碰到符号存在多重定义时，就得有相应的处理规则：</p>
-<ul>
-<li><p>Rule 1：强符号不能多次定义</p>
-<img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210724105327383.png" alt="image-20210724105327383" style="zoom: 33%;" /></li>
-<li><p>Rule 2：若一个符号被定义为一次强符号和多次弱符号，则按强符号定义为准。</p>
-<img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210724105451041.png" alt="image-20210724105451041" style="zoom: 25%;" /></li>
-<li><p>Rule 3：若有多个弱符号定义，则任选其中一个。</p>
-</li>
-</ul>
-<p>关于全局符号的多重定义的问题：</p>
-<ul>
-<li>尽量避免使用全局变量</li>
-<li>一定要使用的话，就按以下规则使用<ul>
-<li>尽量使用本地变量（static）</li>
-<li>全局变量要赋初值</li>
-<li>外部全局变量要使用extern</li>
-</ul>
-</li>
-</ul>
+<p>或</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">/user/lib/gcc/i486-linux-gnu/4.1/cc1 hello.c</span><br></pre></td></tr></table></figure>
+
+<h2 id="三、汇编"><a href="#三、汇编" class="headerlink" title="三、汇编"></a>三、汇编</h2><p>汇编是<strong>将汇编语言源程序转换为机器指令序列</strong>，每条汇编语句几乎都对应一条机器指令。汇编过程相比编译较为简单，没有复杂的语法，没有语义，也不需要指令优化，只需根据汇编指令和机器指令的对照表一一翻译即可。</p>
+<p>汇编结果是一个 <strong>.o 文件（可重定位目标文件）</strong>，其中包含的是不可读的二进制代码。</p>
+<h3 id="汇编命令"><a href="#汇编命令" class="headerlink" title="汇编命令"></a>汇编命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc –c hello.s –o hello.o</span><br></pre></td></tr></table></figure>
+
+<p>或</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">gcc –c hello.c –o hello.o</span><br></pre></td></tr></table></figure>
+
+<p>或（as是一个汇编程序）</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">as hello.s –o hello.o</span><br></pre></td></tr></table></figure>
+
+<h2 id="四、链接"><a href="#四、链接" class="headerlink" title="四、链接"></a>四、链接</h2><p>链接过程<strong>将多个可重定位目标文件合并以生成可执行目标文件</strong>。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/sp20210723_101021_361.png" alt="sp20210723_101021_361"></p>
+<h3 id="链接命令"><a href="#链接命令" class="headerlink" title="链接命令"></a>链接命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc –static –o myproc main.o swap.o</span><br></pre></td></tr></table></figure>
+
+<p>或</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ld –static –o myproc main.o swap.o</span><br></pre></td></tr></table></figure>
+
+<p>其中，static 表示静态链接，如果不指定 -o 选项，则可执行文件名 为“a.out”。</p>
+<p><strong>a.out 就是最终的可执行文件。</strong></p>
 ]]></content>
       <categories>
         <category>链接、装载与库</category>
