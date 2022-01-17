@@ -1,220 +1,1046 @@
 <?xml version="1.0" encoding="utf-8"?>
-<search> 
-  
-  
-    
-    <entry>
-      <title>处理器性能公式</title>
-      <link href="/%E5%A4%84%E7%90%86%E5%99%A8%E6%80%A7%E8%83%BD%E5%85%AC%E5%BC%8F/"/>
-      <url>/%E5%A4%84%E7%90%86%E5%99%A8%E6%80%A7%E8%83%BD%E5%85%AC%E5%BC%8F/</url>
-      
-        <content type="html"><![CDATA[<h3 id="CPU性能及其度量因素"><a href="#CPU性能及其度量因素" class="headerlink" title="CPU性能及其度量因素"></a>CPU性能及其度量因素</h3><p>CPU性能度量的基本指标是<strong>CPU执行时间</strong>。而几乎所有发的计算机都有一个以固定频率运行的时钟，称为<strong>时钟周期</strong>，或脉冲周期等。所以，我们可以利用时钟周期来表示CPU时间：<br>$$<br>程序CPU执行时间 = 程序CPU时钟周期数 × 时钟周期长度<br>$$<br>其中，时钟周期长度与时钟频率互为倒数，所以该公式也可表示为：<br>$$<br>程序CPU执行时间 =  \frac {程序CPU时钟周期数}{时钟频率}<br>$$</p><h3 id="指令性能"><a href="#指令性能" class="headerlink" title="指令性能"></a>指令性能</h3><p>除了时钟周期外，我们还需注意<strong>指令数</strong>，因为计算机必须通过执行指令来运行程序。<br>$$<br>CPU时钟周期 = 程序指令数 × 指令平均时钟周期数<br>$$</p><blockquote><p><strong>指令平均时钟周期数（CPI）</strong>：表示执行某个程序或者程序片段时每条指令所需的时钟周期平均数。</p></blockquote><h3 id="经典的CPU性能公式"><a href="#经典的CPU性能公式" class="headerlink" title="经典的CPU性能公式"></a>经典的CPU性能公式</h3><p>结合公式（1）、（2）、（3），我们可以得出<strong>经典的CPU性能公式</strong>：<br>$$<br>CPU时间 = 指令数 × CPI × 时钟周期长度<br>$$<br>或<br>$$<br>CPU时间 = \frac{指令数 × CPI}{时钟频率}<br>$$</p><h3 id="影响处理器性能的因素"><a href="#影响处理器性能的因素" class="headerlink" title="影响处理器性能的因素"></a>影响处理器性能的因素</h3><p>从该公式可以看出，<strong>处理器性能取决于三个特性：时钟周期、CPI、指令数</strong>。</p><ul><li>时钟周期：硬件技术与组成</li><li>CPI：组成与指令集体系结构</li><li>指令数：指令集体系结构与编译器技术</li></ul><h4 id="如何测量这些因素"><a href="#如何测量这些因素" class="headerlink" title="如何测量这些因素"></a>如何测量这些因素</h4><p>首先，通过运行程序来测量CPU时间，并且计算机说明书上通常介绍了时钟周期长度。</p><p>难以测量的时指令数与 CPI。</p><p>可以使用体系结构仿真器预先执行程序来测量执行的指令数，或者用大多数处理器中的硬件计数器来测量执行的指令数、平均CPI和性能损失。</p><p>但是，CPI 与计算机的各种设计细节密切相关（如存储系统、处理器结构、应用程序中不同类型的指令所占的比例），对于不同的应用程序它是不同的。</p><h3 id="Amdal定律"><a href="#Amdal定律" class="headerlink" title="Amdal定律"></a>Amdal定律</h3><p>Amdal定律阐述了<strong>对于特定改进的性能提升可能由所使用的改进特征的数量所限制</strong>。也就是说，当提升系统的某部分性能时，对整个系统性能的影响取决于:</p><ol><li>这一部分有多重要(ɑ)</li><li>这一部分性能提升了多少(k)</li></ol><p>$$<br>加速比S = \frac{1}{(1-ɑ)+\frac{ɑ}{k}}<br>$$</p><blockquote><p>ɑ 是升级模块占比，k 是该部分性能提升比例</p></blockquote>]]></content>
-      
-      
+<search>
+  <entry>
+    <title>UART</title>
+    <url>/UART/</url>
+    <content><![CDATA[<p>转载总结自<a href="https://www.analog.com/cn/analog-dialogue/articles/uart-a-hardware-communication-protocol.html#">UART：了解通用异步接收器/发送器的硬件通信协议</a></p>
+<p>“沟通最大的问题在于，人们想当然地认为已经沟通了。”  ——乔治·萧伯纳</p>
+<h2 id="一、UART特点"><a href="#一、UART特点" class="headerlink" title="一、UART特点"></a>一、UART特点</h2><ul>
+<li><p><strong>串行</strong></p>
+<p>串行是按位来进行传递，即一位一位的发送和接受。</p>
+</li>
+<li><p><strong>异步</strong></p>
+<p>异步数据传输过程中，不需要时钟线，直接接发数据，但需要约定通讯协议格式</p>
+</li>
+<li><p><strong>全双工</strong></p>
+<p>指可以同时进行收发两方向的数据传递。</p>
+</li>
+</ul>
+<h2 id="二、接口"><a href="#二、接口" class="headerlink" title="二、接口"></a>二、接口</h2><p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/335962-fig-01.svg" alt="Figure 1. Two UARTs directly communicate with each other.">  </p>
+<p>上图是<strong>两个UART彼此直接通信</strong>，其中：</p>
+<ul>
+<li>发送器（TX）</li>
+<li>接收器（RX）</li>
+</ul>
+<p>TX、RX两个信号主要作用是用于串行通信的串行数据的发送和接收。</p>
+<p><img src="https://www.analog.com/-/media/images/analog-dialogue/en/volume-54/number-4/articles/uart-a-hardware-communication-protocol/335962-fig-02.svg?w=900">   </p>
+<p>如上图<strong>带数据总线的UART</strong>，发送UART连接到以并行形式发送数据的控制数据总线。然后，数据将在传输线路（导线）上一位一位地串行传输到接收UART。反过来，对于接收设备，串行数据会被转换为并行数据。</p>
+<h2 id="三、数据传输"><a href="#三、数据传输" class="headerlink" title="三、数据传输"></a>三、数据传输</h2><h3 id="3-1-数据包形式"><a href="#3-1-数据包形式" class="headerlink" title="3.1 数据包形式"></a>3.1 数据包形式</h3><p>UART中，传输模式为数据包形式。数据包由<strong>起始位</strong>、<strong>数据帧</strong>、<strong>奇偶校验位</strong>和<strong>停止位</strong>组成。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/335962-fig-03.svg" alt="Figure 3. UART packet.">  </p>
+<ul>
+<li><p><strong>起始位</strong></p>
+<p>当不传输数据时，UART数据传输线通常保持高电压电平”1“。若要开始数据传输，发送UART会将传输线从高电平拉到<strong>低电平</strong>并保持1个时钟周期。当接收UART检测到高到低电压跃迁时，便开始以波特率对应的频率读取数据帧中的位。</p>
+</li>
+<li><p><strong>数据帧</strong></p>
+<p>数据帧包含所传输的实际数据。如果使用奇偶校验位，数据帧长度可以是5位到8位。如果不使用奇偶校验位，数据帧长度可以是9位。</p>
+</li>
+<li><p><strong>奇偶校验码</strong></p>
+</li>
+<li><p><strong>停止位</strong></p>
+<p>数据结束标志。发送UART将数据传输线保持<strong>高电平</strong>1到2位时间。</p>
+</li>
+</ul>
+<h3 id="3-2-UART传输步骤"><a href="#3-2-UART传输步骤" class="headerlink" title="3.2 UART传输步骤"></a>3.2 UART传输步骤</h3><ol>
+<li><p>发送UART从数据总线并行接收数据。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/335962-fig-08.svg" alt="Figure 8. Data bus to the transmitting UART.">  </p>
+</li>
+<li><p>发送UART将起始位、奇偶校验位和停止位添加到数据帧。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/335962-fig-09.svg" alt="Figure 9. UART data frame at the Tx side."></p>
+</li>
+<li><p>从起始位到结束位，整个数据包以串行方式从发送UART送至接收UART。接收UART以预配置的波特率对数据线进行采样。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/335962-fig-10.svg" alt="Figure 10. UART transmission.">  </p>
+</li>
+<li><p>接收UART丢弃数据帧中的起始位、奇偶校验位和停止位。  <img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/335962-fig-11.svg" alt="Figure 11. The UART data frame at the Rx side.">  </p>
+</li>
+<li><p>接收UART将串行数据转换回并行数据，并将其传输到接收端的数据总线。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/335962-fig-12.svg" alt="Figure 12. Receiving UART to data bus.">  !</p>
+</li>
+</ol>
+<h2 id="UART工作原理"><a href="#UART工作原理" class="headerlink" title="UART工作原理"></a>UART工作原理</h2><p>使用任何硬件通信协议时，首先必须检查数据手册和硬件参考手册。以下是要遵循的步骤：</p>
+<ol>
+<li><p>检查设备的数据手册接口。</p>
+</li>
+<li><p>在存储器映射下面检查UART地址。</p>
+<p><img src="https://www.analog.com/-/media/images/analog-dialogue/en/volume-54/number-4/articles/uart-a-hardware-communication-protocol/335962-fig-15.jpg?w=900" alt="微控制器存储器映射"></p>
+</li>
+<li><p>检查UART端口的具体信息，例如工作模式、数据位长度、奇偶校验位和停止位。</p>
+</li>
+<li><p>检查UART操作的详细信息，包括波特率计算。波特率通过以下示例公式进行配置。</p>
+</li>
+<li><p>对于波特率，务必检查要使用的外设时钟(PCLK)。此示例有26 MHz PCLK和16 MHz PCLK可用。</p>
+</li>
+<li><p>检查UART配置的详细寄存器。了解计算波特率时的参数.</p>
+</li>
+<li><p>检查每个寄存器下的详细信息，代入值以计算波特率，然后开始实现UART。</p>
+</li>
+</ol>
+]]></content>
       <categories>
-          
-          <category> 计算机体系结构 </category>
-          
+        <category>计算机体系结构</category>
       </categories>
-      
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>符号与符号表</title>
-      <link href="/%E7%AC%A6%E5%8F%B7%E4%B8%8E%E7%AC%A6%E5%8F%B7%E8%A1%A8/"/>
-      <url>/%E7%AC%A6%E5%8F%B7%E4%B8%8E%E7%AC%A6%E5%8F%B7%E8%A1%A8/</url>
-      
-        <content type="html"><![CDATA[<p>我们知道链接操作的第一步：</p><p><strong>符号解析</strong></p><ul><li>程序中有定义和引用的符号</li><li>编译器将定义的符号存放在一个符号表（symbol table）中</li><li>编译器将符号引用存放在重定位节（.rel.text和.rel.data）中</li><li>链接器将每个符号引用都与一个确定的符号定义建立关联</li></ul><h2 id="符号"><a href="#符号" class="headerlink" title="符号"></a>符号</h2><p><strong>符号就是其实程序中的变量名、函数名。</strong></p><h3 id="符号定义与符号引用"><a href="#符号定义与符号引用" class="headerlink" title="符号定义与符号引用"></a>符号定义与符号引用</h3><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210724091642042.png" alt="image-20210724091642042" style="zoom: 33%;" /><h4 id="符号定义的本质"><a href="#符号定义的本质" class="headerlink" title="符号定义的本质"></a>符号定义的本质</h4><blockquote><p>指被分配了存储空间。如果是函数名则指代码所在区；如果是变量名则指其所在的静态数据区。</p></blockquote><h3 id="链接符号的类型"><a href="#链接符号的类型" class="headerlink" title="链接符号的类型"></a>链接符号的类型</h3><p>每个可重定位目标模块都有一个符号表，它包含了定义和引用的符号。有三种链接器符号：</p><ul><li><p>Global symbols（<strong>全局符号</strong>）</p><blockquote><p>定义在本目标文件的全局符号，可以被其他目标文件引用。</p></blockquote></li><li><p>External symbols（<strong>外部符号</strong>）</p><blockquote><p>在本目标文件中引用的全局变量，却没有定义在本目标文件。</p></blockquote></li><li><p>Local symbols（<strong>局部符号</strong>）</p><blockquote><p>只在编译单元内部。</p></blockquote></li></ul><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210724095744156.png" alt="image-20210724095744156" style="zoom:33%;" /><h2 id="目标文件中的符号表"><a href="#目标文件中的符号表" class="headerlink" title="目标文件中的符号表"></a>目标文件中的符号表</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">   Elf32_Word st_name;<span class="comment">/*符号对应宇符串在 strtab节中的偏移量*/</span></span><br><span class="line">Elf32_Addr st_value; <span class="comment">/*在对应节中的偏移量,或虚拟地址*/</span></span><br><span class="line">Elf32_Word st_size;<span class="comment">/*符号对应目标字节数，函数大小或变量长度*/</span></span><br><span class="line"><span class="keyword">unsigned</span> <span class="keyword">char</span> st_info;<span class="comment">/*指出符号的类型(Type)和绑定属性(Bind)*/</span></span><br><span class="line"><span class="keyword">unsigned</span> <span class="keyword">char</span> st_other;</span><br><span class="line">Elf32_Half st_shndx;<span class="comment">/*符号对应目标所在的节,或其他倩况*/</span></span><br><span class="line">&#125; Elf32_Sym;</span><br></pre></td></tr></table></figure><p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210723165921745.png" alt="image-20210723165921745"></p><h2 id="符号解析"><a href="#符号解析" class="headerlink" title="符号解析"></a>符号解析</h2><blockquote><p>将每个模块中引用的符号与某个目标模块中的定义符号建立关联。</p></blockquote><p>每个定义符号在代码段或数据段中都被分配了存储空间，将引用符号与定义符号建立关联后，就可在重定位时将引用符号的地址重定位为相关联的定义符号的地址。</p><p>本地符号在本模块内定义并引用，因此其解析较简单，只要与本模块內唯一的定义符号关联即可。</p><p>全局符号(外部定义的、内部定义的)的解析涉及多个模块，故较复杂。</p><h2 id="全局符号的强、弱"><a href="#全局符号的强、弱" class="headerlink" title="全局符号的强、弱"></a>全局符号的强、弱</h2><p>全局符号有强、弱的特性。</p><ul><li>强符号：函数名和已初始化的全局变量名。</li><li>弱符号：未初始化的全局变量名。</li></ul><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210724104209132.png" alt="image-20210724104209132" style="zoom:33%;" /><h2 id="链接器对符号的解析规则"><a href="#链接器对符号的解析规则" class="headerlink" title="链接器对符号的解析规则"></a>链接器对符号的解析规则</h2><p>符号解析时，只能有一个确定的定义（即每个符号仅占一处存储空间）。如果碰到符号存在多重定义时，就得有相应的处理规则：</p><ul><li><p>Rule 1：强符号不能多次定义</p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210724105327383.png" alt="image-20210724105327383" style="zoom: 33%;" /></li><li><p>Rule 2：若一个符号被定义为一次强符号和多次弱符号，则按强符号定义为准。</p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210724105451041.png" alt="image-20210724105451041" style="zoom: 25%;" /></li><li><p>Rule 3：若有多个弱符号定义，则任选其中一个。</p></li></ul><p>关于全局符号的多重定义的问题：</p><ul><li>尽量避免使用全局变量</li><li>一定要使用的话，就按以下规则使用<ul><li>尽量使用本地变量（static）</li><li>全局变量要赋初值</li><li>外部全局变量要使用extern</li></ul></li></ul>]]></content>
-      
-      
+      <tags>
+        <tag>通信协议</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>ELF文件</title>
+    <url>/ELF%E6%96%87%E4%BB%B6/</url>
+    <content><![CDATA[<p>ELF文件格式是一个开放标准，各种UNIX系统的可执行文件都采用ELF格式，它有三种不同的类型：</p>
+<ul>
+<li>可重定位的目标文件（.o）</li>
+<li>可执行文件（.out）</li>
+<li>共享库（.so）</li>
+</ul>
+<p>在详细讲述 ELF 文件之前，我们先了解<strong>链接</strong>。</p>
+<h2 id="一、链接"><a href="#一、链接" class="headerlink" title="一、链接"></a>一、链接</h2><h3 id="1-1-链接的本质"><a href="#1-1-链接的本质" class="headerlink" title="1.1 链接的本质"></a>1.1 链接的本质</h3><p>链接的本质就是<strong>合并相同的“节”</strong>。如下图所示，相同的“节”被合并在一起从而形成可执行目标文件：</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/sp20210723_115137_721.png" alt="sp20210723_115137_721"></p>
+<h3 id="1-2-链接的步骤"><a href="#1-2-链接的步骤" class="headerlink" title="1.2 链接的步骤"></a>1.2 链接的步骤</h3><ul>
+<li>符号解析<ol>
+<li>确定符号引用关系</li>
+</ol>
+</li>
+<li>重定位<ol start="2">
+<li>合并相关的 .o 文件</li>
+<li>确定每个符号的地址</li>
+<li>在指令中填入新地址</li>
+</ol>
+</li>
+</ul>
+<h2 id="二、ELF文件格式"><a href="#二、ELF文件格式" class="headerlink" title="二、ELF文件格式"></a>二、ELF文件格式</h2><h3 id="2-1-ELF两种视图"><a href="#2-1-ELF两种视图" class="headerlink" title="2.1 ELF两种视图"></a>2.1 ELF两种视图</h3><ul>
+<li>链接视图（被链接）：可重定位目标文件</li>
+<li>执行视图（被执行）：可执行目标文件</li>
+</ul>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/sp20210723_123433_495.png" alt="sp20210723_123433_495"></p>
+<h4 id="2-2-1-可重定位目标文件格式"><a href="#2-2-1-可重定位目标文件格式" class="headerlink" title="2.2.1 可重定位目标文件格式"></a>2.2.1 可重定位目标文件格式</h4><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210723124052947.png" alt="image-20210723124052947" style="zoom: 33%;" />
+
+<ul>
+<li><p><strong>ELF 头</strong></p>
+<p>描述了体系结构和操作系统等基本信息，并指出Section Header Table在文件中的什么位置。包括 16 字节标识信息、文件类型、机器类型、节头表的偏移、节头表的表项大小以及表项个数。</p>
+</li>
+<li><p><strong>.txt</strong> </p>
+<p>编译后的代码部分</p>
+</li>
+<li><p><strong>.rodata</strong></p>
+<p>只读数据，如 printf 格式串、switch 跳转表等。</p>
+</li>
+<li><p><strong>.data</strong></p>
+<p>已初始化的全局变量</p>
+</li>
+<li><p><strong>.bss</strong></p>
+<p>未初始化全局变量，仅是占位符，不占据任何实际磁盘空间。区别初始化和非初始化是为了空间效率。</p>
+</li>
+<li><p><strong>.symtab</strong></p>
+<p>存放函数和全局变量（符号表）信息，它不包括局部变量。</p>
+</li>
+<li><p><strong>.rel.txt</strong></p>
+<p>.txt 节的重定位信息，用于重新修改代码段的指令中的地址信息。</p>
+</li>
+<li><p><strong>.rel.data</strong></p>
+<p>.data 节的重定位信息，用于对被模块使用或定义的全局变量进行重定位的信息。</p>
+</li>
+<li><p><strong>.debug</strong></p>
+<p>调试用符号表</p>
+</li>
+<li><p><strong>.strtab</strong></p>
+<p>包含 symtab 和 debug 节中符号及节名</p>
+</li>
+<li><p><strong>Section header table</strong></p>
+<p>每个节的节名、偏移和大小。</p>
+</li>
+</ul>
+<p>例如，求一组数的最大值的汇编程序如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#PURPOSE: This program finds the maximum number of a</span><br><span class="line">#	  set of data items.</span><br><span class="line">#</span><br><span class="line">#VARIABLES: The registers have the following uses:</span><br><span class="line">#</span><br><span class="line"># %edi - Holds the index of the data item being examined</span><br><span class="line"># %ebx - Largest data item found</span><br><span class="line"># %eax - Current data item</span><br><span class="line">#</span><br><span class="line"># The following memory locations are used:</span><br><span class="line">#</span><br><span class="line"># data_items - contains the item data. A 0 is used</span><br><span class="line"># to terminate the data</span><br><span class="line">#</span><br><span class="line"> .section .data</span><br><span class="line">data_items: 		#These are the data items</span><br><span class="line"> .long 3,67,34,222,45,75,54,34,44,33,22,11,66,0</span><br><span class="line"></span><br><span class="line"> .section .text</span><br><span class="line"> .globl _start</span><br><span class="line">_start:</span><br><span class="line"> movl $0, %edi  	# move 0 into the index register</span><br><span class="line"> movl data_items(,%edi,4), %eax # load the first byte of data</span><br><span class="line"> movl %eax, %ebx 	# since this is the first item, %eax is</span><br><span class="line">			# the biggest</span><br><span class="line"></span><br><span class="line">start_loop: 		# start loop</span><br><span class="line"> cmpl $0, %eax  	# check to see if we&#x27;ve hit the end</span><br><span class="line"> je loop_exit</span><br><span class="line"> incl %edi 		# load next value</span><br><span class="line"> movl data_items(,%edi,4), %eax</span><br><span class="line"> cmpl %ebx, %eax 	# compare values</span><br><span class="line"> jle start_loop 	# jump to loop beginning if the new</span><br><span class="line"> 			# one isn&#x27;t bigger</span><br><span class="line"> movl %eax, %ebx 	# move the value as the largest</span><br><span class="line"> jmp start_loop 	# jump to loop beginning</span><br><span class="line"></span><br><span class="line">loop_exit:</span><br><span class="line"> # %ebx is the status code for the _exit system call</span><br><span class="line"> # and it already has the maximum number</span><br><span class="line"> movl $1, %eax  	#1 is the _exit() syscall</span><br><span class="line"> int $0x80</span><br></pre></td></tr></table></figure>
+
+<p>使用汇编器将其转换成可重定位目标文件：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">as max.s -o max.o</span><br></pre></td></tr></table></figure>
+
+<p>使用 readelf 命令可查看 ELF 信息，-a 标识 all，-h 查看 ELF 头，-S 查看节头表：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">readelf -a max.o </span><br></pre></td></tr></table></figure>
+
+<p><strong>ELF头信息</strong>如下：</p>
+<img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210723163458548.png" alt="image-20210723163458548" style="zoom:50%;" />
+
+<p>ELF Header中描述了操作系统是 UNIX，体系结构是 X86-64。Section Header Table中有 8 个Section  Header，从文件地址504（0x1f8）开始，每个Section  Header占 64 字节，共 512 字节，到文件地址 0x3f7 结束。这个目标文件没有Program Header。</p>
+<p><strong>Section Headers 节信息</strong>如下：</p>
+<img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210723164418299.png" alt="image-20210723164418299" style="zoom:50%;" />
+
+<p>从节头表信息可以得到<strong>目标文件的布局</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>起始文件地址</th>
+<th>Section或Header</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>ELF Header</td>
+</tr>
+<tr>
+<td>0x40</td>
+<td><code>.text</code></td>
+</tr>
+<tr>
+<td>0x6d</td>
+<td><code>.data</code></td>
+</tr>
+<tr>
+<td>0xa5</td>
+<td><code>.bss</code>（此段为空）</td>
+</tr>
+<tr>
+<td>0x1c0</td>
+<td><code>.shstrtab</code></td>
+</tr>
+<tr>
+<td>0x1f8</td>
+<td>Section Header Table</td>
+</tr>
+<tr>
+<td>0xa8</td>
+<td><code>.symtab</code></td>
+</tr>
+<tr>
+<td>0x168</td>
+<td><code>.strtab</code></td>
+</tr>
+<tr>
+<td>0x190</td>
+<td><code>.rel.text</code></td>
+</tr>
+</tbody></table>
+<p><code>readelf</code>命令输出的最后一部分：</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210723165921745.png" alt="image-20210723165921745"></p>
+<p><strong>.rel.text</strong>告诉链接器指令中的哪些地方需要做重定位</p>
+<p><strong>.symtab</strong>是符号表。<code>Ndx</code>列是每个符号所在的Section编号，例如符号<code>data_items</code>在第3个Section里（也就是<code>.data</code>段），各Section的编号见Section Header Table。<code>Value</code>列是每个符号所代表的地址，在目标文件中，符号地址都是相对于该符号所在Section的相对地址，比如<code>data_items</code>位于<code>.data</code>段的开头，所以地址是0，<code>_start</code>位于<code>.text</code>段的开头，所以地址也是0，但是<code>start_loop</code>和<code>loop_exit</code>相对于<code>.text</code>段的地址就不是0了。从<code>Bind</code>这一列可以看出<code>_start</code>这个符号是<code>GLOBAL</code>的，而其它符号是<code>LOCAL</code>的，<code>GLOBAL</code>符号是在汇编程序中用<code>.globl</code>指示声明过的符号。</p>
+<p>最后是 <strong>.text段</strong>，使用<code>objdump</code>工具可以把程序中的机器指令反汇编（Disassemble）：</p>
+<img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210723171103315.png" alt="image-20210723171103315" style="zoom: 50%;" />
+
+<p>可以看出，所有的符号都被替换成地址了，比如<code>je 26</code>，26 正是 <code>.symtab</code>中 loop_exit 的 Value 值，注意没有加<code>$</code>的数表示内存地址，而不表示立即数。</p>
+<h4 id="2-2-2-可执行目标文件格式"><a href="#2-2-2-可执行目标文件格式" class="headerlink" title="2.2.2 可执行目标文件格式"></a>2.2.2 可执行目标文件格式</h4><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210723171951012.png" alt="image-20210723171951012" style="zoom: 33%;" />
+
+<p><strong>与可重定位目标文件不同之处在于：</strong></p>
+<ul>
+<li>ELF 头中字段 Entry point address 给出了执行程序的第一条指令的地址，而在可重定位目标文件，此字段为 0.</li>
+<li>多了程序头表，保存了所有Segment的描述信息</li>
+<li>多了一个 .init 节，用于定义 _init 函数，该函数用于进行可执行目标文件开始执行时的初始化工作。</li>
+<li>少了两个 .rel 节（无需重定位）</li>
+</ul>
+<p>按上一节的步骤分析可执行文件<strong>max</strong>，看看链接器都做了什么改动。</p>
+<img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210723172433333.png" alt="image-20210723172433333" style="zoom:50%;" />
+
+<p>在ELF Header中，<code>Type</code>改成了<code>EXEC</code>，由目标文件变成可执行文件了，<code>Entry point address</code>改成了 0x401000（这是<code>_start</code>符号的地址），还可以看出，多了 3 个 Program Header，少了 2 个Section Header。</p>
+<img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210723174200653.png" alt="image-20210723174200653" style="zoom:50%;" />
+
+<p>在Section Header Table中，<code>.text</code>和<code>.data</code>段的加载地址分别改成了0x401000和0x402000。<code>.bss</code>段没有用到，所以被删掉了。<code>.rel.text</code>段就是用于链接过程的，做完链接就没用了，所以也删掉了。</p>
+<img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210723174637002.png" alt="image-20210723174637002" style="zoom:50%;" />
+
+<p>多出来的Program Header Table描述了三个Segment的信息。前面的ELF Header、Program Header Table一起组成一个Segment（<code>FileSiz</code>指出总长度是0xe8），<code>.text</code>段组成一个Segment（总长度是0x2d），<code>.data</code>段组成另一个Segment（总长度是0x38）。</p>
+<p><code>VirtAddr</code>列指出第一个Segment加载到虚拟地址0x400000（注意在x86平台上后面的<code>PhysAddr</code>列是没有意义的，并不代表实际的物理地址），第二个Segment加载到地址0x401000。</p>
+<p><code>Flg</code>列指出第一个Segment的访问权限是可读，第二个Segment的访问权限是可读可执行，第三个Segment的访问权限是可读可写。</p>
+<p>最后一列<code>Align</code>的值0x1000（4K）是x86平台的内存页面大小。在加载时文件也要按内存页面大小分成若干页，文件中的一页对应内存中的一页，对应关系类似于下图所示。</p>
+<p><img src="https://docs.huihoo.com/c/linux-c-programming/images/asm.load.png" alt="文件和加载地址的对应关系"></p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210723181214100.png" alt="image-20210723181214100"></p>
+<p>原来目标文件符号表中的<code>Value</code>都是相对地址，现在都改成绝对地址了。此外还多了三个符号<code>__bss_start</code>、<code>_edata</code>和<code>_end</code>，这些符号在链接脚本中定义，被链接器添加到可执行文件中。</p>
+<p>再看一下反汇编的结果</p>
+<img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210723181119232.png" alt="image-20210723181119232" style="zoom: 50%;" />
+
+<p>指令中的相对地址都改成绝对地址了，跳转指令后的地址都变成了绝对地址。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210723182358675.png" alt="image-20210723182358675"></p>
+]]></content>
       <categories>
-          
-          <category> 链接、装载与库 </category>
-          
+        <category>链接、装载与库</category>
       </categories>
-      
-      
-        <tags>
-            
-            <tag> 程序员的自我修养 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>物理内存管理：连续内存分配</title>
-      <link href="/%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%EF%BC%9A%E8%BF%9E%E7%BB%AD%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D/"/>
-      <url>/%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%EF%BC%9A%E8%BF%9E%E7%BB%AD%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D/</url>
-      
-        <content type="html"><![CDATA[<h2 id="固定分区分配"><a href="#固定分区分配" class="headerlink" title="固定分区分配"></a>固定分区分配</h2><p>固定分区分配时最简单的一种可运行多道程序的储存管理方式。用户空间被划分为若干个固定的大小区域，每个分区只装入一道作业，这样一来，可以几道作业并发运行。当一有空闲时，可以从外存的后备作业队列中选择一个适当大小的作业装入该分区，由此往复运行作业。</p><p><strong>缺陷</strong>：固定分区限制了活动进程的数目，每次都只能相应地进行作业，进程对于空闲分区的大小要求比较高，使得作业不灵活，降低了内存的空间利用率。</p><h2 id="动态分区分配"><a href="#动态分区分配" class="headerlink" title="动态分区分配"></a>动态分区分配</h2><h3 id="分配算法"><a href="#分配算法" class="headerlink" title="分配算法"></a>分配算法</h3><ol><li><p><strong>最先匹配</strong></p><ul><li><p>原理&amp;实现</p><ul><li>空闲分区列表按地址顺序排序</li><li>分配过程时,搜索第一个合适的分区</li><li>释放分区时,检查是否可与临近的空闲分区合并</li></ul></li><li><p>优点</p><ul><li><p>简单</p></li><li><p>在高地址空间有大块的空闲分区</p></li></ul></li><li><p>缺点</p><ul><li>外部碎片</li><li>分配大块时较慢</li></ul></li></ul></li><li><p><strong>最优适配</strong></p><ul><li><p>原理&amp;实现</p><ul><li>空闲分区列表按照大小排序</li><li>分配时,查找一个合适的分区</li><li>释放时,查找并且合并临近的空闲分区(如果找到)</li></ul></li><li><p>优点</p><ul><li>大部分分配的尺可寸较小时,效果很好</li><li>可避免大的空闲分区被拆分</li><li>可减小外部碎片的大小</li><li>相对简单</li></ul></li><li><p>缺点</p><ul><li>外部碎片</li><li>释放分区较慢</li><li>容易产生很多无用的小碎片</li></ul></li></ul></li><li><p><strong>最差适配</strong></p><ul><li><p>原理&amp;实现</p><ul><li>空闲分区列表按由大到小排序</li><li>分配时，选最大的分区</li><li>释放时，检查是否可与临近的空闲分区合并,进行可能的合并，并调整空闲分区列表顺序</li></ul></li><li><p>优点</p><ul><li>中等大小的分配较多时,效果最好</li><li>避免出现太多的小碎片</li></ul></li><li><p>缺点</p><ul><li>释放分区较慢</li><li>外部碎片</li><li>容易破坏大的空闲分区,因此后续难以分配大的分区</li></ul></li></ul><p><img src="https://img-blog.csdn.net/20180922084231119?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM1NjQyMDM2/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="img"></p></li></ol><p><img src="https://img-blog.csdn.net/20180922084231364?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM1NjQyMDM2/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="img"></p><p><img src="https://img-blog.csdn.net/20180922084231367?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM1NjQyMDM2/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="img"></p><h3 id="碎片管理"><a href="#碎片管理" class="headerlink" title="碎片管理"></a>碎片管理</h3><ul><li><p>紧凑</p><ul><li>调整进程占用的分区位置来减少或避免分区碎片。</li><li>通过移动分配给进程的内存分区，以合并外部碎片</li><li><strong>碎片紧凑的条件</strong>：所有的应用程序可动态重定位</li></ul></li><li><p>分区对换</p><p>将等待状态的进程放到外存里，释放内存空间。</p></li></ul><p><strong>缺陷</strong>：动态分区算法复杂，回收空间是要进行分区合并，对于系统的开销较大。</p><h2 id="伙伴系统"><a href="#伙伴系统" class="headerlink" title="伙伴系统"></a>伙伴系统</h2><h3 id="分配算法-1"><a href="#分配算法-1" class="headerlink" title="分配算法"></a>分配算法</h3><p>物理内存管理中把页按照2的幂次方大小划分并分组。每次分配内存时，从适当大小的组中分配页面，把余下的另一半内存重新划分并分组。</p><p>伙伴系统既能在系统的运行过程中不断地划分空闲分区，并根据分区的大小进行分类，然后相同的空闲分区单独设立一个空闲分区双向链表，同时也能在进程需要系统为其分配一个存储空间时，通过计算并找到合适的空闲分区分配给进程。</p><p>会产生外碎片，会产生内碎片</p><p>伙伴系统折中了内存分配和碎片管理的问题。</p>]]></content>
-      
-      
+      <tags>
+        <tag>程序员的自我修养</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Linux命令参数</title>
+    <url>/Linux%E5%91%BD%E4%BB%A4%E5%8F%82%E6%95%B0/</url>
+    <content><![CDATA[<h1 id="命令选项，从-a-到-z"><a href="#命令选项，从-a-到-z" class="headerlink" title="命令选项，从 a 到 z"></a>命令选项，从 a 到 z</h1><p>Linux 命令的选项繁复庞杂，让人眼花缭乱。不过这些选项往往具有相对固定的涵义，熟悉了它们，记忆便不再困难</p>
+<p><strong>-a</strong></p>
+<p>all : 全部，所有 (ls , lsattr , uname)</p>
+<p>archive : 存档 (cp , rsync)</p>
+<p>append : 附加 (tar -A , 7z)</p>
+<p><strong>-b</strong></p>
+<p>blocksize : 块大小，带参数 (du , df)</p>
+<p>batch : 批处理模式 (交互模式的程序通常拥有此选项，如 top -b)</p>
+<p><strong>-c</strong></p>
+<p>commands : 执行命令，带参数 (bash , ksh , python)</p>
+<p>create : 创建 (tar)</p>
+<p><strong>-d</strong></p>
+<p>debug : 调试</p>
+<p>delete : 删除</p>
+<p>directory : 目录 (ls)</p>
+<p><strong>-e</strong></p>
+<p>execute : 执行，带参数 (xterm , perl)</p>
+<p>edit : 编辑</p>
+<p>exclude : 排除</p>
+<p><strong>-f</strong></p>
+<p>force : 强制，不经确认(cp , rm ,mv)</p>
+<p>file : 文件，带参数 (tar)</p>
+<p>configuration file : 指定配置文件(有些守护进程拥有此选项，如 ssh , lighttpd)</p>
+<p><strong>-g</strong></p>
+<p><strong>-h</strong></p>
+<p>–help : 帮助</p>
+<p>human readable : 人性化显示(ls , du , df)</p>
+<p>headers : 头部</p>
+<p><strong>-i</strong></p>
+<p>interactive : 交互模式，提示(rm , mv)</p>
+<p>include : 包含</p>
+<p><strong>-k</strong></p>
+<p>keep : 保留</p>
+<p>kill</p>
+<p><strong>-l</strong></p>
+<p>long listing format : 长格式(ls)</p>
+<p>list : 列表</p>
+<p>load : 读取 (gcc , emacs)</p>
+<p><strong>-m</strong></p>
+<p>message : 消息 (cvs)</p>
+<p>manual : 手册 (whereis)</p>
+<p>create home : 创建 home 目录 (usermod , useradd)</p>
+<p><strong>-n</strong></p>
+<p>number : 行号、编号 (cat , head , tail , pstree , lspci)</p>
+<p>no : (useradd , make)</p>
+<p><strong>-o</strong></p>
+<p>output : 输出 (cc , sort)</p>
+<p>options : 选项 (mount)</p>
+<p><strong>-p</strong></p>
+<p>port : 端口，带参数 (很多网络工具拥有此选项，如 ssh , lftp )</p>
+<p>protocol : 协议，带参数</p>
+<p>passwd : 密码，带参数</p>
+<p><strong>-q</strong></p>
+<p>quiet : 静默</p>
+<p><strong>-r</strong></p>
+<p>reverse : 反转</p>
+<p>recursive : 递归 (cp , rm , chmod -R)</p>
+<p><strong>-s</strong></p>
+<p>silent : 安静</p>
+<p>size : 大小，带参数</p>
+<p>subject</p>
+<p><strong>-t</strong></p>
+<p>tag</p>
+<p>type : 类型 (mount)</p>
+<p><strong>-u</strong></p>
+<p>user : 用户名、UID，带参数</p>
+<p><strong>-v</strong></p>
+<p>verbose : 冗长</p>
+<p>version : 版本</p>
+<p><strong>-w</strong></p>
+<p>width : 宽度</p>
+<p>warning : 警告</p>
+<p><strong>-x</strong></p>
+<p>exclude : 排除 (tar , zip)</p>
+<p><strong>-y</strong></p>
+<p>yes</p>
+<p><strong>-z</strong></p>
+<p>zip : 启用压缩 (bzip , tar , zcat , zip , cvs)</p>
+<hr>
+]]></content>
       <categories>
-          
-          <category> 操作系统 </category>
-          
+        <category>Linux</category>
       </categories>
-      
-      
-        <tags>
-            
-            <tag> 内存管理 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>Linux命令参数</title>
-      <link href="/Linux%E5%91%BD%E4%BB%A4%E5%8F%82%E6%95%B0/"/>
-      <url>/Linux%E5%91%BD%E4%BB%A4%E5%8F%82%E6%95%B0/</url>
-      
-        <content type="html"><![CDATA[<h1 id="命令选项，从-a-到-z"><a href="#命令选项，从-a-到-z" class="headerlink" title="命令选项，从 a 到 z"></a>命令选项，从 a 到 z</h1><p>Linux 命令的选项繁复庞杂，让人眼花缭乱。不过这些选项往往具有相对固定的涵义，熟悉了它们，记忆便不再困难</p><p><strong>-a</strong></p><p>all : 全部，所有 (ls , lsattr , uname)</p><p>archive : 存档 (cp , rsync)</p><p>append : 附加 (tar -A , 7z)</p><p><strong>-b</strong></p><p>blocksize : 块大小，带参数 (du , df)</p><p>batch : 批处理模式 (交互模式的程序通常拥有此选项，如 top -b)</p><p><strong>-c</strong></p><p>commands : 执行命令，带参数 (bash , ksh , python)</p><p>create : 创建 (tar)</p><p><strong>-d</strong></p><p>debug : 调试</p><p>delete : 删除</p><p>directory : 目录 (ls)</p><p><strong>-e</strong></p><p>execute : 执行，带参数 (xterm , perl)</p><p>edit : 编辑</p><p>exclude : 排除</p><p><strong>-f</strong></p><p>force : 强制，不经确认(cp , rm ,mv)</p><p>file : 文件，带参数 (tar)</p><p>configuration file : 指定配置文件(有些守护进程拥有此选项，如 ssh , lighttpd)</p><p><strong>-g</strong></p><p><strong>-h</strong></p><p>–help : 帮助</p><p>human readable : 人性化显示(ls , du , df)</p><p>headers : 头部</p><p><strong>-i</strong></p><p>interactive : 交互模式，提示(rm , mv)</p><p>include : 包含</p><p><strong>-k</strong></p><p>keep : 保留</p><p>kill</p><p><strong>-l</strong></p><p>long listing format : 长格式(ls)</p><p>list : 列表</p><p>load : 读取 (gcc , emacs)</p><p><strong>-m</strong></p><p>message : 消息 (cvs)</p><p>manual : 手册 (whereis)</p><p>create home : 创建 home 目录 (usermod , useradd)</p><p><strong>-n</strong></p><p>number : 行号、编号 (cat , head , tail , pstree , lspci)</p><p>no : (useradd , make)</p><p><strong>-o</strong></p><p>output : 输出 (cc , sort)</p><p>options : 选项 (mount)</p><p><strong>-p</strong></p><p>port : 端口，带参数 (很多网络工具拥有此选项，如 ssh , lftp )</p><p>protocol : 协议，带参数</p><p>passwd : 密码，带参数</p><p><strong>-q</strong></p><p>quiet : 静默</p><p><strong>-r</strong></p><p>reverse : 反转</p><p>recursive : 递归 (cp , rm , chmod -R)</p><p><strong>-s</strong></p><p>silent : 安静</p><p>size : 大小，带参数</p><p>subject</p><p><strong>-t</strong></p><p>tag</p><p>type : 类型 (mount)</p><p><strong>-u</strong></p><p>user : 用户名、UID，带参数</p><p><strong>-v</strong></p><p>verbose : 冗长</p><p>version : 版本</p><p><strong>-w</strong></p><p>width : 宽度</p><p>warning : 警告</p><p><strong>-x</strong></p><p>exclude : 排除 (tar , zip)</p><p><strong>-y</strong></p><p>yes</p><p><strong>-z</strong></p><p>zip : 启用压缩 (bzip , tar , zcat , zip , cvs)</p><hr>]]></content>
-      
-      
+      <tags>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>处理器性能公式</title>
+    <url>/%E5%A4%84%E7%90%86%E5%99%A8%E6%80%A7%E8%83%BD%E5%85%AC%E5%BC%8F/</url>
+    <content><![CDATA[<h3 id="CPU性能及其度量因素"><a href="#CPU性能及其度量因素" class="headerlink" title="CPU性能及其度量因素"></a>CPU性能及其度量因素</h3><p>CPU性能度量的基本指标是<strong>CPU执行时间</strong>。而几乎所有发的计算机都有一个以固定频率运行的时钟，称为<strong>时钟周期</strong>，或脉冲周期等。所以，我们可以利用时钟周期来表示CPU时间：<br>$$<br>程序CPU执行时间 = 程序CPU时钟周期数 × 时钟周期长度<br>$$<br>其中，时钟周期长度与时钟频率互为倒数，所以该公式也可表示为：<br>$$<br>程序CPU执行时间 =  \frac {程序CPU时钟周期数}{时钟频率}<br>$$</p>
+<h3 id="指令性能"><a href="#指令性能" class="headerlink" title="指令性能"></a>指令性能</h3><p>除了时钟周期外，我们还需注意<strong>指令数</strong>，因为计算机必须通过执行指令来运行程序。<br>$$<br>CPU时钟周期 = 程序指令数 × 指令平均时钟周期数<br>$$</p>
+<blockquote>
+<p><strong>指令平均时钟周期数（CPI）</strong>：表示执行某个程序或者程序片段时每条指令所需的时钟周期平均数。</p>
+</blockquote>
+<h3 id="经典的CPU性能公式"><a href="#经典的CPU性能公式" class="headerlink" title="经典的CPU性能公式"></a>经典的CPU性能公式</h3><p>结合公式（1）、（2）、（3），我们可以得出<strong>经典的CPU性能公式</strong>：<br>$$<br>CPU时间 = 指令数 × CPI × 时钟周期长度<br>$$<br>或<br>$$<br>CPU时间 = \frac{指令数 × CPI}{时钟频率}<br>$$</p>
+<h3 id="影响处理器性能的因素"><a href="#影响处理器性能的因素" class="headerlink" title="影响处理器性能的因素"></a>影响处理器性能的因素</h3><p>从该公式可以看出，<strong>处理器性能取决于三个特性：时钟周期、CPI、指令数</strong>。</p>
+<ul>
+<li>时钟周期：硬件技术与组成</li>
+<li>CPI：组成与指令集体系结构</li>
+<li>指令数：指令集体系结构与编译器技术</li>
+</ul>
+<h4 id="如何测量这些因素"><a href="#如何测量这些因素" class="headerlink" title="如何测量这些因素"></a>如何测量这些因素</h4><p>首先，通过运行程序来测量CPU时间，并且计算机说明书上通常介绍了时钟周期长度。</p>
+<p>难以测量的时指令数与 CPI。</p>
+<p>可以使用体系结构仿真器预先执行程序来测量执行的指令数，或者用大多数处理器中的硬件计数器来测量执行的指令数、平均CPI和性能损失。</p>
+<p>但是，CPI 与计算机的各种设计细节密切相关（如存储系统、处理器结构、应用程序中不同类型的指令所占的比例），对于不同的应用程序它是不同的。</p>
+<h3 id="Amdal定律"><a href="#Amdal定律" class="headerlink" title="Amdal定律"></a>Amdal定律</h3><p>Amdal定律阐述了<strong>对于特定改进的性能提升可能由所使用的改进特征的数量所限制</strong>。也就是说，当提升系统的某部分性能时，对整个系统性能的影响取决于:</p>
+<ol>
+<li>这一部分有多重要(ɑ)</li>
+<li>这一部分性能提升了多少(k)</li>
+</ol>
+<p>$$<br>加速比S = \frac{1}{(1-ɑ)+\frac{ɑ}{k}}<br>$$</p>
+<blockquote>
+<p>ɑ 是升级模块占比，k 是该部分性能提升比例</p>
+</blockquote>
+]]></content>
       <categories>
-          
-          <category> Linux </category>
-          
+        <category>计算机体系结构</category>
       </categories>
-      
-      
-        <tags>
-            
-            <tag> Linux </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>ELF文件</title>
-      <link href="/ELF%E6%96%87%E4%BB%B6/"/>
-      <url>/ELF%E6%96%87%E4%BB%B6/</url>
-      
-        <content type="html"><![CDATA[<p>ELF文件格式是一个开放标准，各种UNIX系统的可执行文件都采用ELF格式，它有三种不同的类型：</p><ul><li>可重定位的目标文件（.o）</li><li>可执行文件（.out）</li><li>共享库（.so）</li></ul><p>在详细讲述 ELF 文件之前，我们先了解<strong>链接</strong>。</p><h2 id="一、链接"><a href="#一、链接" class="headerlink" title="一、链接"></a>一、链接</h2><h3 id="1-1-链接的本质"><a href="#1-1-链接的本质" class="headerlink" title="1.1 链接的本质"></a>1.1 链接的本质</h3><p>链接的本质就是<strong>合并相同的“节”</strong>。如下图所示，相同的“节”被合并在一起从而形成可执行目标文件：</p><p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/sp20210723_115137_721.png" alt="sp20210723_115137_721"></p><h3 id="1-2-链接的步骤"><a href="#1-2-链接的步骤" class="headerlink" title="1.2 链接的步骤"></a>1.2 链接的步骤</h3><ul><li>符号解析<ol><li>确定符号引用关系</li></ol></li><li>重定位<ol start="2"><li>合并相关的 .o 文件</li><li>确定每个符号的地址</li><li>在指令中填入新地址</li></ol></li></ul><h2 id="二、ELF文件格式"><a href="#二、ELF文件格式" class="headerlink" title="二、ELF文件格式"></a>二、ELF文件格式</h2><h3 id="2-1-ELF两种视图"><a href="#2-1-ELF两种视图" class="headerlink" title="2.1 ELF两种视图"></a>2.1 ELF两种视图</h3><ul><li>链接视图（被链接）：可重定位目标文件</li><li>执行视图（被执行）：可执行目标文件</li></ul><p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/sp20210723_123433_495.png" alt="sp20210723_123433_495"></p><h4 id="2-2-1-可重定位目标文件格式"><a href="#2-2-1-可重定位目标文件格式" class="headerlink" title="2.2.1 可重定位目标文件格式"></a>2.2.1 可重定位目标文件格式</h4><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210723124052947.png" alt="image-20210723124052947" style="zoom: 33%;" /><ul><li><p><strong>ELF 头</strong></p><p>描述了体系结构和操作系统等基本信息，并指出Section Header Table在文件中的什么位置。包括 16 字节标识信息、文件类型、机器类型、节头表的偏移、节头表的表项大小以及表项个数。</p></li><li><p><strong>.txt</strong> </p><p>编译后的代码部分</p></li><li><p><strong>.rodata</strong></p><p>只读数据，如 printf 格式串、switch 跳转表等。</p></li><li><p><strong>.data</strong></p><p>已初始化的全局变量</p></li><li><p><strong>.bss</strong></p><p>未初始化全局变量，仅是占位符，不占据任何实际磁盘空间。区别初始化和非初始化是为了空间效率。</p></li><li><p><strong>.symtab</strong></p><p>存放函数和全局变量（符号表）信息，它不包括局部变量。</p></li><li><p><strong>.rel.txt</strong></p><p>.txt 节的重定位信息，用于重新修改代码段的指令中的地址信息。</p></li><li><p><strong>.rel.data</strong></p><p>.data 节的重定位信息，用于对被模块使用或定义的全局变量进行重定位的信息。</p></li><li><p><strong>.debug</strong></p><p>调试用符号表</p></li><li><p><strong>.strtab</strong></p><p>包含 symtab 和 debug 节中符号及节名</p></li><li><p><strong>Section header table</strong></p><p>每个节的节名、偏移和大小。</p></li></ul><p>例如，求一组数的最大值的汇编程序如下：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">#PURPOSE: This program finds the maximum number of a</span><br><span class="line">#  set of data items.</span><br><span class="line">#</span><br><span class="line">#VARIABLES: The registers have the following uses:</span><br><span class="line">#</span><br><span class="line"># %edi - Holds the index of the data item being examined</span><br><span class="line"># %ebx - Largest data item found</span><br><span class="line"># %eax - Current data item</span><br><span class="line">#</span><br><span class="line"># The following memory locations are used:</span><br><span class="line">#</span><br><span class="line"># data_items - contains the item data. A 0 is used</span><br><span class="line"># to terminate the data</span><br><span class="line">#</span><br><span class="line"> .section .data</span><br><span class="line">data_items: #These are the data items</span><br><span class="line"> .long 3,67,34,222,45,75,54,34,44,33,22,11,66,0</span><br><span class="line"></span><br><span class="line"> .section .text</span><br><span class="line"> .globl _start</span><br><span class="line">_start:</span><br><span class="line"> movl $0, %edi  # move 0 into the index register</span><br><span class="line"> movl data_items(,%edi,4), %eax # load the first byte of data</span><br><span class="line"> movl %eax, %ebx # since this is the first item, %eax is</span><br><span class="line"># the biggest</span><br><span class="line"></span><br><span class="line">start_loop: # start loop</span><br><span class="line"> cmpl $0, %eax  # check to see if we&#x27;ve hit the end</span><br><span class="line"> je loop_exit</span><br><span class="line"> incl %edi # load next value</span><br><span class="line"> movl data_items(,%edi,4), %eax</span><br><span class="line"> cmpl %ebx, %eax # compare values</span><br><span class="line"> jle start_loop # jump to loop beginning if the new</span><br><span class="line"> # one isn&#x27;t bigger</span><br><span class="line"> movl %eax, %ebx # move the value as the largest</span><br><span class="line"> jmp start_loop # jump to loop beginning</span><br><span class="line"></span><br><span class="line">loop_exit:</span><br><span class="line"> # %ebx is the status code for the _exit system call</span><br><span class="line"> # and it already has the maximum number</span><br><span class="line"> movl $1, %eax  #1 is the _exit() syscall</span><br><span class="line"> int $0x80</span><br></pre></td></tr></table></figure><p>使用汇编器将其转换成可重定位目标文件：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">as max.s -o max.o</span><br></pre></td></tr></table></figure><p>使用 readelf 命令可查看 ELF 信息，-a 标识 all，-h 查看 ELF 头，-S 查看节头表：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">readelf -a max.o </span><br></pre></td></tr></table></figure><p><strong>ELF头信息</strong>如下：</p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210723163458548.png" alt="image-20210723163458548" style="zoom:50%;" /><p>ELF Header中描述了操作系统是 UNIX，体系结构是 X86-64。Section Header Table中有 8 个Section  Header，从文件地址504（0x1f8）开始，每个Section  Header占 64 字节，共 512 字节，到文件地址 0x3f7 结束。这个目标文件没有Program Header。</p><p><strong>Section Headers 节信息</strong>如下：</p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210723164418299.png" alt="image-20210723164418299" style="zoom:50%;" /><p>从节头表信息可以得到<strong>目标文件的布局</strong>：</p><table><thead><tr><th>起始文件地址</th><th>Section或Header</th></tr></thead><tbody><tr><td>0</td><td>ELF Header</td></tr><tr><td>0x40</td><td><code>.text</code></td></tr><tr><td>0x6d</td><td><code>.data</code></td></tr><tr><td>0xa5</td><td><code>.bss</code>（此段为空）</td></tr><tr><td>0x1c0</td><td><code>.shstrtab</code></td></tr><tr><td>0x1f8</td><td>Section Header Table</td></tr><tr><td>0xa8</td><td><code>.symtab</code></td></tr><tr><td>0x168</td><td><code>.strtab</code></td></tr><tr><td>0x190</td><td><code>.rel.text</code></td></tr></tbody></table><p><code>readelf</code>命令输出的最后一部分：</p><p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210723165921745.png" alt="image-20210723165921745"></p><p><strong>.rel.text</strong>告诉链接器指令中的哪些地方需要做重定位</p><p><strong>.symtab</strong>是符号表。<code>Ndx</code>列是每个符号所在的Section编号，例如符号<code>data_items</code>在第3个Section里（也就是<code>.data</code>段），各Section的编号见Section Header Table。<code>Value</code>列是每个符号所代表的地址，在目标文件中，符号地址都是相对于该符号所在Section的相对地址，比如<code>data_items</code>位于<code>.data</code>段的开头，所以地址是0，<code>_start</code>位于<code>.text</code>段的开头，所以地址也是0，但是<code>start_loop</code>和<code>loop_exit</code>相对于<code>.text</code>段的地址就不是0了。从<code>Bind</code>这一列可以看出<code>_start</code>这个符号是<code>GLOBAL</code>的，而其它符号是<code>LOCAL</code>的，<code>GLOBAL</code>符号是在汇编程序中用<code>.globl</code>指示声明过的符号。</p><p>最后是 <strong>.text段</strong>，使用<code>objdump</code>工具可以把程序中的机器指令反汇编（Disassemble）：</p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210723171103315.png" alt="image-20210723171103315" style="zoom: 50%;" /><p>可以看出，所有的符号都被替换成地址了，比如<code>je 26</code>，26 正是 <code>.symtab</code>中 loop_exit 的 Value 值，注意没有加<code>$</code>的数表示内存地址，而不表示立即数。</p><h4 id="2-2-2-可执行目标文件格式"><a href="#2-2-2-可执行目标文件格式" class="headerlink" title="2.2.2 可执行目标文件格式"></a>2.2.2 可执行目标文件格式</h4><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210723171951012.png" alt="image-20210723171951012" style="zoom: 33%;" /><p><strong>与可重定位目标文件不同之处在于：</strong></p><ul><li>ELF 头中字段 Entry point address 给出了执行程序的第一条指令的地址，而在可重定位目标文件，此字段为 0.</li><li>多了程序头表，保存了所有Segment的描述信息</li><li>多了一个 .init 节，用于定义 _init 函数，该函数用于进行可执行目标文件开始执行时的初始化工作。</li><li>少了两个 .rel 节（无需重定位）</li></ul><p>按上一节的步骤分析可执行文件<strong>max</strong>，看看链接器都做了什么改动。</p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210723172433333.png" alt="image-20210723172433333" style="zoom:50%;" /><p>在ELF Header中，<code>Type</code>改成了<code>EXEC</code>，由目标文件变成可执行文件了，<code>Entry point address</code>改成了 0x401000（这是<code>_start</code>符号的地址），还可以看出，多了 3 个 Program Header，少了 2 个Section Header。</p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210723174200653.png" alt="image-20210723174200653" style="zoom:50%;" /><p>在Section Header Table中，<code>.text</code>和<code>.data</code>段的加载地址分别改成了0x401000和0x402000。<code>.bss</code>段没有用到，所以被删掉了。<code>.rel.text</code>段就是用于链接过程的，做完链接就没用了，所以也删掉了。</p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210723174637002.png" alt="image-20210723174637002" style="zoom:50%;" /><p>多出来的Program Header Table描述了三个Segment的信息。前面的ELF Header、Program Header Table一起组成一个Segment（<code>FileSiz</code>指出总长度是0xe8），<code>.text</code>段组成一个Segment（总长度是0x2d），<code>.data</code>段组成另一个Segment（总长度是0x38）。</p><p><code>VirtAddr</code>列指出第一个Segment加载到虚拟地址0x400000（注意在x86平台上后面的<code>PhysAddr</code>列是没有意义的，并不代表实际的物理地址），第二个Segment加载到地址0x401000。</p><p><code>Flg</code>列指出第一个Segment的访问权限是可读，第二个Segment的访问权限是可读可执行，第三个Segment的访问权限是可读可写。</p><p>最后一列<code>Align</code>的值0x1000（4K）是x86平台的内存页面大小。在加载时文件也要按内存页面大小分成若干页，文件中的一页对应内存中的一页，对应关系类似于下图所示。</p><p><img src="https://docs.huihoo.com/c/linux-c-programming/images/asm.load.png" alt="文件和加载地址的对应关系"></p><p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210723181214100.png" alt="image-20210723181214100"></p><p>原来目标文件符号表中的<code>Value</code>都是相对地址，现在都改成绝对地址了。此外还多了三个符号<code>__bss_start</code>、<code>_edata</code>和<code>_end</code>，这些符号在链接脚本中定义，被链接器添加到可执行文件中。</p><p>再看一下反汇编的结果</p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210723181119232.png" alt="image-20210723181119232" style="zoom: 50%;" /><p>指令中的相对地址都改成绝对地址了，跳转指令后的地址都变成了绝对地址。</p><p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210723182358675.png" alt="image-20210723182358675"></p>]]></content>
-      
-      
+  </entry>
+  <entry>
+    <title>正则表达式</title>
+    <url>/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/</url>
+    <content><![CDATA[<h1 id="正则表达式（regex）"><a href="#正则表达式（regex）" class="headerlink" title="正则表达式（regex）"></a>正则表达式（regex）</h1><h2 id="什么是正则表达式"><a href="#什么是正则表达式" class="headerlink" title="什么是正则表达式"></a>什么是正则表达式</h2><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">正则表达式是一组由字母和符号组成的特殊文本，它可以用来从文本中找出满足你想要的格式的句子。</span><br></pre></td></tr></table></figure>
+
+<p>一个正则表达式是一种从左到右匹配主体字符串的模式。 “Regular expression”这个词比较拗口，我们常使用缩写的术语“regex”或“regexp”。 正则表达式可以从一个基础字符串中根据一定的匹配模式替换文本中的字符串、验证表单、提取字符串等等。</p>
+<p><img src="https://github.com/ziishaned/learn-regex/raw/master/img/regexp-cn.png" alt="regexp-cn.png"></p>
+<p>以上的正则表达式可以接受 john_doe、jo-hn_doe、john12_as。 但不匹配Jo，因为它包含了大写的字母而且太短了。</p>
+<h2 id="一、基本匹配"><a href="#一、基本匹配" class="headerlink" title="一、基本匹配"></a>一、基本匹配</h2><p>正则表达式其实就是在执行搜索时的格式，它由一些字母和数字组合而成。 例如：一个正则表达式 the，它表示一个规则：由字母t开始，接着是h，再接着是e。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&quot;the&quot; =&gt; The fat cat sat on the mat.</span><br></pre></td></tr></table></figure>
+
+<p><strong>正则表达式是大小写敏感的</strong>，所以The不会匹配the。</p>
+<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">&quot;The&quot; =&gt; The fat cat sat on the mat.</span><br></pre></td></tr></table></figure>
+
+<h2 id="二、元字符"><a href="#二、元字符" class="headerlink" title="二、元字符"></a>二、元字符</h2><p>正则表达式主要依赖于元字符。 元字符不代表他们本身的字面意思，他们都有特殊的含义。一些元字符写在方括号中的时候有一些特殊的意思。以下是一些元字符的介绍：</p>
+<table>
+<thead>
+<tr>
+<th>元字符</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>.</td>
+<td>句号匹配任意单个字符除了换行符。</td>
+</tr>
+<tr>
+<td>[ ]</td>
+<td>字符种类。匹配方括号内的任意字符。</td>
+</tr>
+<tr>
+<td>[^ ]</td>
+<td>否定的字符种类。匹配除了方括号里的任意字符。</td>
+</tr>
+<tr>
+<td>*</td>
+<td>匹配&gt;=0个重复的在*号之前的字符。</td>
+</tr>
+<tr>
+<td>+</td>
+<td>匹配&gt;=1个重复的+号前的字符。</td>
+</tr>
+<tr>
+<td>?</td>
+<td>标记?之前的字符为可选。</td>
+</tr>
+<tr>
+<td>{n,m}</td>
+<td>匹配num个大括号之前的字符或字符集 (n &lt;= num &lt;= m)。</td>
+</tr>
+<tr>
+<td>(xyz)</td>
+<td>字符集，匹配与 xyz 完全相等的字符串。</td>
+</tr>
+<tr>
+<td>|</td>
+<td>或运算符，匹配符号前或后的字符.</td>
+</tr>
+<tr>
+<td>| 转义字符,用于匹配一些保留的字符 [ ] ( ) { } . * + ? ^ $ \ |</td>
+<td></td>
+</tr>
+<tr>
+<td>^</td>
+<td>从开始行开始匹配.</td>
+</tr>
+<tr>
+<td>$</td>
+<td>从末端开始匹配.</td>
+</tr>
+</tbody></table>
+<h3 id="2-1-点运算符"><a href="#2-1-点运算符" class="headerlink" title="2.1 点运算符 ."></a>2.1 点运算符 .</h3><p>. 是元字符中最简单的例子。. 匹配任意单个字符，但不匹配换行符。 例如，表达式 .ar 匹配一个任意字符后面跟着是 a 和 r 的字符串。</p>
+<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">&quot;.ar&quot; =&gt; The car parked in the garage.</span><br><span class="line">匹配了 car, par, gar</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2-字符集"><a href="#2-2-字符集" class="headerlink" title="2.2 字符集"></a>2.2 字符集</h3><p>字符集也叫做字符类。 方括号用来指定一个字符集。 <strong>在方括号中使用连字符来指定字符集的范围。 在方括号中的字符集不关心顺序</strong>。 例如，表达式 [Tt]he  匹配 the 和 The。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&quot;[Tt]he&quot; =&gt; The car parked in the garage.</span><br><span class="line">匹配了 The, the</span><br></pre></td></tr></table></figure>
+
+<p><strong>方括号的句号就表示句号</strong>。 表达式 ar[.] 匹配 ar.字符串</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&quot;ar[.]&quot; =&gt; A garage is a good place to park a car.</span><br><span class="line">匹配了 ar.</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-2-1-否定字符集"><a href="#2-2-1-否定字符集" class="headerlink" title="2.2.1 否定字符集"></a>2.2.1 否定字符集</h4><p>一般来说 ^ 表示一个字符串的开头，但它用在一个方括号的开头的时候，它表示这个字符集是否定的。 例如，表达式 [^c]ar 匹配一个后面跟着ar的除了c的任意字符。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&quot;[^c]ar&quot; =&gt; The car parked in the garage.</span><br><span class="line">匹配了 par, gar，但未匹配 car</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-3-重复次数"><a href="#2-3-重复次数" class="headerlink" title="2.3 重复次数"></a>2.3 重复次数</h3><p>后面跟着元字符 +，* 或 ? 的，用来指定匹配子模式的次数。 这些元字符在不同的情况下有着不同的意思。</p>
+<h4 id="2-3-1-号"><a href="#2-3-1-号" class="headerlink" title="2.3.1 * 号"></a>2.3.1 * 号</h4><p>* 号匹配 在 * 之前的字符出现大于等于0次。 例如，表达式 a* 匹配 0 或更多个以 a 开头的字符。表达式 [a-z]* 匹配一个行中所有以小写字母开头的字符串。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&quot;[a-z]*&quot; =&gt; The car parked in the garage #21.</span><br><span class="line">匹配了 The car parked in the garage</span><br></pre></td></tr></table></figure>
+
+<p>* 字符和 . 字符搭配可以匹配所有的字符.*。 * 和表示匹配空格的符号\s连起来用，如表达式 \s*cat\s* 匹配 0 或更多个空格开头和 0 或更多个空格结尾的 cat 字符串。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&quot;\s*cat\s*&quot; =&gt; The fat cat sat on the concatenation.</span><br><span class="line">匹配了 cat</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-3-2-号"><a href="#2-3-2-号" class="headerlink" title="2.3.2 + 号"></a>2.3.2 + 号</h4><p>+号匹配 + 号之前的字符出现 &gt;=1 次。 例如表达式 c.+t 匹配以首字母 c 开头以 t 结尾，中间跟着至少一个字符的字符串。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&quot;c.+t&quot; =&gt; The fat cat sat on the mat.</span><br><span class="line">匹配了 cat sat on the mat</span><br></pre></td></tr></table></figure>
+
+<p>在正则表达式中元字符 ? 标记在符号前面的字符为可选，即出现 0 或 1 次。 例如，表达式 [T]?he 匹配字符串 he 和 The。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&quot;[T]?he&quot; =&gt; The car is parked in the garage.</span><br><span class="line">只匹配了 The</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&quot;[T]?he&quot; =&gt; The car is parked in the garage.</span><br><span class="line">匹配了 The, the</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-4-号"><a href="#2-4-号" class="headerlink" title="2.4 { } 号"></a>2.4 { } 号</h3><p>在正则表达式中 { } 是一个量词，常用来限定一个或一组字符可以重复出现的次数。 例如，表达式 [0-9]{2,3} 匹配最少 2 位最多 3 位 0~9 的数字。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&quot;[0-9]&#123;2,3&#125;&quot; =&gt; The number was 9.9997 but we rounded it off to 10.0.</span><br><span class="line">匹配了 9.9997 小数点后的 999 以及 10</span><br></pre></td></tr></table></figure>
+
+<p>我们可以省略第二个参数。 例如，[0-9]{2,} 匹配至少两位 0~9 的数字。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&quot;[0-9]&#123;2,&#125;&quot; =&gt; The number was 9.9997 but we rounded it off to 10.0.</span><br><span class="line">匹配了 9997 和 10</span><br></pre></td></tr></table></figure>
+
+<p>如果逗号也省略掉则表示重复固定的次数。 例如，[0-9]{3} 匹配3位数字</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&quot;[0-9]&#123;3&#125;&quot; =&gt; The number was 9.9997 but we rounded it off to 10.0.</span><br><span class="line">匹配了 999</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-5-…-特征标群"><a href="#2-5-…-特征标群" class="headerlink" title="2.5 (…) 特征标群"></a>2.5 (…) 特征标群</h3><p>特征标群是一组写在 (…) 中的子模式。(…) 中包含的内容将会被看成一个整体，和数学中小括号（ ）的作用相同。例如, 表达式 (ab)* 匹配连续出现 0 或更多个 ab。如果没有使用 (…) ，那么表达式 ab* 将匹配连续出现 0 或更多个 b 。再比如之前说的 { } 是用来表示前面一个字符出现指定次数。但如果在 { } 前加上特征标群 (…) 则表示整个标群内的字符重复 N 次。</p>
+<p>我们还可以在 ( ) 中用或字符 | 表示或。例如，(c|g|p)ar 匹配 car 或 gar 或 par.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&quot;(c|g|p)ar&quot; =&gt; The car is parked in the garage.</span><br><span class="line">匹配了 car, par, gar</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-6-或运算符"><a href="#2-6-或运算符" class="headerlink" title="2.6 | 或运算符"></a>2.6 | 或运算符</h3><p>或运算符就表示或，用作判断条件。</p>
+<p>例如 (T|t)he|car 匹配 (T|t)he 或 car。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&quot;(T|t)he|car&quot; =&gt; The car is parked in the garage.</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-7-转码特殊字符"><a href="#2-7-转码特殊字符" class="headerlink" title="2.7 转码特殊字符"></a>2.7 转码特殊字符</h3><p>反斜线 \ 在表达式中用于转码紧跟其后的字符。用于指定 { } [ ] / \ + * . $ ^ | ? 这些特殊字符。如果想要匹配这些特殊字符则要在其前面加上反斜线 \。</p>
+<p>例如 . 是用来匹配除换行符外的所有字符的。如果想要匹配句子中的 . 则要写成 \ . 以下这个例子 \ .?是选择性匹配.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&quot;(f|c|m)at\.&quot; =&gt; The fat cat sat on the mat.</span><br><span class="line">匹配了 cat.</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-8-锚点"><a href="#2-8-锚点" class="headerlink" title="2.8 锚点"></a>2.8 锚点</h3><p>在正则表达式中，想要匹配指定开头或结尾的字符串就要使用到锚点。^ 指定开头，$ 指定结尾。</p>
+<h4 id="2-8-1-号"><a href="#2-8-1-号" class="headerlink" title="2.8.1 ^ 号"></a>2.8.1 ^ 号</h4><p>^ 用来检查匹配的字符串是否在所匹配字符串的开头。</p>
+<p>例如，在 abc 中使用表达式 ^a 会得到结果 a。但如果使用 ^b 将匹配不到任何结果。因为在字符串 abc 中并不是以 b 开头。</p>
+<p>例如，^(T|t)he 匹配以 The 或 the 开头的字符串。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&quot;(T|t)he&quot; =&gt; The car is parked in the garage.</span><br><span class="line">匹配了 The, the</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&quot;^(T|t)he&quot; =&gt; The car is parked in the garage.</span><br><span class="line">只匹配了 The</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-8-2-号"><a href="#2-8-2-号" class="headerlink" title="2.8.2 $ 号"></a>2.8.2 $ 号</h4><p>同理于 ^ 号，$ 号用来匹配字符是否是最后一个。</p>
+<p>例如，(at.)$ 匹配以 at. 结尾的字符串。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&quot;(at\.)&quot; =&gt; The fat cat. sat. on the mat.</span><br><span class="line">匹配了三个 at.</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&quot;(at\.)$&quot; =&gt; The fat cat. sat. on the mat.</span><br><span class="line">只匹配了最后一个 at.</span><br></pre></td></tr></table></figure>
+
+<h2 id="三、简写字符集"><a href="#三、简写字符集" class="headerlink" title="三、简写字符集"></a>三、简写字符集</h2><p>正则表达式提供一些常用的字符集简写。如下:</p>
+<table>
+<thead>
+<tr>
+<th>简写</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>.</td>
+<td>除换行符外的所有字符</td>
+</tr>
+<tr>
+<td>\w</td>
+<td>匹配所有字母数字，等同于 [a-zA-Z0-9_]</td>
+</tr>
+<tr>
+<td>\W</td>
+<td>匹配所有非字母数字，即符号，等同于： [^\w]</td>
+</tr>
+<tr>
+<td>\d</td>
+<td>匹配数字： [0-9]</td>
+</tr>
+<tr>
+<td>\D</td>
+<td>匹配非数字： [^\d]</td>
+</tr>
+<tr>
+<td>\s</td>
+<td>匹配所有空格字符，等同于： [\t\n\f\r\p{Z}]</td>
+</tr>
+<tr>
+<td>\S</td>
+<td>匹配所有非空格字符： [^\s]</td>
+</tr>
+<tr>
+<td>\f</td>
+<td>匹配一个换页符</td>
+</tr>
+<tr>
+<td>\n</td>
+<td>匹配一个换行符</td>
+</tr>
+<tr>
+<td>\r</td>
+<td>匹配一个回车符</td>
+</tr>
+<tr>
+<td>\t</td>
+<td>匹配一个制表符</td>
+</tr>
+<tr>
+<td>\v</td>
+<td>匹配一个垂直制表符</td>
+</tr>
+<tr>
+<td>\p</td>
+<td>匹配 CR/LF（等同于 \r\n），用来匹配 DOS 行终止符</td>
+</tr>
+</tbody></table>
+<h2 id="四、零宽度断言（前后预查）"><a href="#四、零宽度断言（前后预查）" class="headerlink" title="四、零宽度断言（前后预查）"></a>四、零宽度断言（前后预查）</h2><p>先行断言和后发断言都属于<strong>非捕获簇</strong>（不捕获文本 ，也不针对组合计进行计数）。 先行断言用于判断所匹配的格式是否在另一个确定的格式之前，匹配结果不包含该确定格式（仅作为约束）。</p>
+<p>例如，我们想要获得所有跟在 $ 符号后的数字，我们可以使用正后发断言 (?&lt;=$)[0-9.]*。 这个表达式匹配 $ 开头，之后跟着 0,1,2,3,4,5,6,7,8,9,. 这些字符可以出现大于等于 0 次。</p>
+<p>零宽度断言如下：</p>
+<table>
+<thead>
+<tr>
+<th>符号</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>?=</td>
+<td>正先行断言-存在</td>
+</tr>
+<tr>
+<td>?!</td>
+<td>负先行断言-排除</td>
+</tr>
+<tr>
+<td>?&lt;=</td>
+<td>正后发断言-存在</td>
+</tr>
+<tr>
+<td>?&lt;!</td>
+<td>负后发断言-排除</td>
+</tr>
+</tbody></table>
+<h3 id="4-1-…-正先行断言"><a href="#4-1-…-正先行断言" class="headerlink" title="4.1 ?=… 正先行断言"></a>4.1 ?=… 正先行断言</h3><p>?=… 正先行断言，表示第一部分表达式之后必须跟着 ?=…定义的表达式。</p>
+<p>返回结果只包含满足匹配条件的第一部分表达式。 定义一个正先行断言要使用 ()。在括号内部使用一个问号和等号： (?=…)。</p>
+<p>正先行断言的内容写在括号中的等号后面。 例如，表达式 (T|t)he(?=\sfat) 匹配 The 和 the，在括号中我们又定义了正先行断言 (?=\sfat) ，即 The 和 the 后面紧跟着 (空格)fat。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&quot;(T|t)he(?=\sfat)&quot; =&gt; The fat cat sat on the mat.</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-2-…-负先行断言"><a href="#4-2-…-负先行断言" class="headerlink" title="4.2 ?!… 负先行断言"></a>4.2 ?!… 负先行断言</h3><p>负先行断言 ?! 用于筛选所有匹配结果，筛选条件为 其后不跟随着断言中定义的格式。 正先行断言 定义和 负先行断言 一样，区别就是 = 替换成 ! 也就是 (?!…)。</p>
+<p>表达式 (T|t)he(?!\sfat) 匹配 The 和 the，且其后不跟着 (空格)fat。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&quot;(T|t)he(?!\sfat)&quot; =&gt; The fat cat sat on the mat.</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-3-lt-…-正后发断言"><a href="#4-3-lt-…-正后发断言" class="headerlink" title="4.3 ?&lt;= … 正后发断言"></a>4.3 ?&lt;= … 正后发断言</h3><p>正后发断言 记作(?&lt;=…) 用于筛选所有匹配结果，筛选条件为 其前跟随着断言中定义的格式。 例如，表达式 (?&lt;=(T|t)he\s)(fat|mat) 匹配 fat 和 mat，且其前跟着 The 或 the。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&quot;(?&lt;=(T|t)he\s)(fat|mat)&quot; =&gt; The fat cat sat on the mat.</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-4-lt-…-负后发断言"><a href="#4-4-lt-…-负后发断言" class="headerlink" title="4.4 ?&lt;!… 负后发断言"></a>4.4 ?&lt;!… 负后发断言</h3><p>负后发断言 记作 (?&lt;!…) 用于筛选所有匹配结果，筛选条件为 其前不跟随着断言中定义的格式。 例如，表达式 (?&lt;!(T|t)he\s)(cat) 匹配 cat，且其前不跟着 The 或 the。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&quot;(?&lt;!(T|t)he\s)(cat)&quot; =&gt; The cat sat on cat.</span><br></pre></td></tr></table></figure>
+
+<h2 id="五、标志"><a href="#五、标志" class="headerlink" title="五、标志"></a>五、标志</h2><p>标志也叫模式修正符，因为它可以用来修改表达式的搜索结果。 这些标志可以任意的组合使用，它也是整个正则表达式的一部分。</p>
+<table>
+<thead>
+<tr>
+<th>标志</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>i</td>
+<td>忽略大小写</td>
+</tr>
+<tr>
+<td>g</td>
+<td>全局搜索</td>
+</tr>
+<tr>
+<td>m</td>
+<td>多行修饰符：锚点元字符 ^ $ 工作范围在每行的起始。</td>
+</tr>
+</tbody></table>
+<h3 id="5-1-忽略大小写-Case-Insensitive"><a href="#5-1-忽略大小写-Case-Insensitive" class="headerlink" title="5.1 忽略大小写 (Case Insensitive)"></a>5.1 忽略大小写 (Case Insensitive)</h3><p>修饰语 i 用于忽略大小写。 例如，表达式 /The/gi 表示在全局搜索 The，在后面的 i 将其条件修改为忽略大小写，则变成搜索 the 和 The，g 表示全局搜索。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&quot;The&quot; =&gt; The fat cat sat on the mat.</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&quot;/The/gi&quot; =&gt; The fat cat sat on the mat.</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-2-全局搜索-Global-search"><a href="#5-2-全局搜索-Global-search" class="headerlink" title="5.2 全局搜索 (Global search)"></a>5.2 全局搜索 (Global search)</h3><p>修饰符 g 常用于执行一个全局搜索匹配，即（不仅仅返回第一个匹配的，而是返回全部）。 例如，表达式 /.(at)/g 表示搜索 任意字符（除了换行）+ at，并返回全部结果。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&quot;/.(at)/&quot; =&gt; The fat cat sat on the mat.</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&quot;/.(at)/g&quot; =&gt; The fat cat sat on the mat.</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-3-多行修饰符-Multiline"><a href="#5-3-多行修饰符-Multiline" class="headerlink" title="5.3 多行修饰符 (Multiline)"></a>5.3 多行修饰符 (Multiline)</h3><p>多行修饰符 m 常用于执行一个多行匹配。</p>
+<p>像之前介绍的 (^,$) 用于检查格式是否是在待检测字符串的开头或结尾。但我们如果想要它在每行的开头和结尾生效，我们需要用到多行修饰符 m。</p>
+<p>例如，表达式 /at(.)?$/gm 表示小写字符 a 后跟小写字符 t ，末尾可选除换行符外任意字符。根据 m 修饰符，现在表达式匹配每行的结尾。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&quot;/.at(.)?$/&quot; =&gt; The fat</span><br><span class="line">                cat sat</span><br><span class="line">                on the mat.</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&quot;/.at(.)?$/gm&quot; =&gt; The fat</span><br><span class="line">                  cat sat</span><br><span class="line">                  on the mat.</span><br></pre></td></tr></table></figure>
+
+<h2 id="六、贪婪匹配与惰性匹配-Greedy-vs-lazy-matching"><a href="#六、贪婪匹配与惰性匹配-Greedy-vs-lazy-matching" class="headerlink" title="六、贪婪匹配与惰性匹配 (Greedy vs lazy matching)"></a>六、贪婪匹配与惰性匹配 (Greedy vs lazy matching)</h2><p>正则表达式默认采用贪婪匹配模式，在该模式下意味着会匹配尽可能长的子串。我们可以使用 ? 将贪婪匹配模式转化为惰性匹配模式。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&quot;/(.*at)/&quot; =&gt; The fat cat sat on the mat. </span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&quot;/(.*?at)/&quot; =&gt; The fat cat sat on the mat. </span><br></pre></td></tr></table></figure>
+]]></content>
       <categories>
-          
-          <category> 链接、装载与库 </category>
-          
+        <category>编程</category>
       </categories>
-      
-      
-        <tags>
-            
-            <tag> 程序员的自我修养 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>程序转换处理过程</title>
-      <link href="/%E7%A8%8B%E5%BA%8F%E8%BD%AC%E6%8D%A2%E5%A4%84%E7%90%86%E8%BF%87%E7%A8%8B/"/>
-      <url>/%E7%A8%8B%E5%BA%8F%E8%BD%AC%E6%8D%A2%E5%A4%84%E7%90%86%E8%BF%87%E7%A8%8B/</url>
-      
-        <content type="html"><![CDATA[<p>一个由高级语言编写的程序，必须转换成二进制代码，才能在机器上运行。这种可以在机器上运行是二进制代码被称为<strong>可执行目标文件</strong>。</p><p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/sp20210723_083211_152.png" alt="源程序处理过程"></p><p>上述过程可分为四步：</p><ul><li><strong>预处理</strong></li><li><strong>编译</strong></li><li><strong>汇编</strong></li><li><strong>链接</strong></li></ul><h2 id="一、预处理"><a href="#一、预处理" class="headerlink" title="一、预处理"></a>一、预处理</h2><p>预处理过程主要<strong>处理源文件中以“#”开头的预编译指令</strong>，如：</p><ul><li>删除“#define”并展开所定义的宏。</li><li>处理所有条件预编译指令，如“#if”,“#ifdef”, “#endif”等。</li><li>插入头文件到“#include”处，可以递归方式进行处理。</li><li>删除所有的注释“//”和“/* */”。</li><li> 添加行号和文件名标识，以便编译时编译器产生调试用的行号信息。</li><li>保留所有#pragma编译指令（编译器需要用）</li></ul><p>经过预处理后得到的是 <strong>.i 文件</strong>（预处理文件），该文件是一个可读的文本文件 ，但不包含任何宏定义。</p><h3 id="预处理命令"><a href="#预处理命令" class="headerlink" title="预处理命令"></a>预处理命令</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc –E hello.c –o hello.i</span><br></pre></td></tr></table></figure><p>或者</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cpp hello.c &gt; hello.i</span><br></pre></td></tr></table></figure><h2 id="二、编译"><a href="#二、编译" class="headerlink" title="二、编译"></a>二、编译</h2><p>编译过程就是将预处理后得到的预处理文件（如 hello.i）进行一系列分析，<strong>生成汇编代码文件</strong>的过程。用来进行编译处理的程序称为<strong>编译程序（编译器，Compiler）</strong></p><p>编译包括以下过程：</p><ul><li>词法分析</li><li>语法分析</li><li>语义分析</li><li>中间代码生成</li><li>代码优化</li></ul><p>经过编译后，得到**.s文件**（汇编代码文件）还是可读的文本文件，CPU无法理解和执行它。</p><h3 id="编译命令"><a href="#编译命令" class="headerlink" title="编译命令"></a>编译命令</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -S hello.i -o hello.s</span><br></pre></td></tr></table></figure><p>或</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -S hello.c -o hello.s</span><br></pre></td></tr></table></figure><p>或</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/user/lib/gcc/i486-linux-gnu/4.1/cc1 hello.c</span><br></pre></td></tr></table></figure><h2 id="三、汇编"><a href="#三、汇编" class="headerlink" title="三、汇编"></a>三、汇编</h2><p>汇编是<strong>将汇编语言源程序转换为机器指令序列</strong>，每条汇编语句几乎都对应一条机器指令。汇编过程相比编译较为简单，没有复杂的语法，没有语义，也不需要指令优化，只需根据汇编指令和机器指令的对照表一一翻译即可。</p><p>汇编结果是一个 <strong>.o 文件（可重定位目标文件）</strong>，其中包含的是不可读的二进制代码。</p><h3 id="汇编命令"><a href="#汇编命令" class="headerlink" title="汇编命令"></a>汇编命令</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc –c hello.s –o hello.o</span><br></pre></td></tr></table></figure><p>或</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc –c hello.c –o hello.o</span><br></pre></td></tr></table></figure><p>或（as是一个汇编程序）</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">as hello.s –o hello.o</span><br></pre></td></tr></table></figure><h2 id="四、链接"><a href="#四、链接" class="headerlink" title="四、链接"></a>四、链接</h2><p>链接过程<strong>将多个可重定位目标文件合并以生成可执行目标文件</strong>。</p><p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/sp20210723_101021_361.png" alt="sp20210723_101021_361"></p><h3 id="链接命令"><a href="#链接命令" class="headerlink" title="链接命令"></a>链接命令</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc –static –o myproc main.o swap.o</span><br></pre></td></tr></table></figure><p>或</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ld –static –o myproc main.o swap.o</span><br></pre></td></tr></table></figure><p>其中，static 表示静态链接，如果不指定 -o 选项，则可执行文件名 为“a.out”。</p><p><strong>a.out 就是最终的可执行文件。</strong></p>]]></content>
-      
-      
+      <tags>
+        <tag>正则表达式</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>处理器流水线重点</title>
+    <url>/%E5%A4%84%E7%90%86%E5%99%A8%E6%B5%81%E6%B0%B4%E7%BA%BF%E9%87%8D%E7%82%B9/</url>
+    <content><![CDATA[<h2 id="一、处理器流水线概述"><a href="#一、处理器流水线概述" class="headerlink" title="一、处理器流水线概述"></a>一、处理器流水线概述</h2><p>计算机体系结构中最经典的就是五级流水线，即<strong>取值</strong>、<strong>译码</strong>、<strong>执行</strong>、<strong>访存</strong>、<strong>写回</strong>五个步骤。</p>
+<p>流水线本质上可以理解为<strong>以面积换性能、以空间换时间</strong>的手段。</p>
+<h2 id="二、取指"><a href="#二、取指" class="headerlink" title="二、取指"></a>二、取指</h2><p>取值阶段的核心是“<strong>快</strong>”和“<strong>连续不断</strong>”。</p>
+<h3 id="2-1-快速取值"><a href="#2-1-快速取值" class="headerlink" title="2.1 快速取值"></a>2.1 快速取值</h3><p>要快速从存储器中取出指令，首先要保证存储器的读延迟越小越好。为了使处理器可以以最快的速度取值，通常使用<strong>ITCM</strong>和<strong>ICache</strong>的方法。</p>
+<ul>
+<li><h4 id="ITCM"><a href="#ITCM" class="headerlink" title="ITCM"></a>ITCM</h4><p>指令紧耦合存储器，指配置一段较小容量的存储器来存储指令，在物理上接近处理器核且专属处理器核。</p>
+<p>ITCM大大提升了<strong>时距不相邻而空距相邻</strong>的代码段的执行性能，且需要人为地把代码组织成空距相邻。如蜂鸟E200处理器</p>
+</li>
+<li><h4 id="ICache"><a href="#ICache" class="headerlink" title="ICache"></a>ICache</h4><p>指令缓存。</p>
+<p>ICache智能地、自动地将<strong>时距相邻而空距很远</strong>的代码段放置在体内，CPU以单周期访问这些代码，大大提升了程序性能。如NutShell处理器。</p>
+</li>
+</ul>
+<h3 id="2-2-连续不断"><a href="#2-2-连续不断" class="headerlink" title="2.2 连续不断"></a>2.2 连续不断</h3><h4 id="处理非对齐指令"><a href="#处理非对齐指令" class="headerlink" title="处理非对齐指令"></a>处理非对齐指令</h4><ol>
+<li><p>普通指令非对齐</p>
+<p>剩余缓存</p>
+</li>
+<li><p>分支跳转指令非对齐</p>
+<p>多体交叉存储器</p>
+</li>
+</ol>
+<h4 id="处理分支指令——分支预测"><a href="#处理分支指令——分支预测" class="headerlink" title="处理分支指令——分支预测"></a>处理分支指令——分支预测</h4><p>对于条件跳转/分支指令，理论上要在执行阶段完成之后，才能解析出最终的跳转结果，而这样会造成流水线浪费。利用分支预测，不仅可以使取值连续不断，同时可以解决流水线里<strong>控制冲突</strong>问题。</p>
+<ul>
+<li><h5 id="静态预测"><a href="#静态预测" class="headerlink" title="静态预测"></a>静态预测</h5><ol>
+<li>总预测分支指令不会发生跳转</li>
+<li>BTFN预测，对向后的跳转预测为跳，对向前的跳转预测为不跳。蜂鸟E200处理器采取该方法。</li>
+</ol>
+</li>
+<li><h5 id="动态预测"><a href="#动态预测" class="headerlink" title="动态预测"></a>动态预测</h5><p>利用已经执行过的指令的历史信息和分支本身的信息综合进行方向预测。</p>
+<p>例如NutShell处理器，通过综合考虑分支目标缓冲器 (Branch Target Buffer, <strong>BTB</strong>)、模式历史表 (Pattern History Table,  <strong>PHT</strong>) 和返回地址栈 (Return Address Stack, <strong>RAS</strong>) 对不同类型的转移指令做出快速的预测. </p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/BPU-NutShell.jpg" alt="img"></p>
+<p>BTB 中缓存了跳转指令的地址高位信息、跳转目标、指令类型等信息. 在做分支预测时会用取指 PC 索引 BTB 表项, 如果 PC 高位与读到的 BTB 表项的标签匹配则认为 BTB 命中, 再根据 BTB 中记录的指令类型判断跳转方向和跳转目标. 如果类型为条件分支指令,  则需要访问模式历史表 (PHT) 来判断是否跳转; 如果类型为返回指令, 则选择返回地址栈 (RAS) 的栈顶内容作为跳转目标;  如果类型为直接或间接跳转指令, 则选择 BTB 中记录的跳转目标.</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/BTB-NutShell.jpg" alt="img"></p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/sp20210718_152102_053.png" alt="sp20210718_152102_053"></p>
+<p>当分支预测器判断一条指令为条件分支跳转时, 需要访问 PHT 进一步对跳转方向做出预测. PHT 的每一项都是一个<strong>两位饱和计数器</strong>, 计数器的内容指示了强跳转、弱跳转、弱不跳转、强不跳转四种分支指令可能所处的状态, 该两位计数器的高位则指示了分支预测的方向.</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/PHT-NutShell.jpg"></p>
+<p>两位饱和计数器是用于预测分支“方向”；BTB是用于预测分支“地址”。</p>
+<p>更详细的介绍可见<a href="https://hitsz-cslab.gitee.io/arch/lab2/1-theory/"><strong>分支预测器设计</strong></a></p>
+</li>
+</ul>
+<h2 id="三、执行"><a href="#三、执行" class="headerlink" title="三、执行"></a>三、执行</h2><h3 id="3-1-流水线数据冲突"><a href="#3-1-流水线数据冲突" class="headerlink" title="3.1 流水线数据冲突"></a>3.1 流水线数据冲突</h3><p>执行阶段除了根据指令的具体类型进行运算外，另一个重要职能就是维护并解决流水线冲突。</p>
+<ul>
+<li><p><strong>WAR（Write After Read）</strong></p>
+<p>假设指令j是在指令i后面执行的指令，WAR表示指令i读出数据后，指令j才能写这个寄存器。</p>
+</li>
+<li><p><strong>WAW（Write After Write）</strong></p>
+<p>假设指令j是在指令i后面执行的指令，WAW表示指令i将数据写入寄存器后，指令j才能将数据写入这个寄存器。</p>
+</li>
+<li><p><strong>RAW（Read After Write）</strong></p>
+<p>假设指令j是在指令i后面执行的指令，RAW表示指令i将数据写入寄存器后，指令j才能从这个寄存器读取数据。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ADD r1,r2,r3</span><br><span class="line">SUB r4,r5,r1     指令需要读取上一条指令的结果</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>解决数据冲突的方法：</p>
+<ul>
+<li><p><strong>寄存器重命名（Tomasulo算法）</strong></p>
+<p>顺序执行的指令写寄存器实在写回阶段，后续的指令也是在写回阶段写寄存器，所以不存在WAW依赖。读寄存器实在译码阶段进行，而写寄存器实在写回阶段，所以不存在WAR依赖。而且，可以通过寄存器重命名的方法解决WAW、WAR，无需担心其执行顺序。</p>
+</li>
+<li><p><strong>数据前递（旁路）</strong></p>
+<p><img src="https://img-blog.csdnimg.cn/20190401202913338.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3NpbmF0XzM2OTQ1NTky,size_16,color_FFFFFF,t_70" alt="img"></p>
+<p>openmips使用该方法解决数据冒险问题。</p>
+</li>
+<li><p><strong>流水线暂停</strong>（stall）</p>
+<p><img src="https://img-blog.csdnimg.cn/20190401195112319.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3NpbmF0XzM2OTQ1NTky,size_16,color_FFFFFF,t_70" alt="img"></p>
+<p>蜂鸟E200使用了OITF模块，每一次派遣一个长指令，则会在OITF中分配一个表项(Entry)，在这个表项中会存储该长指令的结果寄存器索引。在流水线的写回(Write-back)点，每次按顺序写回一个长指令之后，就会将此指令在OITF中的表项移除。每条指令派遣时，都会将本指令的源操作数和目的操作数寄存器索引和OITF中的各个表项进行比对，从而判断本指令是否与已经被派遣出，且尚未写回的长指令产生RAW和WAW相关性。如果产生相关性，则stall住当前指令的派遣。如果没有RAW和WAW相关性，且该指令为多周期长指令，把该指令写入OITF，如果OITF是full，则仍要stall住管线，等待OITF释放空间后，再写入并派遣。</p>
+</li>
+<li><p><strong>保留站</strong></p>
+</li>
+<li><p><strong>乱序发射队列</strong></p>
+</li>
+</ul>
+<h3 id="3-2-发射和派遣"><a href="#3-2-发射和派遣" class="headerlink" title="3.2 发射和派遣"></a>3.2 发射和派遣</h3><p>派遣往往表示指令经过译码之后被派发到不同的运算单元的等待队列中的过程。</p>
+<p>发射往往表示指令从运算单元的等待队列中（解决了数据依赖性之后）发射到运算单元开始执行的过程。</p>
+<ul>
+<li><p>顺序发射、顺序执行、顺序写回</p>
+</li>
+<li><p>顺序发射、乱序执行、顺序写回</p>
+<p>乱序执行指在指令执行阶段可以由不同的运算单元同时执行不同的指令，从而提高性能。同时，乱序执行处理器避免了在顺序执行处理器处理过程中指令由于运算数据未到位所造成的等待。</p>
+</li>
+<li><p>顺序发射、乱序执行、乱序写回</p>
+<p>有些处理器会配置Re-order Buffer（ROB），存储经由执行阶段处理后得到的结果，并有 ROB 把该结果按照顺序写回到寄存器文件。这是典型的乱序写回实现。</p>
+</li>
+<li><p>顺序派遣、乱序发射、乱序执行、乱序写回</p>
+</li>
+</ul>
+<h2 id="四、交付"><a href="#四、交付" class="headerlink" title="四、交付"></a>四、交付</h2><p>交付模块有三个概念：交付、取消、冲刷。</p>
+<ul>
+<li><strong>交付</strong>指指令不再是预测执行状态，被判定为真正地在处理器中被执行。</li>
+<li><strong>取消</strong>指该指令最终被判定取消。</li>
+<li><strong>冲刷</strong>是将没有交付的后续指令全部取消掉。</li>
+</ul>
+<p>影响指令交付的因素：</p>
+<ul>
+<li>中断、异常、分支预测指令</li>
+<li>条件码</li>
+</ul>
+<p>交付模块可以在不同的流水线位置中完成：</p>
+<ul>
+<li><p>在”执行“阶段进行</p>
+<p>在流水线执行阶段，理论上已经可以将分支预测指令的结果解析完成。如蜂鸟E200。</p>
+</li>
+<li><p>在”写回“阶段进行</p>
+<p>由于有的指令需要多个周期才能写回结果，并可能产生错误异常。如openmips。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/DE5DD5973939E9DCC65C1F64B0D2D9CB.png" alt="DE5DD5973939E9DCC65C1F64B0D2D9CB"></p>
+</li>
+<li><p>在重排序交付队列（Re-Order Commit Queue）中进行</p>
+</li>
+</ul>
+<h2 id="五、写回"><a href="#五、写回" class="headerlink" title="五、写回"></a>五、写回</h2><p>最终写回仲裁、长指令写回仲裁、OITF</p>
+<p>最终写回仲裁：长指令比单指令有更高优先级。如果没有长指令写回，单指令可以比更早位置的长指令写回。</p>
+<p>长指令写回仲裁：根据OITF判断长指令的先后关系，严格控制长指令的写回顺序</p>
+]]></content>
       <categories>
-          
-          <category> 链接、装载与库 </category>
-          
+        <category>计算机体系结构</category>
       </categories>
-      
-      
-        <tags>
-            
-            <tag> 程序员的自我修养 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>UART</title>
-      <link href="/UART/"/>
-      <url>/UART/</url>
-      
-        <content type="html"><![CDATA[<p>转载总结自<a href="https://www.analog.com/cn/analog-dialogue/articles/uart-a-hardware-communication-protocol.html#">UART：了解通用异步接收器/发送器的硬件通信协议</a></p><p>“沟通最大的问题在于，人们想当然地认为已经沟通了。”  ——乔治·萧伯纳</p><h2 id="一、UART特点"><a href="#一、UART特点" class="headerlink" title="一、UART特点"></a>一、UART特点</h2><ul><li><p><strong>串行</strong></p><p>串行是按位来进行传递，即一位一位的发送和接受。</p></li><li><p><strong>异步</strong></p><p>异步数据传输过程中，不需要时钟线，直接接发数据，但需要约定通讯协议格式</p></li><li><p><strong>全双工</strong></p><p>指可以同时进行收发两方向的数据传递。</p></li></ul><h2 id="二、接口"><a href="#二、接口" class="headerlink" title="二、接口"></a>二、接口</h2><p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/335962-fig-01.svg" alt="Figure 1. Two UARTs directly communicate with each other.">  </p><p>上图是<strong>两个UART彼此直接通信</strong>，其中：</p><ul><li>发送器（TX）</li><li>接收器（RX）</li></ul><p>TX、RX两个信号主要作用是用于串行通信的串行数据的发送和接收。</p><p><img src="https://www.analog.com/-/media/images/analog-dialogue/en/volume-54/number-4/articles/uart-a-hardware-communication-protocol/335962-fig-02.svg?w=900">   </p><p>如上图<strong>带数据总线的UART</strong>，发送UART连接到以并行形式发送数据的控制数据总线。然后，数据将在传输线路（导线）上一位一位地串行传输到接收UART。反过来，对于接收设备，串行数据会被转换为并行数据。</p><h2 id="三、数据传输"><a href="#三、数据传输" class="headerlink" title="三、数据传输"></a>三、数据传输</h2><h3 id="3-1-数据包形式"><a href="#3-1-数据包形式" class="headerlink" title="3.1 数据包形式"></a>3.1 数据包形式</h3><p>UART中，传输模式为数据包形式。数据包由<strong>起始位</strong>、<strong>数据帧</strong>、<strong>奇偶校验位</strong>和<strong>停止位</strong>组成。</p><p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/335962-fig-03.svg" alt="Figure 3. UART packet.">  </p><ul><li><p><strong>起始位</strong></p><p>当不传输数据时，UART数据传输线通常保持高电压电平”1“。若要开始数据传输，发送UART会将传输线从高电平拉到<strong>低电平</strong>并保持1个时钟周期。当接收UART检测到高到低电压跃迁时，便开始以波特率对应的频率读取数据帧中的位。</p></li><li><p><strong>数据帧</strong></p><p>数据帧包含所传输的实际数据。如果使用奇偶校验位，数据帧长度可以是5位到8位。如果不使用奇偶校验位，数据帧长度可以是9位。</p></li><li><p><strong>奇偶校验码</strong></p></li><li><p><strong>停止位</strong></p><p>数据结束标志。发送UART将数据传输线保持<strong>高电平</strong>1到2位时间。</p></li></ul><h3 id="3-2-UART传输步骤"><a href="#3-2-UART传输步骤" class="headerlink" title="3.2 UART传输步骤"></a>3.2 UART传输步骤</h3><ol><li><p>发送UART从数据总线并行接收数据。</p><p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/335962-fig-08.svg" alt="Figure 8. Data bus to the transmitting UART.">  </p></li><li><p>发送UART将起始位、奇偶校验位和停止位添加到数据帧。</p><p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/335962-fig-09.svg" alt="Figure 9. UART data frame at the Tx side."></p></li><li><p>从起始位到结束位，整个数据包以串行方式从发送UART送至接收UART。接收UART以预配置的波特率对数据线进行采样。</p><p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/335962-fig-10.svg" alt="Figure 10. UART transmission.">  </p></li><li><p>接收UART丢弃数据帧中的起始位、奇偶校验位和停止位。  <img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/335962-fig-11.svg" alt="Figure 11. The UART data frame at the Rx side.">  </p></li><li><p>接收UART将串行数据转换回并行数据，并将其传输到接收端的数据总线。</p><p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/335962-fig-12.svg" alt="Figure 12. Receiving UART to data bus.">  !</p></li></ol><h2 id="UART工作原理"><a href="#UART工作原理" class="headerlink" title="UART工作原理"></a>UART工作原理</h2><p>使用任何硬件通信协议时，首先必须检查数据手册和硬件参考手册。以下是要遵循的步骤：</p><ol><li><p>检查设备的数据手册接口。</p></li><li><p>在存储器映射下面检查UART地址。</p><p><img src="https://www.analog.com/-/media/images/analog-dialogue/en/volume-54/number-4/articles/uart-a-hardware-communication-protocol/335962-fig-15.jpg?w=900" alt="微控制器存储器映射"></p></li><li><p>检查UART端口的具体信息，例如工作模式、数据位长度、奇偶校验位和停止位。</p></li><li><p>检查UART操作的详细信息，包括波特率计算。波特率通过以下示例公式进行配置。</p></li><li><p>对于波特率，务必检查要使用的外设时钟(PCLK)。此示例有26 MHz PCLK和16 MHz PCLK可用。</p></li><li><p>检查UART配置的详细寄存器。了解计算波特率时的参数.</p></li><li><p>检查每个寄存器下的详细信息，代入值以计算波特率，然后开始实现UART。</p></li></ol>]]></content>
-      
-      
+  </entry>
+  <entry>
+    <title>物理内存管理：连续内存分配</title>
+    <url>/%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%EF%BC%9A%E8%BF%9E%E7%BB%AD%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D/</url>
+    <content><![CDATA[<h2 id="固定分区分配"><a href="#固定分区分配" class="headerlink" title="固定分区分配"></a>固定分区分配</h2><p>固定分区分配时最简单的一种可运行多道程序的储存管理方式。用户空间被划分为若干个固定的大小区域，每个分区只装入一道作业，这样一来，可以几道作业并发运行。当一有空闲时，可以从外存的后备作业队列中选择一个适当大小的作业装入该分区，由此往复运行作业。</p>
+<p><strong>缺陷</strong>：固定分区限制了活动进程的数目，每次都只能相应地进行作业，进程对于空闲分区的大小要求比较高，使得作业不灵活，降低了内存的空间利用率。</p>
+<h2 id="动态分区分配"><a href="#动态分区分配" class="headerlink" title="动态分区分配"></a>动态分区分配</h2><h3 id="分配算法"><a href="#分配算法" class="headerlink" title="分配算法"></a>分配算法</h3><ol>
+<li><p><strong>最先匹配</strong></p>
+<ul>
+<li><p>原理&amp;实现</p>
+<ul>
+<li>空闲分区列表按地址顺序排序</li>
+<li>分配过程时,搜索第一个合适的分区</li>
+<li>释放分区时,检查是否可与临近的空闲分区合并</li>
+</ul>
+</li>
+<li><p>优点</p>
+<ul>
+<li><p>简单</p>
+</li>
+<li><p>在高地址空间有大块的空闲分区</p>
+</li>
+</ul>
+</li>
+<li><p>缺点</p>
+<ul>
+<li>外部碎片</li>
+<li>分配大块时较慢</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>最优适配</strong></p>
+<ul>
+<li><p>原理&amp;实现</p>
+<ul>
+<li>空闲分区列表按照大小排序</li>
+<li>分配时,查找一个合适的分区</li>
+<li>释放时,查找并且合并临近的空闲分区(如果找到)</li>
+</ul>
+</li>
+<li><p>优点</p>
+<ul>
+<li>大部分分配的尺可寸较小时,效果很好</li>
+<li>可避免大的空闲分区被拆分</li>
+<li>可减小外部碎片的大小</li>
+<li>相对简单</li>
+</ul>
+</li>
+<li><p>缺点</p>
+<ul>
+<li>外部碎片</li>
+<li>释放分区较慢</li>
+<li>容易产生很多无用的小碎片</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>最差适配</strong></p>
+<ul>
+<li><p>原理&amp;实现</p>
+<ul>
+<li>空闲分区列表按由大到小排序</li>
+<li>分配时，选最大的分区</li>
+<li>释放时，检查是否可与临近的空闲分区合并,进行可能的合并，并调整空闲分区列表顺序</li>
+</ul>
+</li>
+<li><p>优点</p>
+<ul>
+<li>中等大小的分配较多时,效果最好</li>
+<li>避免出现太多的小碎片</li>
+</ul>
+</li>
+<li><p>缺点</p>
+<ul>
+<li>释放分区较慢</li>
+<li>外部碎片</li>
+<li>容易破坏大的空闲分区,因此后续难以分配大的分区</li>
+</ul>
+</li>
+</ul>
+<p><img src="https://img-blog.csdn.net/20180922084231119?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM1NjQyMDM2/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="img"></p>
+</li>
+</ol>
+<p><img src="https://img-blog.csdn.net/20180922084231364?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM1NjQyMDM2/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="img"></p>
+<p><img src="https://img-blog.csdn.net/20180922084231367?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM1NjQyMDM2/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="img"></p>
+<h3 id="碎片管理"><a href="#碎片管理" class="headerlink" title="碎片管理"></a>碎片管理</h3><ul>
+<li><p>紧凑</p>
+<ul>
+<li>调整进程占用的分区位置来减少或避免分区碎片。</li>
+<li>通过移动分配给进程的内存分区，以合并外部碎片</li>
+<li><strong>碎片紧凑的条件</strong>：所有的应用程序可动态重定位</li>
+</ul>
+</li>
+<li><p>分区对换</p>
+<p>将等待状态的进程放到外存里，释放内存空间。</p>
+</li>
+</ul>
+<p><strong>缺陷</strong>：动态分区算法复杂，回收空间是要进行分区合并，对于系统的开销较大。</p>
+<h2 id="伙伴系统"><a href="#伙伴系统" class="headerlink" title="伙伴系统"></a>伙伴系统</h2><h3 id="分配算法-1"><a href="#分配算法-1" class="headerlink" title="分配算法"></a>分配算法</h3><p>物理内存管理中把页按照2的幂次方大小划分并分组。每次分配内存时，从适当大小的组中分配页面，把余下的另一半内存重新划分并分组。</p>
+<p>伙伴系统既能在系统的运行过程中不断地划分空闲分区，并根据分区的大小进行分类，然后相同的空闲分区单独设立一个空闲分区双向链表，同时也能在进程需要系统为其分配一个存储空间时，通过计算并找到合适的空闲分区分配给进程。</p>
+<p>会产生外碎片，会产生内碎片</p>
+<p>伙伴系统折中了内存分配和碎片管理的问题。</p>
+]]></content>
       <categories>
-          
-          <category> 计算机体系结构 </category>
-          
+        <category>操作系统</category>
       </categories>
-      
-      
-        <tags>
-            
-            <tag> 通信协议 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>处理器流水线重点</title>
-      <link href="/%E5%A4%84%E7%90%86%E5%99%A8%E6%B5%81%E6%B0%B4%E7%BA%BF%E9%87%8D%E7%82%B9/"/>
-      <url>/%E5%A4%84%E7%90%86%E5%99%A8%E6%B5%81%E6%B0%B4%E7%BA%BF%E9%87%8D%E7%82%B9/</url>
-      
-        <content type="html"><![CDATA[<h2 id="一、处理器流水线概述"><a href="#一、处理器流水线概述" class="headerlink" title="一、处理器流水线概述"></a>一、处理器流水线概述</h2><p>计算机体系结构中最经典的就是五级流水线，即<strong>取值</strong>、<strong>译码</strong>、<strong>执行</strong>、<strong>访存</strong>、<strong>写回</strong>五个步骤。</p><p>流水线本质上可以理解为<strong>以面积换性能、以空间换时间</strong>的手段。</p><h2 id="二、取指"><a href="#二、取指" class="headerlink" title="二、取指"></a>二、取指</h2><p>取值阶段的核心是“<strong>快</strong>”和“<strong>连续不断</strong>”。</p><h3 id="2-1-快速取值"><a href="#2-1-快速取值" class="headerlink" title="2.1 快速取值"></a>2.1 快速取值</h3><p>要快速从存储器中取出指令，首先要保证存储器的读延迟越小越好。为了使处理器可以以最快的速度取值，通常使用<strong>ITCM</strong>和<strong>ICache</strong>的方法。</p><ul><li><h4 id="ITCM"><a href="#ITCM" class="headerlink" title="ITCM"></a>ITCM</h4><p>指令紧耦合存储器，指配置一段较小容量的存储器来存储指令，在物理上接近处理器核且专属处理器核。</p><p>ITCM大大提升了<strong>时距不相邻而空距相邻</strong>的代码段的执行性能，且需要人为地把代码组织成空距相邻。如蜂鸟E200处理器</p></li><li><h4 id="ICache"><a href="#ICache" class="headerlink" title="ICache"></a>ICache</h4><p>指令缓存。</p><p>ICache智能地、自动地将<strong>时距相邻而空距很远</strong>的代码段放置在体内，CPU以单周期访问这些代码，大大提升了程序性能。如NutShell处理器。</p></li></ul><h3 id="2-2-连续不断"><a href="#2-2-连续不断" class="headerlink" title="2.2 连续不断"></a>2.2 连续不断</h3><h4 id="处理非对齐指令"><a href="#处理非对齐指令" class="headerlink" title="处理非对齐指令"></a>处理非对齐指令</h4><ol><li><p>普通指令非对齐</p><p>剩余缓存</p></li><li><p>分支跳转指令非对齐</p><p>多体交叉存储器</p></li></ol><h4 id="处理分支指令——分支预测"><a href="#处理分支指令——分支预测" class="headerlink" title="处理分支指令——分支预测"></a>处理分支指令——分支预测</h4><p>对于条件跳转/分支指令，理论上要在执行阶段完成之后，才能解析出最终的跳转结果，而这样会造成流水线浪费。利用分支预测，不仅可以使取值连续不断，同时可以解决流水线里<strong>控制冲突</strong>问题。</p><ul><li><h5 id="静态预测"><a href="#静态预测" class="headerlink" title="静态预测"></a>静态预测</h5><ol><li>总预测分支指令不会发生跳转</li><li>BTFN预测，对向后的跳转预测为跳，对向前的跳转预测为不跳。蜂鸟E200处理器采取该方法。</li></ol></li><li><h5 id="动态预测"><a href="#动态预测" class="headerlink" title="动态预测"></a>动态预测</h5><p>利用已经执行过的指令的历史信息和分支本身的信息综合进行方向预测。</p><p>例如NutShell处理器，通过综合考虑分支目标缓冲器 (Branch Target Buffer, <strong>BTB</strong>)、模式历史表 (Pattern History Table,  <strong>PHT</strong>) 和返回地址栈 (Return Address Stack, <strong>RAS</strong>) 对不同类型的转移指令做出快速的预测. </p><p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/BPU-NutShell.jpg" alt="img"></p><p>BTB 中缓存了跳转指令的地址高位信息、跳转目标、指令类型等信息. 在做分支预测时会用取指 PC 索引 BTB 表项, 如果 PC 高位与读到的 BTB 表项的标签匹配则认为 BTB 命中, 再根据 BTB 中记录的指令类型判断跳转方向和跳转目标. 如果类型为条件分支指令,  则需要访问模式历史表 (PHT) 来判断是否跳转; 如果类型为返回指令, 则选择返回地址栈 (RAS) 的栈顶内容作为跳转目标;  如果类型为直接或间接跳转指令, 则选择 BTB 中记录的跳转目标.</p><p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/BTB-NutShell.jpg" alt="img"></p><p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/sp20210718_152102_053.png" alt="sp20210718_152102_053"></p><p>当分支预测器判断一条指令为条件分支跳转时, 需要访问 PHT 进一步对跳转方向做出预测. PHT 的每一项都是一个<strong>两位饱和计数器</strong>, 计数器的内容指示了强跳转、弱跳转、弱不跳转、强不跳转四种分支指令可能所处的状态, 该两位计数器的高位则指示了分支预测的方向.</p><p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/PHT-NutShell.jpg"></p><p>两位饱和计数器是用于预测分支“方向”；BTB是用于预测分支“地址”。</p><p>更详细的介绍可见<a href="https://hitsz-cslab.gitee.io/arch/lab2/1-theory/"><strong>分支预测器设计</strong></a></p></li></ul><h2 id="三、执行"><a href="#三、执行" class="headerlink" title="三、执行"></a>三、执行</h2><h3 id="3-1-流水线数据冲突"><a href="#3-1-流水线数据冲突" class="headerlink" title="3.1 流水线数据冲突"></a>3.1 流水线数据冲突</h3><p>执行阶段除了根据指令的具体类型进行运算外，另一个重要职能就是维护并解决流水线冲突。</p><ul><li><p><strong>WAR（Write After Read）</strong></p><p>假设指令j是在指令i后面执行的指令，WAR表示指令i读出数据后，指令j才能写这个寄存器。</p></li><li><p><strong>WAW（Write After Write）</strong></p><p>假设指令j是在指令i后面执行的指令，WAW表示指令i将数据写入寄存器后，指令j才能将数据写入这个寄存器。</p></li><li><p><strong>RAW（Read After Write）</strong></p><p>假设指令j是在指令i后面执行的指令，RAW表示指令i将数据写入寄存器后，指令j才能从这个寄存器读取数据。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ADD r1,r2,r3</span><br><span class="line">SUB r4,r5,r1     指令需要读取上一条指令的结果</span><br></pre></td></tr></table></figure></li></ul><p>解决数据冲突的方法：</p><ul><li><p><strong>寄存器重命名（Tomasulo算法）</strong></p><p>顺序执行的指令写寄存器实在写回阶段，后续的指令也是在写回阶段写寄存器，所以不存在WAW依赖。读寄存器实在译码阶段进行，而写寄存器实在写回阶段，所以不存在WAR依赖。而且，可以通过寄存器重命名的方法解决WAW、WAR，无需担心其执行顺序。</p></li><li><p><strong>数据前递（旁路）</strong></p><p><img src="https://img-blog.csdnimg.cn/20190401202913338.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3NpbmF0XzM2OTQ1NTky,size_16,color_FFFFFF,t_70" alt="img"></p><p>openmips使用该方法解决数据冒险问题。</p></li><li><p><strong>流水线暂停</strong>（stall）</p><p><img src="https://img-blog.csdnimg.cn/20190401195112319.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3NpbmF0XzM2OTQ1NTky,size_16,color_FFFFFF,t_70" alt="img"></p><p>蜂鸟E200使用了OITF模块，每一次派遣一个长指令，则会在OITF中分配一个表项(Entry)，在这个表项中会存储该长指令的结果寄存器索引。在流水线的写回(Write-back)点，每次按顺序写回一个长指令之后，就会将此指令在OITF中的表项移除。每条指令派遣时，都会将本指令的源操作数和目的操作数寄存器索引和OITF中的各个表项进行比对，从而判断本指令是否与已经被派遣出，且尚未写回的长指令产生RAW和WAW相关性。如果产生相关性，则stall住当前指令的派遣。如果没有RAW和WAW相关性，且该指令为多周期长指令，把该指令写入OITF，如果OITF是full，则仍要stall住管线，等待OITF释放空间后，再写入并派遣。</p></li><li><p><strong>保留站</strong></p></li><li><p><strong>乱序发射队列</strong></p></li></ul><h3 id="3-2-发射和派遣"><a href="#3-2-发射和派遣" class="headerlink" title="3.2 发射和派遣"></a>3.2 发射和派遣</h3><p>派遣往往表示指令经过译码之后被派发到不同的运算单元的等待队列中的过程。</p><p>发射往往表示指令从运算单元的等待队列中（解决了数据依赖性之后）发射到运算单元开始执行的过程。</p><ul><li><p>顺序发射、顺序执行、顺序写回</p></li><li><p>顺序发射、乱序执行、顺序写回</p><p>乱序执行指在指令执行阶段可以由不同的运算单元同时执行不同的指令，从而提高性能。同时，乱序执行处理器避免了在顺序执行处理器处理过程中指令由于运算数据未到位所造成的等待。</p></li><li><p>顺序发射、乱序执行、乱序写回</p><p>有些处理器会配置Re-order Buffer（ROB），存储经由执行阶段处理后得到的结果，并有 ROB 把该结果按照顺序写回到寄存器文件。这是典型的乱序写回实现。</p></li><li><p>顺序派遣、乱序发射、乱序执行、乱序写回</p></li></ul><h2 id="四、交付"><a href="#四、交付" class="headerlink" title="四、交付"></a>四、交付</h2><p>交付模块有三个概念：交付、取消、冲刷。</p><ul><li><strong>交付</strong>指指令不再是预测执行状态，被判定为真正地在处理器中被执行。</li><li><strong>取消</strong>指该指令最终被判定取消。</li><li><strong>冲刷</strong>是将没有交付的后续指令全部取消掉。</li></ul><p>影响指令交付的因素：</p><ul><li>中断、异常、分支预测指令</li><li>条件码</li></ul><p>交付模块可以在不同的流水线位置中完成：</p><ul><li><p>在”执行“阶段进行</p><p>在流水线执行阶段，理论上已经可以将分支预测指令的结果解析完成。如蜂鸟E200。</p></li><li><p>在”写回“阶段进行</p><p>由于有的指令需要多个周期才能写回结果，并可能产生错误异常。如openmips。</p><p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/DE5DD5973939E9DCC65C1F64B0D2D9CB.png" alt="DE5DD5973939E9DCC65C1F64B0D2D9CB"></p></li><li><p>在重排序交付队列（Re-Order Commit Queue）中进行</p></li></ul><h2 id="五、写回"><a href="#五、写回" class="headerlink" title="五、写回"></a>五、写回</h2><p>最终写回仲裁、长指令写回仲裁、OITF</p><p>最终写回仲裁：长指令比单指令有更高优先级。如果没有长指令写回，单指令可以比更早位置的长指令写回。</p><p>长指令写回仲裁：根据OITF判断长指令的先后关系，严格控制长指令的写回顺序</p>]]></content>
-      
-      
+      <tags>
+        <tag>内存管理</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>程序转换处理过程</title>
+    <url>/%E7%A8%8B%E5%BA%8F%E8%BD%AC%E6%8D%A2%E5%A4%84%E7%90%86%E8%BF%87%E7%A8%8B/</url>
+    <content><![CDATA[<p>一个由高级语言编写的程序，必须转换成二进制代码，才能在机器上运行。这种可以在机器上运行是二进制代码被称为<strong>可执行目标文件</strong>。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/sp20210723_083211_152.png" alt="源程序处理过程"></p>
+<p>上述过程可分为四步：</p>
+<ul>
+<li><strong>预处理</strong></li>
+<li><strong>编译</strong></li>
+<li><strong>汇编</strong></li>
+<li><strong>链接</strong></li>
+</ul>
+<h2 id="一、预处理"><a href="#一、预处理" class="headerlink" title="一、预处理"></a>一、预处理</h2><p>预处理过程主要<strong>处理源文件中以“#”开头的预编译指令</strong>，如：</p>
+<ul>
+<li>删除“#define”并展开所定义的宏。</li>
+<li>处理所有条件预编译指令，如“#if”,“#ifdef”, “#endif”等。</li>
+<li>插入头文件到“#include”处，可以递归方式进行处理。</li>
+<li>删除所有的注释“//”和“/* */”。</li>
+<li> 添加行号和文件名标识，以便编译时编译器产生调试用的行号信息。</li>
+<li>保留所有#pragma编译指令（编译器需要用）</li>
+</ul>
+<p>经过预处理后得到的是 <strong>.i 文件</strong>（预处理文件），该文件是一个可读的文本文件 ，但不包含任何宏定义。</p>
+<h3 id="预处理命令"><a href="#预处理命令" class="headerlink" title="预处理命令"></a>预处理命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc –E hello.c –o hello.i</span><br></pre></td></tr></table></figure>
+
+<p>或者</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cpp hello.c &gt; hello.i</span><br></pre></td></tr></table></figure>
+
+<h2 id="二、编译"><a href="#二、编译" class="headerlink" title="二、编译"></a>二、编译</h2><p>编译过程就是将预处理后得到的预处理文件（如 hello.i）进行一系列分析，<strong>生成汇编代码文件</strong>的过程。用来进行编译处理的程序称为<strong>编译程序（编译器，Compiler）</strong></p>
+<p>编译包括以下过程：</p>
+<ul>
+<li>词法分析</li>
+<li>语法分析</li>
+<li>语义分析</li>
+<li>中间代码生成</li>
+<li>代码优化</li>
+</ul>
+<p>经过编译后，得到**.s文件**（汇编代码文件）还是可读的文本文件，CPU无法理解和执行它。</p>
+<h3 id="编译命令"><a href="#编译命令" class="headerlink" title="编译命令"></a>编译命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc -S hello.i -o hello.s</span><br></pre></td></tr></table></figure>
+
+<p>或</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc -S hello.c -o hello.s</span><br></pre></td></tr></table></figure>
+
+<p>或</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">/user/lib/gcc/i486-linux-gnu/4.1/cc1 hello.c</span><br></pre></td></tr></table></figure>
+
+<h2 id="三、汇编"><a href="#三、汇编" class="headerlink" title="三、汇编"></a>三、汇编</h2><p>汇编是<strong>将汇编语言源程序转换为机器指令序列</strong>，每条汇编语句几乎都对应一条机器指令。汇编过程相比编译较为简单，没有复杂的语法，没有语义，也不需要指令优化，只需根据汇编指令和机器指令的对照表一一翻译即可。</p>
+<p>汇编结果是一个 <strong>.o 文件（可重定位目标文件）</strong>，其中包含的是不可读的二进制代码。</p>
+<h3 id="汇编命令"><a href="#汇编命令" class="headerlink" title="汇编命令"></a>汇编命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc –c hello.s –o hello.o</span><br></pre></td></tr></table></figure>
+
+<p>或</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">gcc –c hello.c –o hello.o</span><br></pre></td></tr></table></figure>
+
+<p>或（as是一个汇编程序）</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">as hello.s –o hello.o</span><br></pre></td></tr></table></figure>
+
+<h2 id="四、链接"><a href="#四、链接" class="headerlink" title="四、链接"></a>四、链接</h2><p>链接过程<strong>将多个可重定位目标文件合并以生成可执行目标文件</strong>。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/sp20210723_101021_361.png" alt="sp20210723_101021_361"></p>
+<h3 id="链接命令"><a href="#链接命令" class="headerlink" title="链接命令"></a>链接命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc –static –o myproc main.o swap.o</span><br></pre></td></tr></table></figure>
+
+<p>或</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ld –static –o myproc main.o swap.o</span><br></pre></td></tr></table></figure>
+
+<p>其中，static 表示静态链接，如果不指定 -o 选项，则可执行文件名 为“a.out”。</p>
+<p><strong>a.out 就是最终的可执行文件。</strong></p>
+]]></content>
       <categories>
-          
-          <category> 计算机体系结构 </category>
-          
+        <category>链接、装载与库</category>
       </categories>
-      
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>正则表达式</title>
-      <link href="/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/"/>
-      <url>/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/</url>
-      
-        <content type="html"><![CDATA[<h1 id="正则表达式（regex）"><a href="#正则表达式（regex）" class="headerlink" title="正则表达式（regex）"></a>正则表达式（regex）</h1><h2 id="什么是正则表达式"><a href="#什么是正则表达式" class="headerlink" title="什么是正则表达式"></a>什么是正则表达式</h2><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">正则表达式是一组由字母和符号组成的特殊文本，它可以用来从文本中找出满足你想要的格式的句子。</span><br></pre></td></tr></table></figure><p>一个正则表达式是一种从左到右匹配主体字符串的模式。 “Regular expression”这个词比较拗口，我们常使用缩写的术语“regex”或“regexp”。 正则表达式可以从一个基础字符串中根据一定的匹配模式替换文本中的字符串、验证表单、提取字符串等等。</p><p><img src="https://github.com/ziishaned/learn-regex/raw/master/img/regexp-cn.png" alt="regexp-cn.png"></p><p>以上的正则表达式可以接受 john_doe、jo-hn_doe、john12_as。 但不匹配Jo，因为它包含了大写的字母而且太短了。</p><h2 id="一、基本匹配"><a href="#一、基本匹配" class="headerlink" title="一、基本匹配"></a>一、基本匹配</h2><p>正则表达式其实就是在执行搜索时的格式，它由一些字母和数字组合而成。 例如：一个正则表达式 the，它表示一个规则：由字母t开始，接着是h，再接着是e。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;the&quot; =&gt; The fat cat sat on the mat.</span><br></pre></td></tr></table></figure><p><strong>正则表达式是大小写敏感的</strong>，所以The不会匹配the。</p><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;The&quot; =&gt; The fat cat sat on the mat.</span><br></pre></td></tr></table></figure><h2 id="二、元字符"><a href="#二、元字符" class="headerlink" title="二、元字符"></a>二、元字符</h2><p>正则表达式主要依赖于元字符。 元字符不代表他们本身的字面意思，他们都有特殊的含义。一些元字符写在方括号中的时候有一些特殊的意思。以下是一些元字符的介绍：</p><table><thead><tr><th>元字符</th><th>描述</th></tr></thead><tbody><tr><td>.</td><td>句号匹配任意单个字符除了换行符。</td></tr><tr><td>[ ]</td><td>字符种类。匹配方括号内的任意字符。</td></tr><tr><td>[^ ]</td><td>否定的字符种类。匹配除了方括号里的任意字符。</td></tr><tr><td>*</td><td>匹配&gt;=0个重复的在*号之前的字符。</td></tr><tr><td>+</td><td>匹配&gt;=1个重复的+号前的字符。</td></tr><tr><td>?</td><td>标记?之前的字符为可选。</td></tr><tr><td>{n,m}</td><td>匹配num个大括号之前的字符或字符集 (n &lt;= num &lt;= m)。</td></tr><tr><td>(xyz)</td><td>字符集，匹配与 xyz 完全相等的字符串。</td></tr><tr><td>|</td><td>或运算符，匹配符号前或后的字符.</td></tr><tr><td>| 转义字符,用于匹配一些保留的字符 [ ] ( ) { } . * + ? ^ $ \ |</td><td></td></tr><tr><td>^</td><td>从开始行开始匹配.</td></tr><tr><td>$</td><td>从末端开始匹配.</td></tr></tbody></table><h3 id="2-1-点运算符"><a href="#2-1-点运算符" class="headerlink" title="2.1 点运算符 ."></a>2.1 点运算符 .</h3><p>. 是元字符中最简单的例子。. 匹配任意单个字符，但不匹配换行符。 例如，表达式 .ar 匹配一个任意字符后面跟着是 a 和 r 的字符串。</p><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&quot;.ar&quot; =&gt; The car parked in the garage.</span><br><span class="line">匹配了 car, par, gar</span><br></pre></td></tr></table></figure><h3 id="2-2-字符集"><a href="#2-2-字符集" class="headerlink" title="2.2 字符集"></a>2.2 字符集</h3><p>字符集也叫做字符类。 方括号用来指定一个字符集。 <strong>在方括号中使用连字符来指定字符集的范围。 在方括号中的字符集不关心顺序</strong>。 例如，表达式 [Tt]he  匹配 the 和 The。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&quot;[Tt]he&quot; =&gt; The car parked in the garage.</span><br><span class="line">匹配了 The, the</span><br></pre></td></tr></table></figure><p><strong>方括号的句号就表示句号</strong>。 表达式 ar[.] 匹配 ar.字符串</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&quot;ar[.]&quot; =&gt; A garage is a good place to park a car.</span><br><span class="line">匹配了 ar.</span><br></pre></td></tr></table></figure><h4 id="2-2-1-否定字符集"><a href="#2-2-1-否定字符集" class="headerlink" title="2.2.1 否定字符集"></a>2.2.1 否定字符集</h4><p>一般来说 ^ 表示一个字符串的开头，但它用在一个方括号的开头的时候，它表示这个字符集是否定的。 例如，表达式 [^c]ar 匹配一个后面跟着ar的除了c的任意字符。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&quot;[^c]ar&quot; =&gt; The car parked in the garage.</span><br><span class="line">匹配了 par, gar，但未匹配 car</span><br></pre></td></tr></table></figure><h3 id="2-3-重复次数"><a href="#2-3-重复次数" class="headerlink" title="2.3 重复次数"></a>2.3 重复次数</h3><p>后面跟着元字符 +，* 或 ? 的，用来指定匹配子模式的次数。 这些元字符在不同的情况下有着不同的意思。</p><h4 id="2-3-1-号"><a href="#2-3-1-号" class="headerlink" title="2.3.1 * 号"></a>2.3.1 * 号</h4><p>* 号匹配 在 * 之前的字符出现大于等于0次。 例如，表达式 a* 匹配 0 或更多个以 a 开头的字符。表达式 [a-z]* 匹配一个行中所有以小写字母开头的字符串。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&quot;[a-z]*&quot; =&gt; The car parked in the garage #21.</span><br><span class="line">匹配了 The car parked in the garage</span><br></pre></td></tr></table></figure><p>* 字符和 . 字符搭配可以匹配所有的字符.*。 * 和表示匹配空格的符号\s连起来用，如表达式 \s*cat\s* 匹配 0 或更多个空格开头和 0 或更多个空格结尾的 cat 字符串。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&quot;\s*cat\s*&quot; =&gt; The fat cat sat on the concatenation.</span><br><span class="line">匹配了 cat</span><br></pre></td></tr></table></figure><h4 id="2-3-2-号"><a href="#2-3-2-号" class="headerlink" title="2.3.2 + 号"></a>2.3.2 + 号</h4><p>+号匹配 + 号之前的字符出现 &gt;=1 次。 例如表达式 c.+t 匹配以首字母 c 开头以 t 结尾，中间跟着至少一个字符的字符串。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&quot;c.+t&quot; =&gt; The fat cat sat on the mat.</span><br><span class="line">匹配了 cat sat on the mat</span><br></pre></td></tr></table></figure><p>在正则表达式中元字符 ? 标记在符号前面的字符为可选，即出现 0 或 1 次。 例如，表达式 [T]?he 匹配字符串 he 和 The。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&quot;[T]?he&quot; =&gt; The car is parked in the garage.</span><br><span class="line">只匹配了 The</span><br></pre></td></tr></table></figure><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&quot;[T]?he&quot; =&gt; The car is parked in the garage.</span><br><span class="line">匹配了 The, the</span><br></pre></td></tr></table></figure><h3 id="2-4-号"><a href="#2-4-号" class="headerlink" title="2.4 { } 号"></a>2.4 { } 号</h3><p>在正则表达式中 { } 是一个量词，常用来限定一个或一组字符可以重复出现的次数。 例如，表达式 [0-9]{2,3} 匹配最少 2 位最多 3 位 0~9 的数字。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&quot;[0-9]&#123;2,3&#125;&quot; =&gt; The number was 9.9997 but we rounded it off to 10.0.</span><br><span class="line">匹配了 9.9997 小数点后的 999 以及 10</span><br></pre></td></tr></table></figure><p>我们可以省略第二个参数。 例如，[0-9]{2,} 匹配至少两位 0~9 的数字。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&quot;[0-9]&#123;2,&#125;&quot; =&gt; The number was 9.9997 but we rounded it off to 10.0.</span><br><span class="line">匹配了 9997 和 10</span><br></pre></td></tr></table></figure><p>如果逗号也省略掉则表示重复固定的次数。 例如，[0-9]{3} 匹配3位数字</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&quot;[0-9]&#123;3&#125;&quot; =&gt; The number was 9.9997 but we rounded it off to 10.0.</span><br><span class="line">匹配了 999</span><br></pre></td></tr></table></figure><h3 id="2-5-…-特征标群"><a href="#2-5-…-特征标群" class="headerlink" title="2.5 (…) 特征标群"></a>2.5 (…) 特征标群</h3><p>特征标群是一组写在 (…) 中的子模式。(…) 中包含的内容将会被看成一个整体，和数学中小括号（ ）的作用相同。例如, 表达式 (ab)* 匹配连续出现 0 或更多个 ab。如果没有使用 (…) ，那么表达式 ab* 将匹配连续出现 0 或更多个 b 。再比如之前说的 { } 是用来表示前面一个字符出现指定次数。但如果在 { } 前加上特征标群 (…) 则表示整个标群内的字符重复 N 次。</p><p>我们还可以在 ( ) 中用或字符 | 表示或。例如，(c|g|p)ar 匹配 car 或 gar 或 par.</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&quot;(c|g|p)ar&quot; =&gt; The car is parked in the garage.</span><br><span class="line">匹配了 car, par, gar</span><br></pre></td></tr></table></figure><h3 id="2-6-或运算符"><a href="#2-6-或运算符" class="headerlink" title="2.6 | 或运算符"></a>2.6 | 或运算符</h3><p>或运算符就表示或，用作判断条件。</p><p>例如 (T|t)he|car 匹配 (T|t)he 或 car。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;(T|t)he|car&quot; =&gt; The car is parked in the garage.</span><br></pre></td></tr></table></figure><h3 id="2-7-转码特殊字符"><a href="#2-7-转码特殊字符" class="headerlink" title="2.7 转码特殊字符"></a>2.7 转码特殊字符</h3><p>反斜线 \ 在表达式中用于转码紧跟其后的字符。用于指定 { } [ ] / \ + * . $ ^ | ? 这些特殊字符。如果想要匹配这些特殊字符则要在其前面加上反斜线 \。</p><p>例如 . 是用来匹配除换行符外的所有字符的。如果想要匹配句子中的 . 则要写成 \ . 以下这个例子 \ .?是选择性匹配.</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&quot;(f|c|m)at\.&quot; =&gt; The fat cat sat on the mat.</span><br><span class="line">匹配了 cat.</span><br></pre></td></tr></table></figure><h3 id="2-8-锚点"><a href="#2-8-锚点" class="headerlink" title="2.8 锚点"></a>2.8 锚点</h3><p>在正则表达式中，想要匹配指定开头或结尾的字符串就要使用到锚点。^ 指定开头，$ 指定结尾。</p><h4 id="2-8-1-号"><a href="#2-8-1-号" class="headerlink" title="2.8.1 ^ 号"></a>2.8.1 ^ 号</h4><p>^ 用来检查匹配的字符串是否在所匹配字符串的开头。</p><p>例如，在 abc 中使用表达式 ^a 会得到结果 a。但如果使用 ^b 将匹配不到任何结果。因为在字符串 abc 中并不是以 b 开头。</p><p>例如，^(T|t)he 匹配以 The 或 the 开头的字符串。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&quot;(T|t)he&quot; =&gt; The car is parked in the garage.</span><br><span class="line">匹配了 The, the</span><br></pre></td></tr></table></figure><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&quot;^(T|t)he&quot; =&gt; The car is parked in the garage.</span><br><span class="line">只匹配了 The</span><br></pre></td></tr></table></figure><h4 id="2-8-2-号"><a href="#2-8-2-号" class="headerlink" title="2.8.2 $ 号"></a>2.8.2 $ 号</h4><p>同理于 ^ 号，$ 号用来匹配字符是否是最后一个。</p><p>例如，(at.)$ 匹配以 at. 结尾的字符串。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&quot;(at\.)&quot; =&gt; The fat cat. sat. on the mat.</span><br><span class="line">匹配了三个 at.</span><br></pre></td></tr></table></figure><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&quot;(at\.)$&quot; =&gt; The fat cat. sat. on the mat.</span><br><span class="line">只匹配了最后一个 at.</span><br></pre></td></tr></table></figure><h2 id="三、简写字符集"><a href="#三、简写字符集" class="headerlink" title="三、简写字符集"></a>三、简写字符集</h2><p>正则表达式提供一些常用的字符集简写。如下:</p><table><thead><tr><th>简写</th><th>描述</th></tr></thead><tbody><tr><td>.</td><td>除换行符外的所有字符</td></tr><tr><td>\w</td><td>匹配所有字母数字，等同于 [a-zA-Z0-9_]</td></tr><tr><td>\W</td><td>匹配所有非字母数字，即符号，等同于： [^\w]</td></tr><tr><td>\d</td><td>匹配数字： [0-9]</td></tr><tr><td>\D</td><td>匹配非数字： [^\d]</td></tr><tr><td>\s</td><td>匹配所有空格字符，等同于： [\t\n\f\r\p{Z}]</td></tr><tr><td>\S</td><td>匹配所有非空格字符： [^\s]</td></tr><tr><td>\f</td><td>匹配一个换页符</td></tr><tr><td>\n</td><td>匹配一个换行符</td></tr><tr><td>\r</td><td>匹配一个回车符</td></tr><tr><td>\t</td><td>匹配一个制表符</td></tr><tr><td>\v</td><td>匹配一个垂直制表符</td></tr><tr><td>\p</td><td>匹配 CR/LF（等同于 \r\n），用来匹配 DOS 行终止符</td></tr></tbody></table><h2 id="四、零宽度断言（前后预查）"><a href="#四、零宽度断言（前后预查）" class="headerlink" title="四、零宽度断言（前后预查）"></a>四、零宽度断言（前后预查）</h2><p>先行断言和后发断言都属于<strong>非捕获簇</strong>（不捕获文本 ，也不针对组合计进行计数）。 先行断言用于判断所匹配的格式是否在另一个确定的格式之前，匹配结果不包含该确定格式（仅作为约束）。</p><p>例如，我们想要获得所有跟在 $ 符号后的数字，我们可以使用正后发断言 (?&lt;=$)[0-9.]*。 这个表达式匹配 $ 开头，之后跟着 0,1,2,3,4,5,6,7,8,9,. 这些字符可以出现大于等于 0 次。</p><p>零宽度断言如下：</p><table><thead><tr><th>符号</th><th>描述</th></tr></thead><tbody><tr><td>?=</td><td>正先行断言-存在</td></tr><tr><td>?!</td><td>负先行断言-排除</td></tr><tr><td>?&lt;=</td><td>正后发断言-存在</td></tr><tr><td>?&lt;!</td><td>负后发断言-排除</td></tr></tbody></table><h3 id="4-1-…-正先行断言"><a href="#4-1-…-正先行断言" class="headerlink" title="4.1 ?=… 正先行断言"></a>4.1 ?=… 正先行断言</h3><p>?=… 正先行断言，表示第一部分表达式之后必须跟着 ?=…定义的表达式。</p><p>返回结果只包含满足匹配条件的第一部分表达式。 定义一个正先行断言要使用 ()。在括号内部使用一个问号和等号： (?=…)。</p><p>正先行断言的内容写在括号中的等号后面。 例如，表达式 (T|t)he(?=\sfat) 匹配 The 和 the，在括号中我们又定义了正先行断言 (?=\sfat) ，即 The 和 the 后面紧跟着 (空格)fat。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;(T|t)he(?=\sfat)&quot; =&gt; The fat cat sat on the mat.</span><br></pre></td></tr></table></figure><h3 id="4-2-…-负先行断言"><a href="#4-2-…-负先行断言" class="headerlink" title="4.2 ?!… 负先行断言"></a>4.2 ?!… 负先行断言</h3><p>负先行断言 ?! 用于筛选所有匹配结果，筛选条件为 其后不跟随着断言中定义的格式。 正先行断言 定义和 负先行断言 一样，区别就是 = 替换成 ! 也就是 (?!…)。</p><p>表达式 (T|t)he(?!\sfat) 匹配 The 和 the，且其后不跟着 (空格)fat。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;(T|t)he(?!\sfat)&quot; =&gt; The fat cat sat on the mat.</span><br></pre></td></tr></table></figure><h3 id="4-3-lt-…-正后发断言"><a href="#4-3-lt-…-正后发断言" class="headerlink" title="4.3 ?&lt;= … 正后发断言"></a>4.3 ?&lt;= … 正后发断言</h3><p>正后发断言 记作(?&lt;=…) 用于筛选所有匹配结果，筛选条件为 其前跟随着断言中定义的格式。 例如，表达式 (?&lt;=(T|t)he\s)(fat|mat) 匹配 fat 和 mat，且其前跟着 The 或 the。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;(?&lt;=(T|t)he\s)(fat|mat)&quot; =&gt; The fat cat sat on the mat.</span><br></pre></td></tr></table></figure><h3 id="4-4-lt-…-负后发断言"><a href="#4-4-lt-…-负后发断言" class="headerlink" title="4.4 ?&lt;!… 负后发断言"></a>4.4 ?&lt;!… 负后发断言</h3><p>负后发断言 记作 (?&lt;!…) 用于筛选所有匹配结果，筛选条件为 其前不跟随着断言中定义的格式。 例如，表达式 (?&lt;!(T|t)he\s)(cat) 匹配 cat，且其前不跟着 The 或 the。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;(?&lt;!(T|t)he\s)(cat)&quot; =&gt; The cat sat on cat.</span><br></pre></td></tr></table></figure><h2 id="五、标志"><a href="#五、标志" class="headerlink" title="五、标志"></a>五、标志</h2><p>标志也叫模式修正符，因为它可以用来修改表达式的搜索结果。 这些标志可以任意的组合使用，它也是整个正则表达式的一部分。</p><table><thead><tr><th>标志</th><th>描述</th></tr></thead><tbody><tr><td>i</td><td>忽略大小写</td></tr><tr><td>g</td><td>全局搜索</td></tr><tr><td>m</td><td>多行修饰符：锚点元字符 ^ $ 工作范围在每行的起始。</td></tr></tbody></table><h3 id="5-1-忽略大小写-Case-Insensitive"><a href="#5-1-忽略大小写-Case-Insensitive" class="headerlink" title="5.1 忽略大小写 (Case Insensitive)"></a>5.1 忽略大小写 (Case Insensitive)</h3><p>修饰语 i 用于忽略大小写。 例如，表达式 /The/gi 表示在全局搜索 The，在后面的 i 将其条件修改为忽略大小写，则变成搜索 the 和 The，g 表示全局搜索。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;The&quot; =&gt; The fat cat sat on the mat.</span><br></pre></td></tr></table></figure><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;/The/gi&quot; =&gt; The fat cat sat on the mat.</span><br></pre></td></tr></table></figure><h3 id="5-2-全局搜索-Global-search"><a href="#5-2-全局搜索-Global-search" class="headerlink" title="5.2 全局搜索 (Global search)"></a>5.2 全局搜索 (Global search)</h3><p>修饰符 g 常用于执行一个全局搜索匹配，即（不仅仅返回第一个匹配的，而是返回全部）。 例如，表达式 /.(at)/g 表示搜索 任意字符（除了换行）+ at，并返回全部结果。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;/.(at)/&quot; =&gt; The fat cat sat on the mat.</span><br></pre></td></tr></table></figure><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;/.(at)/g&quot; =&gt; The fat cat sat on the mat.</span><br></pre></td></tr></table></figure><h3 id="5-3-多行修饰符-Multiline"><a href="#5-3-多行修饰符-Multiline" class="headerlink" title="5.3 多行修饰符 (Multiline)"></a>5.3 多行修饰符 (Multiline)</h3><p>多行修饰符 m 常用于执行一个多行匹配。</p><p>像之前介绍的 (^,$) 用于检查格式是否是在待检测字符串的开头或结尾。但我们如果想要它在每行的开头和结尾生效，我们需要用到多行修饰符 m。</p><p>例如，表达式 /at(.)?$/gm 表示小写字符 a 后跟小写字符 t ，末尾可选除换行符外任意字符。根据 m 修饰符，现在表达式匹配每行的结尾。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&quot;/.at(.)?$/&quot; =&gt; The fat</span><br><span class="line">                cat sat</span><br><span class="line">                on the mat.</span><br></pre></td></tr></table></figure><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&quot;/.at(.)?$/gm&quot; =&gt; The fat</span><br><span class="line">                  cat sat</span><br><span class="line">                  on the mat.</span><br></pre></td></tr></table></figure><h2 id="六、贪婪匹配与惰性匹配-Greedy-vs-lazy-matching"><a href="#六、贪婪匹配与惰性匹配-Greedy-vs-lazy-matching" class="headerlink" title="六、贪婪匹配与惰性匹配 (Greedy vs lazy matching)"></a>六、贪婪匹配与惰性匹配 (Greedy vs lazy matching)</h2><p>正则表达式默认采用贪婪匹配模式，在该模式下意味着会匹配尽可能长的子串。我们可以使用 ? 将贪婪匹配模式转化为惰性匹配模式。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;/(.*at)/&quot; =&gt; The fat cat sat on the mat. </span><br></pre></td></tr></table></figure><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;/(.*?at)/&quot; =&gt; The fat cat sat on the mat. </span><br></pre></td></tr></table></figure>]]></content>
-      
-      
+      <tags>
+        <tag>程序员的自我修养</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>符号与符号表</title>
+    <url>/%E7%AC%A6%E5%8F%B7%E4%B8%8E%E7%AC%A6%E5%8F%B7%E8%A1%A8/</url>
+    <content><![CDATA[<p>我们知道链接操作的第一步：</p>
+<p><strong>符号解析</strong></p>
+<ul>
+<li>程序中有定义和引用的符号</li>
+<li>编译器将定义的符号存放在一个符号表（symbol table）中</li>
+<li>编译器将符号引用存放在重定位节（.rel.text和.rel.data）中</li>
+<li>链接器将每个符号引用都与一个确定的符号定义建立关联</li>
+</ul>
+<h2 id="符号"><a href="#符号" class="headerlink" title="符号"></a>符号</h2><p><strong>符号就是其实程序中的变量名、函数名。</strong></p>
+<h3 id="符号定义与符号引用"><a href="#符号定义与符号引用" class="headerlink" title="符号定义与符号引用"></a>符号定义与符号引用</h3><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210724091642042.png" alt="image-20210724091642042" style="zoom: 33%;" />
+
+<h4 id="符号定义的本质"><a href="#符号定义的本质" class="headerlink" title="符号定义的本质"></a>符号定义的本质</h4><blockquote>
+<p>指被分配了存储空间。如果是函数名则指代码所在区；如果是变量名则指其所在的静态数据区。</p>
+</blockquote>
+<h3 id="链接符号的类型"><a href="#链接符号的类型" class="headerlink" title="链接符号的类型"></a>链接符号的类型</h3><p>每个可重定位目标模块都有一个符号表，它包含了定义和引用的符号。有三种链接器符号：</p>
+<ul>
+<li><p>Global symbols（<strong>全局符号</strong>）</p>
+<blockquote>
+<p>定义在本目标文件的全局符号，可以被其他目标文件引用。</p>
+</blockquote>
+</li>
+<li><p>External symbols（<strong>外部符号</strong>）</p>
+<blockquote>
+<p>在本目标文件中引用的全局变量，却没有定义在本目标文件。</p>
+</blockquote>
+</li>
+<li><p>Local symbols（<strong>局部符号</strong>）</p>
+<blockquote>
+<p>只在编译单元内部。</p>
+</blockquote>
+</li>
+</ul>
+<img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210724095744156.png" alt="image-20210724095744156" style="zoom:33%;" />
+
+<h2 id="目标文件中的符号表"><a href="#目标文件中的符号表" class="headerlink" title="目标文件中的符号表"></a>目标文件中的符号表</h2><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">   Elf32_Word st_name;	<span class="comment">/*符号对应宇符串在 strtab节中的偏移量*/</span></span><br><span class="line">	Elf32_Addr st_value; 	<span class="comment">/*在对应节中的偏移量,或虚拟地址*/</span></span><br><span class="line">	Elf32_Word st_size;		<span class="comment">/*符号对应目标字节数，函数大小或变量长度*/</span></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">char</span> st_info;<span class="comment">/*指出符号的类型(Type)和绑定属性(Bind)*/</span></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">char</span> st_other;</span><br><span class="line">	Elf32_Half st_shndx;	<span class="comment">/*符号对应目标所在的节,或其他倩况*/</span></span><br><span class="line">&#125; Elf32_Sym;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210723165921745.png" alt="image-20210723165921745"></p>
+<h2 id="符号解析"><a href="#符号解析" class="headerlink" title="符号解析"></a>符号解析</h2><blockquote>
+<p>将每个模块中引用的符号与某个目标模块中的定义符号建立关联。</p>
+</blockquote>
+<p>每个定义符号在代码段或数据段中都被分配了存储空间，将引用符号与定义符号建立关联后，就可在重定位时将引用符号的地址重定位为相关联的定义符号的地址。</p>
+<p>本地符号在本模块内定义并引用，因此其解析较简单，只要与本模块內唯一的定义符号关联即可。</p>
+<p>全局符号(外部定义的、内部定义的)的解析涉及多个模块，故较复杂。</p>
+<h2 id="全局符号的强、弱"><a href="#全局符号的强、弱" class="headerlink" title="全局符号的强、弱"></a>全局符号的强、弱</h2><p>全局符号有强、弱的特性。</p>
+<ul>
+<li>强符号：函数名和已初始化的全局变量名。</li>
+<li>弱符号：未初始化的全局变量名。</li>
+</ul>
+<img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210724104209132.png" alt="image-20210724104209132" style="zoom:33%;" />
+
+<h2 id="链接器对符号的解析规则"><a href="#链接器对符号的解析规则" class="headerlink" title="链接器对符号的解析规则"></a>链接器对符号的解析规则</h2><p>符号解析时，只能有一个确定的定义（即每个符号仅占一处存储空间）。如果碰到符号存在多重定义时，就得有相应的处理规则：</p>
+<ul>
+<li><p>Rule 1：强符号不能多次定义</p>
+<img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210724105327383.png" alt="image-20210724105327383" style="zoom: 33%;" /></li>
+<li><p>Rule 2：若一个符号被定义为一次强符号和多次弱符号，则按强符号定义为准。</p>
+<img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210724105451041.png" alt="image-20210724105451041" style="zoom: 25%;" /></li>
+<li><p>Rule 3：若有多个弱符号定义，则任选其中一个。</p>
+</li>
+</ul>
+<p>关于全局符号的多重定义的问题：</p>
+<ul>
+<li>尽量避免使用全局变量</li>
+<li>一定要使用的话，就按以下规则使用<ul>
+<li>尽量使用本地变量（static）</li>
+<li>全局变量要赋初值</li>
+<li>外部全局变量要使用extern</li>
+</ul>
+</li>
+</ul>
+]]></content>
       <categories>
-          
-          <category> 编程 </category>
-          
+        <category>链接、装载与库</category>
       </categories>
-      
-      
-        <tags>
-            
-            <tag> 正则表达式 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-  
-  
+      <tags>
+        <tag>程序员的自我修养</tag>
+      </tags>
+  </entry>
 </search>
