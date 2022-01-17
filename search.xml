@@ -264,121 +264,6 @@
       </tags>
   </entry>
   <entry>
-    <title>UART</title>
-    <url>/UART/</url>
-    <content><![CDATA[<p>转载总结自<a href="https://www.analog.com/cn/analog-dialogue/articles/uart-a-hardware-communication-protocol.html#">UART：了解通用异步接收器/发送器的硬件通信协议</a></p>
-<p>“沟通最大的问题在于，人们想当然地认为已经沟通了。”  ——乔治·萧伯纳</p>
-<h2 id="一、UART特点"><a href="#一、UART特点" class="headerlink" title="一、UART特点"></a>一、UART特点</h2><ul>
-<li><p><strong>串行</strong></p>
-<p>串行是按位来进行传递，即一位一位的发送和接受。</p>
-</li>
-<li><p><strong>异步</strong></p>
-<p>异步数据传输过程中，不需要时钟线，直接接发数据，但需要约定通讯协议格式</p>
-</li>
-<li><p><strong>全双工</strong></p>
-<p>指可以同时进行收发两方向的数据传递。</p>
-</li>
-</ul>
-<h2 id="二、接口"><a href="#二、接口" class="headerlink" title="二、接口"></a>二、接口</h2><p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/335962-fig-01.svg" alt="Figure 1. Two UARTs directly communicate with each other.">  </p>
-<p>上图是<strong>两个UART彼此直接通信</strong>，其中：</p>
-<ul>
-<li>发送器（TX）</li>
-<li>接收器（RX）</li>
-</ul>
-<p>TX、RX两个信号主要作用是用于串行通信的串行数据的发送和接收。</p>
-<p><img src="https://www.analog.com/-/media/images/analog-dialogue/en/volume-54/number-4/articles/uart-a-hardware-communication-protocol/335962-fig-02.svg?w=900">   </p>
-<p>如上图<strong>带数据总线的UART</strong>，发送UART连接到以并行形式发送数据的控制数据总线。然后，数据将在传输线路（导线）上一位一位地串行传输到接收UART。反过来，对于接收设备，串行数据会被转换为并行数据。</p>
-<h2 id="三、数据传输"><a href="#三、数据传输" class="headerlink" title="三、数据传输"></a>三、数据传输</h2><h3 id="3-1-数据包形式"><a href="#3-1-数据包形式" class="headerlink" title="3.1 数据包形式"></a>3.1 数据包形式</h3><p>UART中，传输模式为数据包形式。数据包由<strong>起始位</strong>、<strong>数据帧</strong>、<strong>奇偶校验位</strong>和<strong>停止位</strong>组成。</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/335962-fig-03.svg" alt="Figure 3. UART packet.">  </p>
-<ul>
-<li><p><strong>起始位</strong></p>
-<p>当不传输数据时，UART数据传输线通常保持高电压电平”1“。若要开始数据传输，发送UART会将传输线从高电平拉到<strong>低电平</strong>并保持1个时钟周期。当接收UART检测到高到低电压跃迁时，便开始以波特率对应的频率读取数据帧中的位。</p>
-</li>
-<li><p><strong>数据帧</strong></p>
-<p>数据帧包含所传输的实际数据。如果使用奇偶校验位，数据帧长度可以是5位到8位。如果不使用奇偶校验位，数据帧长度可以是9位。</p>
-</li>
-<li><p><strong>奇偶校验码</strong></p>
-</li>
-<li><p><strong>停止位</strong></p>
-<p>数据结束标志。发送UART将数据传输线保持<strong>高电平</strong>1到2位时间。</p>
-</li>
-</ul>
-<h3 id="3-2-UART传输步骤"><a href="#3-2-UART传输步骤" class="headerlink" title="3.2 UART传输步骤"></a>3.2 UART传输步骤</h3><ol>
-<li><p>发送UART从数据总线并行接收数据。</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/335962-fig-08.svg" alt="Figure 8. Data bus to the transmitting UART.">  </p>
-</li>
-<li><p>发送UART将起始位、奇偶校验位和停止位添加到数据帧。</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/335962-fig-09.svg" alt="Figure 9. UART data frame at the Tx side."></p>
-</li>
-<li><p>从起始位到结束位，整个数据包以串行方式从发送UART送至接收UART。接收UART以预配置的波特率对数据线进行采样。</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/335962-fig-10.svg" alt="Figure 10. UART transmission.">  </p>
-</li>
-<li><p>接收UART丢弃数据帧中的起始位、奇偶校验位和停止位。  <img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/335962-fig-11.svg" alt="Figure 11. The UART data frame at the Rx side.">  </p>
-</li>
-<li><p>接收UART将串行数据转换回并行数据，并将其传输到接收端的数据总线。</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/335962-fig-12.svg" alt="Figure 12. Receiving UART to data bus.">  !</p>
-</li>
-</ol>
-<h2 id="UART工作原理"><a href="#UART工作原理" class="headerlink" title="UART工作原理"></a>UART工作原理</h2><p>使用任何硬件通信协议时，首先必须检查数据手册和硬件参考手册。以下是要遵循的步骤：</p>
-<ol>
-<li><p>检查设备的数据手册接口。</p>
-</li>
-<li><p>在存储器映射下面检查UART地址。</p>
-<p><img src="https://www.analog.com/-/media/images/analog-dialogue/en/volume-54/number-4/articles/uart-a-hardware-communication-protocol/335962-fig-15.jpg?w=900" alt="微控制器存储器映射"></p>
-</li>
-<li><p>检查UART端口的具体信息，例如工作模式、数据位长度、奇偶校验位和停止位。</p>
-</li>
-<li><p>检查UART操作的详细信息，包括波特率计算。波特率通过以下示例公式进行配置。</p>
-</li>
-<li><p>对于波特率，务必检查要使用的外设时钟(PCLK)。此示例有26 MHz PCLK和16 MHz PCLK可用。</p>
-</li>
-<li><p>检查UART配置的详细寄存器。了解计算波特率时的参数.</p>
-</li>
-<li><p>检查每个寄存器下的详细信息，代入值以计算波特率，然后开始实现UART。</p>
-</li>
-</ol>
-]]></content>
-      <categories>
-        <category>计算机体系结构</category>
-      </categories>
-      <tags>
-        <tag>通信协议</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>处理器性能公式</title>
-    <url>/%E5%A4%84%E7%90%86%E5%99%A8%E6%80%A7%E8%83%BD%E5%85%AC%E5%BC%8F/</url>
-    <content><![CDATA[<h3 id="CPU性能及其度量因素"><a href="#CPU性能及其度量因素" class="headerlink" title="CPU性能及其度量因素"></a>CPU性能及其度量因素</h3><p>CPU性能度量的基本指标是<strong>CPU执行时间</strong>。而几乎所有发的计算机都有一个以固定频率运行的时钟，称为<strong>时钟周期</strong>，或脉冲周期等。所以，我们可以利用时钟周期来表示CPU时间：<br>$$<br>程序CPU执行时间 = 程序CPU时钟周期数 × 时钟周期长度<br>$$<br>其中，时钟周期长度与时钟频率互为倒数，所以该公式也可表示为：<br>$$<br>程序CPU执行时间 =  \frac {程序CPU时钟周期数}{时钟频率}<br>$$</p>
-<h3 id="指令性能"><a href="#指令性能" class="headerlink" title="指令性能"></a>指令性能</h3><p>除了时钟周期外，我们还需注意<strong>指令数</strong>，因为计算机必须通过执行指令来运行程序。<br>$$<br>CPU时钟周期 = 程序指令数 × 指令平均时钟周期数<br>$$</p>
-<blockquote>
-<p><strong>指令平均时钟周期数（CPI）</strong>：表示执行某个程序或者程序片段时每条指令所需的时钟周期平均数。</p>
-</blockquote>
-<h3 id="经典的CPU性能公式"><a href="#经典的CPU性能公式" class="headerlink" title="经典的CPU性能公式"></a>经典的CPU性能公式</h3><p>结合公式（1）、（2）、（3），我们可以得出<strong>经典的CPU性能公式</strong>：<br>$$<br>CPU时间 = 指令数 × CPI × 时钟周期长度<br>$$<br>或<br>$$<br>CPU时间 = \frac{指令数 × CPI}{时钟频率}<br>$$</p>
-<h3 id="影响处理器性能的因素"><a href="#影响处理器性能的因素" class="headerlink" title="影响处理器性能的因素"></a>影响处理器性能的因素</h3><p>从该公式可以看出，<strong>处理器性能取决于三个特性：时钟周期、CPI、指令数</strong>。</p>
-<ul>
-<li>时钟周期：硬件技术与组成</li>
-<li>CPI：组成与指令集体系结构</li>
-<li>指令数：指令集体系结构与编译器技术</li>
-</ul>
-<h4 id="如何测量这些因素"><a href="#如何测量这些因素" class="headerlink" title="如何测量这些因素"></a>如何测量这些因素</h4><p>首先，通过运行程序来测量CPU时间，并且计算机说明书上通常介绍了时钟周期长度。</p>
-<p>难以测量的时指令数与 CPI。</p>
-<p>可以使用体系结构仿真器预先执行程序来测量执行的指令数，或者用大多数处理器中的硬件计数器来测量执行的指令数、平均CPI和性能损失。</p>
-<p>但是，CPI 与计算机的各种设计细节密切相关（如存储系统、处理器结构、应用程序中不同类型的指令所占的比例），对于不同的应用程序它是不同的。</p>
-<h3 id="Amdal定律"><a href="#Amdal定律" class="headerlink" title="Amdal定律"></a>Amdal定律</h3><p>Amdal定律阐述了<strong>对于特定改进的性能提升可能由所使用的改进特征的数量所限制</strong>。也就是说，当提升系统的某部分性能时，对整个系统性能的影响取决于:</p>
-<ol>
-<li>这一部分有多重要(ɑ)</li>
-<li>这一部分性能提升了多少(k)</li>
-</ol>
-<p>$$<br>加速比S = \frac{1}{(1-ɑ)+\frac{ɑ}{k}}<br>$$</p>
-<blockquote>
-<p>ɑ 是升级模块占比，k 是该部分性能提升比例</p>
-</blockquote>
-]]></content>
-      <categories>
-        <category>计算机体系结构</category>
-      </categories>
-  </entry>
-  <entry>
     <title>分支预测</title>
     <url>/%E5%88%86%E6%94%AF%E9%A2%84%E6%B5%8B/</url>
     <content><![CDATA[<p>分支预测解决流水线冲突中的控制冒险。在指令集中，分支指令包括条件指令和非条件指令。对无条件指令来说，无需进行条件判断，就可以获得跳转后的地址；但是对条件跳转指令，无论是条件直接跳转还是条件间接跳转指令（RISC-V 无此类指令），都需要在执行阶段才可以确定是否跳转，这样会影响取值阶段的效率。</p>
@@ -483,6 +368,121 @@
       <categories>
         <category>计算机体系结构</category>
       </categories>
+  </entry>
+  <entry>
+    <title>处理器性能公式</title>
+    <url>/%E5%A4%84%E7%90%86%E5%99%A8%E6%80%A7%E8%83%BD%E5%85%AC%E5%BC%8F/</url>
+    <content><![CDATA[<h3 id="CPU性能及其度量因素"><a href="#CPU性能及其度量因素" class="headerlink" title="CPU性能及其度量因素"></a>CPU性能及其度量因素</h3><p>CPU性能度量的基本指标是<strong>CPU执行时间</strong>。而几乎所有发的计算机都有一个以固定频率运行的时钟，称为<strong>时钟周期</strong>，或脉冲周期等。所以，我们可以利用时钟周期来表示CPU时间：<br>$$<br>程序CPU执行时间 = 程序CPU时钟周期数 × 时钟周期长度<br>$$<br>其中，时钟周期长度与时钟频率互为倒数，所以该公式也可表示为：<br>$$<br>程序CPU执行时间 =  \frac {程序CPU时钟周期数}{时钟频率}<br>$$</p>
+<h3 id="指令性能"><a href="#指令性能" class="headerlink" title="指令性能"></a>指令性能</h3><p>除了时钟周期外，我们还需注意<strong>指令数</strong>，因为计算机必须通过执行指令来运行程序。<br>$$<br>CPU时钟周期 = 程序指令数 × 指令平均时钟周期数<br>$$</p>
+<blockquote>
+<p><strong>指令平均时钟周期数（CPI）</strong>：表示执行某个程序或者程序片段时每条指令所需的时钟周期平均数。</p>
+</blockquote>
+<h3 id="经典的CPU性能公式"><a href="#经典的CPU性能公式" class="headerlink" title="经典的CPU性能公式"></a>经典的CPU性能公式</h3><p>结合公式（1）、（2）、（3），我们可以得出<strong>经典的CPU性能公式</strong>：<br>$$<br>CPU时间 = 指令数 × CPI × 时钟周期长度<br>$$<br>或<br>$$<br>CPU时间 = \frac{指令数 × CPI}{时钟频率}<br>$$</p>
+<h3 id="影响处理器性能的因素"><a href="#影响处理器性能的因素" class="headerlink" title="影响处理器性能的因素"></a>影响处理器性能的因素</h3><p>从该公式可以看出，<strong>处理器性能取决于三个特性：时钟周期、CPI、指令数</strong>。</p>
+<ul>
+<li>时钟周期：硬件技术与组成</li>
+<li>CPI：组成与指令集体系结构</li>
+<li>指令数：指令集体系结构与编译器技术</li>
+</ul>
+<h4 id="如何测量这些因素"><a href="#如何测量这些因素" class="headerlink" title="如何测量这些因素"></a>如何测量这些因素</h4><p>首先，通过运行程序来测量CPU时间，并且计算机说明书上通常介绍了时钟周期长度。</p>
+<p>难以测量的时指令数与 CPI。</p>
+<p>可以使用体系结构仿真器预先执行程序来测量执行的指令数，或者用大多数处理器中的硬件计数器来测量执行的指令数、平均CPI和性能损失。</p>
+<p>但是，CPI 与计算机的各种设计细节密切相关（如存储系统、处理器结构、应用程序中不同类型的指令所占的比例），对于不同的应用程序它是不同的。</p>
+<h3 id="Amdal定律"><a href="#Amdal定律" class="headerlink" title="Amdal定律"></a>Amdal定律</h3><p>Amdal定律阐述了<strong>对于特定改进的性能提升可能由所使用的改进特征的数量所限制</strong>。也就是说，当提升系统的某部分性能时，对整个系统性能的影响取决于:</p>
+<ol>
+<li>这一部分有多重要(ɑ)</li>
+<li>这一部分性能提升了多少(k)</li>
+</ol>
+<p>$$<br>加速比S = \frac{1}{(1-ɑ)+\frac{ɑ}{k}}<br>$$</p>
+<blockquote>
+<p>ɑ 是升级模块占比，k 是该部分性能提升比例</p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>计算机体系结构</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>UART</title>
+    <url>/UART/</url>
+    <content><![CDATA[<p>转载总结自<a href="https://www.analog.com/cn/analog-dialogue/articles/uart-a-hardware-communication-protocol.html#">UART：了解通用异步接收器/发送器的硬件通信协议</a></p>
+<p>“沟通最大的问题在于，人们想当然地认为已经沟通了。”  ——乔治·萧伯纳</p>
+<h2 id="一、UART特点"><a href="#一、UART特点" class="headerlink" title="一、UART特点"></a>一、UART特点</h2><ul>
+<li><p><strong>串行</strong></p>
+<p>串行是按位来进行传递，即一位一位的发送和接受。</p>
+</li>
+<li><p><strong>异步</strong></p>
+<p>异步数据传输过程中，不需要时钟线，直接接发数据，但需要约定通讯协议格式</p>
+</li>
+<li><p><strong>全双工</strong></p>
+<p>指可以同时进行收发两方向的数据传递。</p>
+</li>
+</ul>
+<h2 id="二、接口"><a href="#二、接口" class="headerlink" title="二、接口"></a>二、接口</h2><p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/335962-fig-01.svg" alt="Figure 1. Two UARTs directly communicate with each other.">  </p>
+<p>上图是<strong>两个UART彼此直接通信</strong>，其中：</p>
+<ul>
+<li>发送器（TX）</li>
+<li>接收器（RX）</li>
+</ul>
+<p>TX、RX两个信号主要作用是用于串行通信的串行数据的发送和接收。</p>
+<p><img src="https://www.analog.com/-/media/images/analog-dialogue/en/volume-54/number-4/articles/uart-a-hardware-communication-protocol/335962-fig-02.svg?w=900">   </p>
+<p>如上图<strong>带数据总线的UART</strong>，发送UART连接到以并行形式发送数据的控制数据总线。然后，数据将在传输线路（导线）上一位一位地串行传输到接收UART。反过来，对于接收设备，串行数据会被转换为并行数据。</p>
+<h2 id="三、数据传输"><a href="#三、数据传输" class="headerlink" title="三、数据传输"></a>三、数据传输</h2><h3 id="3-1-数据包形式"><a href="#3-1-数据包形式" class="headerlink" title="3.1 数据包形式"></a>3.1 数据包形式</h3><p>UART中，传输模式为数据包形式。数据包由<strong>起始位</strong>、<strong>数据帧</strong>、<strong>奇偶校验位</strong>和<strong>停止位</strong>组成。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/335962-fig-03.svg" alt="Figure 3. UART packet.">  </p>
+<ul>
+<li><p><strong>起始位</strong></p>
+<p>当不传输数据时，UART数据传输线通常保持高电压电平”1“。若要开始数据传输，发送UART会将传输线从高电平拉到<strong>低电平</strong>并保持1个时钟周期。当接收UART检测到高到低电压跃迁时，便开始以波特率对应的频率读取数据帧中的位。</p>
+</li>
+<li><p><strong>数据帧</strong></p>
+<p>数据帧包含所传输的实际数据。如果使用奇偶校验位，数据帧长度可以是5位到8位。如果不使用奇偶校验位，数据帧长度可以是9位。</p>
+</li>
+<li><p><strong>奇偶校验码</strong></p>
+</li>
+<li><p><strong>停止位</strong></p>
+<p>数据结束标志。发送UART将数据传输线保持<strong>高电平</strong>1到2位时间。</p>
+</li>
+</ul>
+<h3 id="3-2-UART传输步骤"><a href="#3-2-UART传输步骤" class="headerlink" title="3.2 UART传输步骤"></a>3.2 UART传输步骤</h3><ol>
+<li><p>发送UART从数据总线并行接收数据。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/335962-fig-08.svg" alt="Figure 8. Data bus to the transmitting UART.">  </p>
+</li>
+<li><p>发送UART将起始位、奇偶校验位和停止位添加到数据帧。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/335962-fig-09.svg" alt="Figure 9. UART data frame at the Tx side."></p>
+</li>
+<li><p>从起始位到结束位，整个数据包以串行方式从发送UART送至接收UART。接收UART以预配置的波特率对数据线进行采样。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/335962-fig-10.svg" alt="Figure 10. UART transmission.">  </p>
+</li>
+<li><p>接收UART丢弃数据帧中的起始位、奇偶校验位和停止位。  <img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/335962-fig-11.svg" alt="Figure 11. The UART data frame at the Rx side.">  </p>
+</li>
+<li><p>接收UART将串行数据转换回并行数据，并将其传输到接收端的数据总线。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/335962-fig-12.svg" alt="Figure 12. Receiving UART to data bus.">  !</p>
+</li>
+</ol>
+<h2 id="UART工作原理"><a href="#UART工作原理" class="headerlink" title="UART工作原理"></a>UART工作原理</h2><p>使用任何硬件通信协议时，首先必须检查数据手册和硬件参考手册。以下是要遵循的步骤：</p>
+<ol>
+<li><p>检查设备的数据手册接口。</p>
+</li>
+<li><p>在存储器映射下面检查UART地址。</p>
+<p><img src="https://www.analog.com/-/media/images/analog-dialogue/en/volume-54/number-4/articles/uart-a-hardware-communication-protocol/335962-fig-15.jpg?w=900" alt="微控制器存储器映射"></p>
+</li>
+<li><p>检查UART端口的具体信息，例如工作模式、数据位长度、奇偶校验位和停止位。</p>
+</li>
+<li><p>检查UART操作的详细信息，包括波特率计算。波特率通过以下示例公式进行配置。</p>
+</li>
+<li><p>对于波特率，务必检查要使用的外设时钟(PCLK)。此示例有26 MHz PCLK和16 MHz PCLK可用。</p>
+</li>
+<li><p>检查UART配置的详细寄存器。了解计算波特率时的参数.</p>
+</li>
+<li><p>检查每个寄存器下的详细信息，代入值以计算波特率，然后开始实现UART。</p>
+</li>
+</ol>
+]]></content>
+      <categories>
+        <category>计算机体系结构</category>
+      </categories>
+      <tags>
+        <tag>通信协议</tag>
+      </tags>
   </entry>
   <entry>
     <title>处理器流水线重点</title>
