@@ -20,19 +20,17 @@
     var CONFIG = {"hostname":"monuo2021.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="处理器性能分析及Amdal定律">
-<meta property="og:type" content="article">
-<meta property="og:title" content="处理器性能公式">
-<meta property="og:url" content="https://monuo2021.github.io/%E5%A4%84%E7%90%86%E5%99%A8%E6%80%A7%E8%83%BD%E5%85%AC%E5%BC%8F/index.html">
+  <meta name="description" content="悲莫悲兮生别离，乐莫乐兮新相知">
+<meta property="og:type" content="website">
+<meta property="og:title" content="飞光">
+<meta property="og:url" content="https://monuo2021.github.io/archives/2022/index.html">
 <meta property="og:site_name" content="飞光">
-<meta property="og:description" content="处理器性能分析及Amdal定律">
+<meta property="og:description" content="悲莫悲兮生别离，乐莫乐兮新相知">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2021-08-13T06:47:13.000Z">
-<meta property="article:modified_time" content="2021-08-13T06:48:40.954Z">
 <meta property="article:author" content="monuo">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://monuo2021.github.io/%E5%A4%84%E7%90%86%E5%99%A8%E6%80%A7%E8%83%BD%E5%85%AC%E5%BC%8F/">
+<link rel="canonical" href="https://monuo2021.github.io/archives/2022/">
 
 
 <script id="page-configurations">
@@ -40,12 +38,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : true,
+    isPost : false,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>处理器性能公式 | 飞光</title>
+  <title>归档 | 飞光</title>
   
 
 
@@ -149,114 +147,50 @@
         <div class="content-wrap">
           
 
-          <div class="content post posts-expand">
+          <div class="content archive">
             
 
-    
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://monuo2021.github.io/%E5%A4%84%E7%90%86%E5%99%A8%E6%80%A7%E8%83%BD%E5%85%AC%E5%BC%8F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-      <meta itemprop="name" content="monuo">
-      <meta itemprop="description" content="悲莫悲兮生别离，乐莫乐兮新相知">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="飞光">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          处理器性能公式
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-08-13 14:47:13 / 修改时间：14:48:40" itemprop="dateCreated datePublished" datetime="2021-08-13T14:47:13+08:00">2021-08-13</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">计算机体系结构</span></a>
-                </span>
-            </span>
-
-          
-            <div class="post-description">处理器性能分析及Amdal定律</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
+  
+  <div class="post-block">
+    <div class="posts-collapse">
+      <div class="collection-title">
+        <span class="collection-header">嗯..! 目前共计 10 篇日志。 继续努力。</span>
+      </div>
 
       
-        <h3 id="CPU性能及其度量因素"><a href="#CPU性能及其度量因素" class="headerlink" title="CPU性能及其度量因素"></a>CPU性能及其度量因素</h3><p>CPU性能度量的基本指标是<strong>CPU执行时间</strong>。而几乎所有发的计算机都有一个以固定频率运行的时钟，称为<strong>时钟周期</strong>，或脉冲周期等。所以，我们可以利用时钟周期来表示CPU时间：<br>$$<br>程序CPU执行时间 = 程序CPU时钟周期数 × 时钟周期长度<br>$$<br>其中，时钟周期长度与时钟频率互为倒数，所以该公式也可表示为：<br>$$<br>程序CPU执行时间 =  \frac {程序CPU时钟周期数}{时钟频率}<br>$$</p>
-<h3 id="指令性能"><a href="#指令性能" class="headerlink" title="指令性能"></a>指令性能</h3><p>除了时钟周期外，我们还需注意<strong>指令数</strong>，因为计算机必须通过执行指令来运行程序。<br>$$<br>CPU时钟周期 = 程序指令数 × 指令平均时钟周期数<br>$$</p>
-<blockquote>
-<p><strong>指令平均时钟周期数（CPI）</strong>：表示执行某个程序或者程序片段时每条指令所需的时钟周期平均数。</p>
-</blockquote>
-<h3 id="经典的CPU性能公式"><a href="#经典的CPU性能公式" class="headerlink" title="经典的CPU性能公式"></a>经典的CPU性能公式</h3><p>结合公式（1）、（2）、（3），我们可以得出<strong>经典的CPU性能公式</strong>：<br>$$<br>CPU时间 = 指令数 × CPI × 时钟周期长度<br>$$<br>或<br>$$<br>CPU时间 = \frac{指令数 × CPI}{时钟频率}<br>$$</p>
-<h3 id="影响处理器性能的因素"><a href="#影响处理器性能的因素" class="headerlink" title="影响处理器性能的因素"></a>影响处理器性能的因素</h3><p>从该公式可以看出，<strong>处理器性能取决于三个特性：时钟周期、CPI、指令数</strong>。</p>
-<ul>
-<li>时钟周期：硬件技术与组成</li>
-<li>CPI：组成与指令集体系结构</li>
-<li>指令数：指令集体系结构与编译器技术</li>
-</ul>
-<h4 id="如何测量这些因素"><a href="#如何测量这些因素" class="headerlink" title="如何测量这些因素"></a>如何测量这些因素</h4><p>首先，通过运行程序来测量CPU时间，并且计算机说明书上通常介绍了时钟周期长度。</p>
-<p>难以测量的时指令数与 CPI。</p>
-<p>可以使用体系结构仿真器预先执行程序来测量执行的指令数，或者用大多数处理器中的硬件计数器来测量执行的指令数、平均CPI和性能损失。</p>
-<p>但是，CPI 与计算机的各种设计细节密切相关（如存储系统、处理器结构、应用程序中不同类型的指令所占的比例），对于不同的应用程序它是不同的。</p>
-<h3 id="Amdal定律"><a href="#Amdal定律" class="headerlink" title="Amdal定律"></a>Amdal定律</h3><p>Amdal定律阐述了<strong>对于特定改进的性能提升可能由所使用的改进特征的数量所限制</strong>。也就是说，当提升系统的某部分性能时，对整个系统性能的影响取决于:</p>
-<ol>
-<li>这一部分有多重要(ɑ)</li>
-<li>这一部分性能提升了多少(k)</li>
-</ol>
-<p>$$<br>加速比S = \frac{1}{(1-ɑ)+\frac{ɑ}{k}}<br>$$</p>
-<blockquote>
-<p>ɑ 是升级模块占比，k 是该部分性能提升比例</p>
-</blockquote>
-
+    <div class="collection-year">
+      <span class="collection-header">2022</span>
     </div>
 
-    
-    
-    
+  <article itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
 
-      <footer class="post-footer">
+      <div class="post-meta">
+        <time itemprop="dateCreated"
+              datetime="2022-01-17T21:37:18+08:00"
+              content="2022-01-17">
+          01-17
+        </time>
+      </div>
 
-        
+      <div class="post-title">
+          <a class="post-title-link" href="/%E5%88%86%E6%94%AF%E9%A2%84%E6%B5%8B/" itemprop="url">
+            <span itemprop="name">分支预测</span>
+          </a>
+      </div>
 
-
-        
-    <div class="post-nav">
-      <div class="post-nav-item">
-    <a href="/%E7%AC%A6%E5%8F%B7%E4%B8%8E%E7%AC%A6%E5%8F%B7%E8%A1%A8/" rel="prev" title="符号与符号表">
-      <i class="fa fa-chevron-left"></i> 符号与符号表
-    </a></div>
-      <div class="post-nav-item">
-    <a href="/%E5%88%86%E6%94%AF%E9%A2%84%E6%B5%8B/" rel="next" title="分支预测">
-      分支预测 <i class="fa fa-chevron-right"></i>
-    </a></div>
-    </div>
-      </footer>
-    
+    </header>
   </article>
+
+
+    </div>
+  </div>
   
   
+  
+
   
 
 
@@ -309,7 +243,6 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#CPU%E6%80%A7%E8%83%BD%E5%8F%8A%E5%85%B6%E5%BA%A6%E9%87%8F%E5%9B%A0%E7%B4%A0"><span class="nav-number">1.</span> <span class="nav-text">CPU性能及其度量因素</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%87%E4%BB%A4%E6%80%A7%E8%83%BD"><span class="nav-number">2.</span> <span class="nav-text">指令性能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%8F%E5%85%B8%E7%9A%84CPU%E6%80%A7%E8%83%BD%E5%85%AC%E5%BC%8F"><span class="nav-number">3.</span> <span class="nav-text">经典的CPU性能公式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BD%B1%E5%93%8D%E5%A4%84%E7%90%86%E5%99%A8%E6%80%A7%E8%83%BD%E7%9A%84%E5%9B%A0%E7%B4%A0"><span class="nav-number">4.</span> <span class="nav-text">影响处理器性能的因素</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E6%B5%8B%E9%87%8F%E8%BF%99%E4%BA%9B%E5%9B%A0%E7%B4%A0"><span class="nav-number">4.1.</span> <span class="nav-text">如何测量这些因素</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Amdal%E5%AE%9A%E5%BE%8B"><span class="nav-number">5.</span> <span class="nav-text">Amdal定律</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

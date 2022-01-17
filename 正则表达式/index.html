@@ -29,7 +29,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://github.com/ziishaned/learn-regex/raw/master/img/regexp-cn.png">
 <meta property="article:published_time" content="2021-07-05T23:39:30.000Z">
-<meta property="article:modified_time" content="2021-07-08T07:59:35.804Z">
+<meta property="article:modified_time" content="2022-01-17T13:38:03.117Z">
 <meta property="article:author" content="monuo">
 <meta property="article:tag" content="正则表达式">
 <meta name="twitter:card" content="summary">
@@ -189,7 +189,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-07-08 15:59:35" itemprop="dateModified" datetime="2021-07-08T15:59:35+08:00">2021-07-08</time>
+                <time title="修改时间：2022-01-17 21:38:03" itemprop="dateModified" datetime="2022-01-17T21:38:03+08:00">2022-01-17</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -217,11 +217,11 @@
 
 <p>一个正则表达式是一种从左到右匹配主体字符串的模式。 “Regular expression”这个词比较拗口，我们常使用缩写的术语“regex”或“regexp”。 正则表达式可以从一个基础字符串中根据一定的匹配模式替换文本中的字符串、验证表单、提取字符串等等。</p>
 <p><img src="https://github.com/ziishaned/learn-regex/raw/master/img/regexp-cn.png" alt="regexp-cn.png"></p>
-<p>以上的正则表达式可以接受 john_doe、jo-hn_doe、john12_as。 但不匹配Jo，因为它包含了大写的字母而且太短了。</p>
-<h2 id="一、基本匹配"><a href="#一、基本匹配" class="headerlink" title="一、基本匹配"></a>一、基本匹配</h2><p>正则表达式其实就是在执行搜索时的格式，它由一些字母和数字组合而成。 例如：一个正则表达式 the，它表示一个规则：由字母t开始，接着是h，再接着是e。</p>
+<p>以上的正则表达式可以接受 john_doe、jo-hn_doe、john12_as。 但不匹配 Jo，因为它包含了大写的字母而且太短了。</p>
+<h2 id="一、基本匹配"><a href="#一、基本匹配" class="headerlink" title="一、基本匹配"></a>一、基本匹配</h2><p>正则表达式其实就是在执行搜索时的格式，它由一些字母和数字组合而成。 例如：一个正则表达式 the，它表示一个规则：由字母 t 开始，接着是 h，再接着是 e。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;the&quot; =&gt; The fat cat sat on the mat.</span><br></pre></td></tr></table></figure>
 
-<p><strong>正则表达式是大小写敏感的</strong>，所以The不会匹配the。</p>
+<p><strong>正则表达式是大小写敏感的</strong>，所以 The 不会匹配 the。</p>
 <figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;The&quot; =&gt; The fat cat sat on the mat.</span><br></pre></td></tr></table></figure>
 
 <h2 id="二、元字符"><a href="#二、元字符" class="headerlink" title="二、元字符"></a>二、元字符</h2><p>正则表达式主要依赖于元字符。 元字符不代表他们本身的字面意思，他们都有特殊的含义。一些元字符写在方括号中的时候有一些特殊的意思。以下是一些元字符的介绍：</p>
@@ -246,11 +246,11 @@
 </tr>
 <tr>
 <td>*</td>
-<td>匹配&gt;=0个重复的在*号之前的字符。</td>
+<td>匹配&gt;=0 个重复的在*号之前的字符。</td>
 </tr>
 <tr>
 <td>+</td>
-<td>匹配&gt;=1个重复的+号前的字符。</td>
+<td>匹配&gt;=1 个重复的+号前的字符。</td>
 </tr>
 <tr>
 <td>?</td>
@@ -258,7 +258,7 @@
 </tr>
 <tr>
 <td>{n,m}</td>
-<td>匹配num个大括号之前的字符或字符集 (n &lt;= num &lt;= m)。</td>
+<td>匹配 num 个大括号之前的字符或字符集 (n &lt;= num &lt;= m)。</td>
 </tr>
 <tr>
 <td>(xyz)</td>
@@ -284,20 +284,20 @@
 <h3 id="2-1-点运算符"><a href="#2-1-点运算符" class="headerlink" title="2.1 点运算符 ."></a>2.1 点运算符 .</h3><p>. 是元字符中最简单的例子。. 匹配任意单个字符，但不匹配换行符。 例如，表达式 .ar 匹配一个任意字符后面跟着是 a 和 r 的字符串。</p>
 <figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&quot;.ar&quot; =&gt; The car parked in the garage.</span><br><span class="line">匹配了 car, par, gar</span><br></pre></td></tr></table></figure>
 
-<h3 id="2-2-字符集"><a href="#2-2-字符集" class="headerlink" title="2.2 字符集"></a>2.2 字符集</h3><p>字符集也叫做字符类。 方括号用来指定一个字符集。 <strong>在方括号中使用连字符来指定字符集的范围。 在方括号中的字符集不关心顺序</strong>。 例如，表达式 [Tt]he  匹配 the 和 The。</p>
+<h3 id="2-2-字符集"><a href="#2-2-字符集" class="headerlink" title="2.2 字符集"></a>2.2 字符集</h3><p>字符集也叫做字符类。 方括号用来指定一个字符集。 <strong>在方括号中使用连字符来指定字符集的范围。 在方括号中的字符集不关心顺序</strong>。 例如，表达式 [Tt]he 匹配 the 和 The。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&quot;[Tt]he&quot; =&gt; The car parked in the garage.</span><br><span class="line">匹配了 The, the</span><br></pre></td></tr></table></figure>
 
 <p><strong>方括号的句号就表示句号</strong>。 表达式 ar[.] 匹配 ar.字符串</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&quot;ar[.]&quot; =&gt; A garage is a good place to park a car.</span><br><span class="line">匹配了 ar.</span><br></pre></td></tr></table></figure>
 
-<h4 id="2-2-1-否定字符集"><a href="#2-2-1-否定字符集" class="headerlink" title="2.2.1 否定字符集"></a>2.2.1 否定字符集</h4><p>一般来说 ^ 表示一个字符串的开头，但它用在一个方括号的开头的时候，它表示这个字符集是否定的。 例如，表达式 [^c]ar 匹配一个后面跟着ar的除了c的任意字符。</p>
+<h4 id="2-2-1-否定字符集"><a href="#2-2-1-否定字符集" class="headerlink" title="2.2.1 否定字符集"></a>2.2.1 否定字符集</h4><p>一般来说 ^ 表示一个字符串的开头，但它用在一个方括号的开头的时候，它表示这个字符集是否定的。 例如，表达式 [^c]ar 匹配一个后面跟着 ar 的除了 c 的任意字符。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&quot;[^c]ar&quot; =&gt; The car parked in the garage.</span><br><span class="line">匹配了 par, gar，但未匹配 car</span><br></pre></td></tr></table></figure>
 
 <h3 id="2-3-重复次数"><a href="#2-3-重复次数" class="headerlink" title="2.3 重复次数"></a>2.3 重复次数</h3><p>后面跟着元字符 +，* 或 ? 的，用来指定匹配子模式的次数。 这些元字符在不同的情况下有着不同的意思。</p>
-<h4 id="2-3-1-号"><a href="#2-3-1-号" class="headerlink" title="2.3.1 * 号"></a>2.3.1 * 号</h4><p>* 号匹配 在 * 之前的字符出现大于等于0次。 例如，表达式 a* 匹配 0 或更多个以 a 开头的字符。表达式 [a-z]* 匹配一个行中所有以小写字母开头的字符串。</p>
+<h4 id="2-3-1-号"><a href="#2-3-1-号" class="headerlink" title="2.3.1 * 号"></a>2.3.1 * 号</h4><p>* 号匹配 在 * 之前的字符出现大于等于 0 次。 例如，表达式 a* 匹配 0 或更多个以 a 开头的字符。表达式 [a-z]* 匹配一个行中所有以小写字母开头的字符串。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&quot;[a-z]*&quot; =&gt; The car parked in the garage #21.</span><br><span class="line">匹配了 The car parked in the garage</span><br></pre></td></tr></table></figure>
 
-<p>* 字符和 . 字符搭配可以匹配所有的字符.*。 * 和表示匹配空格的符号\s连起来用，如表达式 \s*cat\s* 匹配 0 或更多个空格开头和 0 或更多个空格结尾的 cat 字符串。</p>
+<p>* 字符和 . 字符搭配可以匹配所有的字符.*。 * 和表示匹配空格的符号\s 连起来用，如表达式 \s*cat\s* 匹配 0 或更多个空格开头和 0 或更多个空格结尾的 cat 字符串。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&quot;\s*cat\s*&quot; =&gt; The fat cat sat on the concatenation.</span><br><span class="line">匹配了 cat</span><br></pre></td></tr></table></figure>
 
 <h4 id="2-3-2-号"><a href="#2-3-2-号" class="headerlink" title="2.3.2 + 号"></a>2.3.2 + 号</h4><p>+号匹配 + 号之前的字符出现 &gt;=1 次。 例如表达式 c.+t 匹配以首字母 c 开头以 t 结尾，中间跟着至少一个字符的字符串。</p>
@@ -314,7 +314,7 @@
 <p>我们可以省略第二个参数。 例如，[0-9]{2,} 匹配至少两位 0~9 的数字。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&quot;[0-9]&#123;2,&#125;&quot; =&gt; The number was 9.9997 but we rounded it off to 10.0.</span><br><span class="line">匹配了 9997 和 10</span><br></pre></td></tr></table></figure>
 
-<p>如果逗号也省略掉则表示重复固定的次数。 例如，[0-9]{3} 匹配3位数字</p>
+<p>如果逗号也省略掉则表示重复固定的次数。 例如，[0-9]{3} 匹配 3 位数字</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&quot;[0-9]&#123;3&#125;&quot; =&gt; The number was 9.9997 but we rounded it off to 10.0.</span><br><span class="line">匹配了 999</span><br></pre></td></tr></table></figure>
 
 <h3 id="2-5-…-特征标群"><a href="#2-5-…-特征标群" class="headerlink" title="2.5 (…) 特征标群"></a>2.5 (…) 特征标群</h3><p>特征标群是一组写在 (…) 中的子模式。(…) 中包含的内容将会被看成一个整体，和数学中小括号（ ）的作用相同。例如, 表达式 (ab)* 匹配连续出现 0 或更多个 ab。如果没有使用 (…) ，那么表达式 ab* 将匹配连续出现 0 或更多个 b 。再比如之前说的 { } 是用来表示前面一个字符出现指定次数。但如果在 { } 前加上特征标群 (…) 则表示整个标群内的字符重复 N 次。</p>
@@ -485,9 +485,9 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&quot;/.at(.)?$/gm&quot; =&gt; The fat</span><br><span class="line">                  cat sat</span><br><span class="line">                  on the mat.</span><br></pre></td></tr></table></figure>
 
 <h2 id="六、贪婪匹配与惰性匹配-Greedy-vs-lazy-matching"><a href="#六、贪婪匹配与惰性匹配-Greedy-vs-lazy-matching" class="headerlink" title="六、贪婪匹配与惰性匹配 (Greedy vs lazy matching)"></a>六、贪婪匹配与惰性匹配 (Greedy vs lazy matching)</h2><p>正则表达式默认采用贪婪匹配模式，在该模式下意味着会匹配尽可能长的子串。我们可以使用 ? 将贪婪匹配模式转化为惰性匹配模式。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;/(.*at)/&quot; =&gt; The fat cat sat on the mat. </span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;/(.*at)/&quot; =&gt; The fat cat sat on the mat.</span><br></pre></td></tr></table></figure>
 
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;/(.*?at)/&quot; =&gt; The fat cat sat on the mat. </span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;/(.*?at)/&quot; =&gt; The fat cat sat on the mat.</span><br></pre></td></tr></table></figure>
 
     </div>
 
@@ -584,7 +584,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-count">10</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.lug.ustc.edu.cn/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic|Roboto Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"monuo2021.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="分支预测解决流水线冲突中的控制冒险。在指令集中，分支指令包括条件指令和非条件指令。对无条件指令来说，无需进行条件判断，就可以获得跳转后的地址；但是对条件跳转指令，无论是条件直接跳转还是条件间接跳转指令（RISC-V 无此类指令），都需要在执行阶段才可以确定是否跳转，这样会影响取值阶段的效率。 举个简陋的例子说明分支预测的可行性：12if (data[c] &gt;&#x3D; 128)    sum +&#x3D;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="分支预测">
+<meta property="og:url" content="https://monuo2021.github.io/%E5%88%86%E6%94%AF%E9%A2%84%E6%B5%8B/index.html">
+<meta property="og:site_name" content="飞光">
+<meta property="og:description" content="分支预测解决流水线冲突中的控制冒险。在指令集中，分支指令包括条件指令和非条件指令。对无条件指令来说，无需进行条件判断，就可以获得跳转后的地址；但是对条件跳转指令，无论是条件直接跳转还是条件间接跳转指令（RISC-V 无此类指令），都需要在执行阶段才可以确定是否跳转，这样会影响取值阶段的效率。 举个简陋的例子说明分支预测的可行性：12if (data[c] &gt;&#x3D; 128)    sum +&#x3D;">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210807143814880.png">
+<meta property="og:image" content="https://hitsz-cslab.gitee.io/arch/lab2/assets/3-2.png">
+<meta property="og:image" content="https://gitee.com/tanliang-TL/blogpic/raw/master/img/8f114fa7d5d2558cab31be6030bda790_1440w.jpg">
+<meta property="og:image" content="https://images2017.cnblogs.com/blog/421096/201711/421096-20171106023943446-433328795.png">
+<meta property="og:image" content="https://gitee.com/tanliang-TL/blogpic/raw/master/img/5a0becc8ebd91ccfd43b74383c729075_1440w.jpg">
+<meta property="og:image" content="d:/Users/图片/Saved%20Pictures/840px-Two-level_branch_prediction.svg.png">
+<meta property="og:image" content="https://gitee.com/tanliang-TL/blogpic/raw/master/img/74364714907197a556de2895dc62027a_1440w.jpg">
+<meta property="og:image" content="https://gitee.com/tanliang-TL/blogpic/raw/master/img/3-4.png">
+<meta property="og:image" content="https://hitsz-cslab.gitee.io/arch/lab2/assets/3-5.png">
+<meta property="og:image" content="https://gitee.com/tanliang-TL/blogpic/raw/master/img/3-6.png">
+<meta property="og:image" content="https://gitee.com/tanliang-TL/blogpic/raw/master/img/BTB-NutShell.jpg">
+<meta property="article:published_time" content="2022-01-17T13:37:18.000Z">
+<meta property="article:modified_time" content="2022-01-17T13:39:18.877Z">
+<meta property="article:author" content="monuo">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210807143814880.png">
+
+<link rel="canonical" href="https://monuo2021.github.io/%E5%88%86%E6%94%AF%E9%A2%84%E6%B5%8B/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>分支预测 | 飞光</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">飞光</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://monuo2021.github.io/%E5%88%86%E6%94%AF%E9%A2%84%E6%B5%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="monuo">
+      <meta itemprop="description" content="悲莫悲兮生别离，乐莫乐兮新相知">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="飞光">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          分支预测
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-01-17 21:37:18 / 修改时间：21:39:18" itemprop="dateCreated datePublished" datetime="2022-01-17T21:37:18+08:00">2022-01-17</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">计算机体系结构</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>分支预测解决流水线冲突中的控制冒险。在指令集中，分支指令包括条件指令和非条件指令。对无条件指令来说，无需进行条件判断，就可以获得跳转后的地址；但是对条件跳转指令，无论是条件直接跳转还是条件间接跳转指令（RISC-V 无此类指令），都需要在执行阶段才可以确定是否跳转，这样会影响取值阶段的效率。</p>
+<h6 id="举个简陋的例子说明分支预测的可行性："><a href="#举个简陋的例子说明分支预测的可行性：" class="headerlink" title="举个简陋的例子说明分支预测的可行性："></a>举个简陋的例子说明分支预测的可行性：</h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">if (data[c] &gt;= 128)</span><br><span class="line">    sum += data[c];</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">T = branch taken</span><br><span class="line">N = branch not taken</span><br><span class="line"></span><br><span class="line">data[] = 0, 1, 2, 3, 4, ... 126, 127, 128, 129, 130, ... 250, 251, 252, ...</span><br><span class="line">branch = N  N  N  N  N  ...   N    N    T    T    T  ...   T    T    T  ...</span><br><span class="line">       = NNNNNNNNNNNN ... NNNNNNNTTTTTTTTT ... TTTTTTTTTT  (easy to predict)</span><br></pre></td></tr></table></figure>
+
+<p>可以发现，由于分支指令之间的相关性，根据分支历史可以预测出当前分支指令的方向与地址。</p>
+<p>不过要注意一点，即使分支预测成功率达到 90% 也是非常糟糕的。因为现代处理器流水线深度太深了，出错一次就要 flush 整个流水线，造成了性能的损失。</p>
+<h2 id="一、基本部件"><a href="#一、基本部件" class="headerlink" title="一、基本部件"></a>一、基本部件</h2><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210807143814880.png" alt="image-20210807143814880" style="zoom:50%;" />
+
+<ul>
+<li><p><strong>BTB</strong>（Branch Target Buffer, 分支目标缓冲器）</p>
+<p>用于<strong>预测目标地址</strong>。缓存保存了最近执行过的分支指令的 PC 值，以及它们的跳转目标地址。</p>
+</li>
+<li><p><strong>两比特饱和计数器</strong></p>
+<p><img src="https://hitsz-cslab.gitee.io/arch/lab2/assets/3-2.png" alt="img"></p>
+<p>四个状态：</p>
+<ul>
+<li>强跳转</li>
+<li>弱跳转</li>
+<li>强不跳转</li>
+<li>弱不跳转</li>
+</ul>
+<p>当执行一条分支指令时，会根据指令是否跳转来更新两比特饱和计数器。一个 2bit 状态机的核心思路就是：<strong>这次预测错了不要紧，再给你一次机会，还是预测错了的话那再改变预测结果</strong>。</p>
+</li>
+</ul>
+<h2 id="二、预测方向"><a href="#二、预测方向" class="headerlink" title="二、预测方向"></a>二、预测方向</h2><h3 id="2-1-静态预测"><a href="#2-1-静态预测" class="headerlink" title="2.1 静态预测"></a>2.1 静态预测</h3><p>静态预测不依赖任何过去执行过的指令和历史信息。</p>
+<ul>
+<li><p><strong>总预测接下来的指令都（不）跳转</strong>。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/8f114fa7d5d2558cab31be6030bda790_1440w.jpg" alt="img"></p>
+<p>可以看出，这种预测准确率都在 50%以上，最高的还达到了 99.4%。</p>
+</li>
+<li><p><strong>BTFN 跳转</strong>（Back Taken, Forward Not Taken），如果所跳转的目标地址位于跳转指令的前方（比当前指令晚执行），则不跳转；如果所跳转的目标地址位图跳转指令的后方（比当前指令早执行）则跳转。</p>
+</li>
+<li><p>某些指令一律预测跳转，其他指令一律预测不跳转</p>
+</li>
+</ul>
+<p><img src="https://images2017.cnblogs.com/blog/421096/201711/421096-20171106023943446-433328795.png" alt="image"></p>
+<h3 id="2-2-动态预测"><a href="#2-2-动态预测" class="headerlink" title="2.2 动态预测"></a>2.2 动态预测</h3><p>动态分支预测使用运行时收集的关于跳转或未跳转的分支信息来预测分支结果。</p>
+<h4 id="2-2-1-一级预测器"><a href="#2-2-1-一级预测器" class="headerlink" title="2.2.1 一级预测器"></a>2.2.1 一级预测器</h4><p>直接将“两比特饱和计数器”组织成一维表格，称为预测器表格，并直接使用 PC 值的一部分进行索引。譬如使用 PC 的后 10 位作为索引，则仅需要维护 1000 个表项的表格。</p>
+<p>“一级”是指其索引仅仅采用指令本身的 PC 值。</p>
+<p>该方法简单，但索引机制过于简单。像低 10 位相同但高位不相同的 PC，就会指向同样的表项。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/5a0becc8ebd91ccfd43b74383c729075_1440w.jpg" alt="img"></p>
+<h4 id="2-2-2-二级预测器"><a href="#2-2-2-二级预测器" class="headerlink" title="2.2.2 二级预测器"></a>2.2.2 二级预测器</h4><p>也称为<strong>相关预测器</strong>，如其名字所述，分为两级：Branch history 以及 Pattern history table。</p>
+  <img src="D:\Users\图片\Saved Pictures\840px-Two-level_branch_prediction.svg.png" alt="840px-Two-level_branch_prediction.svg" style="zoom: 33%;" />
+
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/74364714907197a556de2895dc62027a_1440w.jpg" alt="img"></p>
+<p>图中每两条虚线之间是 4%。可以看到大部分预测的准确率都已经达到了 <strong>96%</strong> 以上了。</p>
+<h5 id="基于分支历史的分支预测器"><a href="#基于分支历史的分支预测器" class="headerlink" title="基于分支历史的分支预测器"></a>基于分支历史的分支预测器</h5><p>Branch history 可分为局部历史和全局历史。全局历史是指每个分支指令自己的分支跳转历史，全局历史是指所有分支指令的指令跳转历史。</p>
+<ul>
+<li><p><strong>全局分支预测器</strong></p>
+<p>基于全局历史的分支预测方法在 BHT 的基础上增加了<strong>GHR（Global History Register，全局历史寄存器）</strong>来将所有分支指令关联起来，即使用一个 k 比特的 GHR 来记录所有最近 k 条分支指令的历史。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/3-4.png" alt="img"></p>
+<p>最有代表性的全局分支算法是 Gshare 算法和 Gselect 算法。</p>
+<ul>
+<li><p>Gshare 算法</p>
+<p>将分支指令的地址和 GHR 进行<strong>异或</strong>，将结果作为 PHT 的索引。</p>
+</li>
+<li><p>Gselect 算法</p>
+<p>将分支指令的地址和 GHR 直接<strong>拼接</strong>，将结果作为 PHT 的索引。</p>
+</li>
+</ul>
+</li>
+<li><p><strong>局部分支预测器</strong></p>
+<p>基于全局历史的分支预测方法将所有分支指令都关联到一起。然而事实上，并非所有的分支指令都具有关联性。为此，基于局部历史的分支预测方法使用<strong>LHT（Local History Table，局部历史表）</strong>来代替全局历史预测中的 GHR。</p>
+<p>LHT 一般具有 64 条记录，每条记录均包含 Tag 和局部转移历史 2 个字段。其中，Tag 字段是分支指令地址的一部分，局部转移历史字段则是 k 比特的移位寄存器，其作用等同于 GHR。</p>
+<p><img src="https://hitsz-cslab.gitee.io/arch/lab2/assets/3-5.png" alt="img"></p>
+</li>
+</ul>
+<h5 id="锦标赛分支预测"><a href="#锦标赛分支预测" class="headerlink" title="锦标赛分支预测"></a>锦标赛分支预测</h5><p>锦标赛分支预测（又称混合分支预测或组合分支预测）是一种博采众长的分支预测方法，其基本原理是将两个或以上的分支预测方法进行结合，充分发挥各预测方法的优势，以进一步提高分支预测的准确度。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/3-6.png" alt="img"></p>
+<h2 id="三、预测地址"><a href="#三、预测地址" class="headerlink" title="三、预测地址"></a>三、预测地址</h2><ul>
+<li><p>BTB</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/BTB-NutShell.jpg" alt="BTB"></p>
+<ul>
+<li>使用容量有限的缓存保存最近执行过的分支指 PC 值，以及它们的跳转目标地址。对于后续要取指的每条 PC 值，将其与 BTB 中存储的各个 PC 值进行比较，如果出现匹配，则预测这是 分支指令，并使用其对应存储的跳转目标地址作为预测的跳转地址。</li>
+<li>是其缺点之一是不能将 BTB 容量做到太大， 否则面积和时序都无法接受。</li>
+<li>另一个缺点是对于间接跳转（indirect Jump/Branch ）指令的预测效果并不理想，这主要是由于间接跳转分支的目标地址是使用寄存器索引的操作数（基地址寄存器）计算所得，而寄存器中的值随着程序执行可能每次都不一样，因此 BTB 中存储的上次跳转的目标地址并不一定等于本次跳转的目标值。不过，RISC-V 指令架构无需担心这点，因为 RISC-V 没有条件间接跳转指令。</li>
+</ul>
+</li>
+<li><p>RAS</p>
+<ul>
+<li>使用容量有限的硬件堆栈来存储函数调用的返回地址。</li>
+<li>间接跳转指令可以用于函数的调用和返回，而函数的调用和返回在程序中往往是成对出现的，因此可以在函数调用（使用分支跳转指令）时将当前 PC 值加 4（或者加 2）， 即其顺序执行的下一条指令的 PC 值压入 RAS 中，等到函数返回（使用分支跳转指令〉时将 RAS 中的值弹出，这样就可以快速地为该函数返回的分支跳转指令预测目标地址。</li>
+</ul>
+</li>
+</ul>
+<p>在 NutShell 处理器中，在做分支预测时会用取指 PC 索引 BTB 表项, 如果 PC 高位与读到的 BTB 表项的标签匹配则认为 BTB 命中, 再根据 BTB 中记录的指令类型判断跳转方向和跳转目标. 如果类型为条件分支指令, 则需要访问模式历史表 (PHT) 来判断是否跳转; 如果类型为返回指令, 则选择返回地址栈 (RAS) 的栈顶内容作为跳转目标; 如果类型为直接或间接跳转指令, 则选择 BTB 中记录的跳转目标.</p>
+<h2 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h2><ul>
+<li><p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/11227809/why-is-processing-a-sorted-array-faster-than-processing-an-unsorted-array#11227902">StackOverflow 回答 What is Branch Prediction?</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/TaigaCon/p/7791303.html">Branch Prediction</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://hitsz-cslab.gitee.io/arch/lab2/1-theory/">哈工大-分支预测器设计</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://www.wikiwand.com/en/Branch_predictor">wiki-Branch predictor</a></p>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/%E5%A4%84%E7%90%86%E5%99%A8%E6%80%A7%E8%83%BD%E5%85%AC%E5%BC%8F/" rel="prev" title="处理器性能公式">
+      <i class="fa fa-chevron-left"></i> 处理器性能公式
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E4%B8%BE%E4%B8%AA%E7%AE%80%E9%99%8B%E7%9A%84%E4%BE%8B%E5%AD%90%E8%AF%B4%E6%98%8E%E5%88%86%E6%94%AF%E9%A2%84%E6%B5%8B%E7%9A%84%E5%8F%AF%E8%A1%8C%E6%80%A7%EF%BC%9A"><span class="nav-number">1.</span> <span class="nav-text">举个简陋的例子说明分支预测的可行性：</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%9F%BA%E6%9C%AC%E9%83%A8%E4%BB%B6"><span class="nav-number"></span> <span class="nav-text">一、基本部件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E9%A2%84%E6%B5%8B%E6%96%B9%E5%90%91"><span class="nav-number"></span> <span class="nav-text">二、预测方向</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E9%9D%99%E6%80%81%E9%A2%84%E6%B5%8B"><span class="nav-number"></span> <span class="nav-text">2.1 静态预测</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E5%8A%A8%E6%80%81%E9%A2%84%E6%B5%8B"><span class="nav-number"></span> <span class="nav-text">2.2 动态预测</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-1-%E4%B8%80%E7%BA%A7%E9%A2%84%E6%B5%8B%E5%99%A8"><span class="nav-number"></span> <span class="nav-text">2.2.1 一级预测器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-2-%E4%BA%8C%E7%BA%A7%E9%A2%84%E6%B5%8B%E5%99%A8"><span class="nav-number"></span> <span class="nav-text">2.2.2 二级预测器</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E5%88%86%E6%94%AF%E5%8E%86%E5%8F%B2%E7%9A%84%E5%88%86%E6%94%AF%E9%A2%84%E6%B5%8B%E5%99%A8"><span class="nav-number"></span> <span class="nav-text">基于分支历史的分支预测器</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%94%A6%E6%A0%87%E8%B5%9B%E5%88%86%E6%94%AF%E9%A2%84%E6%B5%8B"><span class="nav-number"></span> <span class="nav-text">锦标赛分支预测</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E9%A2%84%E6%B5%8B%E5%9C%B0%E5%9D%80"><span class="nav-number"></span> <span class="nav-text">三、预测地址</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E6%A1%A3"><span class="nav-number"></span> <span class="nav-text">参考文档</span></a></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="monuo"
+      src="/images/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">monuo</p>
+  <div class="site-description" itemprop="description">悲莫悲兮生别离，乐莫乐兮新相知</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/monuo2021" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;monuo2021" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">monuo</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/medium-zoom@1/dist/medium-zoom.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
