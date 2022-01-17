@@ -174,88 +174,6 @@
       </tags>
   </entry>
   <entry>
-    <title>UART</title>
-    <url>/UART/</url>
-    <content><![CDATA[<p>转载总结自<a href="https://www.analog.com/cn/analog-dialogue/articles/uart-a-hardware-communication-protocol.html#">UART：了解通用异步接收器/发送器的硬件通信协议</a></p>
-<p>“沟通最大的问题在于，人们想当然地认为已经沟通了。”  ——乔治·萧伯纳</p>
-<h2 id="一、UART特点"><a href="#一、UART特点" class="headerlink" title="一、UART特点"></a>一、UART特点</h2><ul>
-<li><p><strong>串行</strong></p>
-<p>串行是按位来进行传递，即一位一位的发送和接受。</p>
-</li>
-<li><p><strong>异步</strong></p>
-<p>异步数据传输过程中，不需要时钟线，直接接发数据，但需要约定通讯协议格式</p>
-</li>
-<li><p><strong>全双工</strong></p>
-<p>指可以同时进行收发两方向的数据传递。</p>
-</li>
-</ul>
-<h2 id="二、接口"><a href="#二、接口" class="headerlink" title="二、接口"></a>二、接口</h2><p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/335962-fig-01.svg" alt="Figure 1. Two UARTs directly communicate with each other.">  </p>
-<p>上图是<strong>两个UART彼此直接通信</strong>，其中：</p>
-<ul>
-<li>发送器（TX）</li>
-<li>接收器（RX）</li>
-</ul>
-<p>TX、RX两个信号主要作用是用于串行通信的串行数据的发送和接收。</p>
-<p><img src="https://www.analog.com/-/media/images/analog-dialogue/en/volume-54/number-4/articles/uart-a-hardware-communication-protocol/335962-fig-02.svg?w=900">   </p>
-<p>如上图<strong>带数据总线的UART</strong>，发送UART连接到以并行形式发送数据的控制数据总线。然后，数据将在传输线路（导线）上一位一位地串行传输到接收UART。反过来，对于接收设备，串行数据会被转换为并行数据。</p>
-<h2 id="三、数据传输"><a href="#三、数据传输" class="headerlink" title="三、数据传输"></a>三、数据传输</h2><h3 id="3-1-数据包形式"><a href="#3-1-数据包形式" class="headerlink" title="3.1 数据包形式"></a>3.1 数据包形式</h3><p>UART中，传输模式为数据包形式。数据包由<strong>起始位</strong>、<strong>数据帧</strong>、<strong>奇偶校验位</strong>和<strong>停止位</strong>组成。</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/335962-fig-03.svg" alt="Figure 3. UART packet.">  </p>
-<ul>
-<li><p><strong>起始位</strong></p>
-<p>当不传输数据时，UART数据传输线通常保持高电压电平”1“。若要开始数据传输，发送UART会将传输线从高电平拉到<strong>低电平</strong>并保持1个时钟周期。当接收UART检测到高到低电压跃迁时，便开始以波特率对应的频率读取数据帧中的位。</p>
-</li>
-<li><p><strong>数据帧</strong></p>
-<p>数据帧包含所传输的实际数据。如果使用奇偶校验位，数据帧长度可以是5位到8位。如果不使用奇偶校验位，数据帧长度可以是9位。</p>
-</li>
-<li><p><strong>奇偶校验码</strong></p>
-</li>
-<li><p><strong>停止位</strong></p>
-<p>数据结束标志。发送UART将数据传输线保持<strong>高电平</strong>1到2位时间。</p>
-</li>
-</ul>
-<h3 id="3-2-UART传输步骤"><a href="#3-2-UART传输步骤" class="headerlink" title="3.2 UART传输步骤"></a>3.2 UART传输步骤</h3><ol>
-<li><p>发送UART从数据总线并行接收数据。</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/335962-fig-08.svg" alt="Figure 8. Data bus to the transmitting UART.">  </p>
-</li>
-<li><p>发送UART将起始位、奇偶校验位和停止位添加到数据帧。</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/335962-fig-09.svg" alt="Figure 9. UART data frame at the Tx side."></p>
-</li>
-<li><p>从起始位到结束位，整个数据包以串行方式从发送UART送至接收UART。接收UART以预配置的波特率对数据线进行采样。</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/335962-fig-10.svg" alt="Figure 10. UART transmission.">  </p>
-</li>
-<li><p>接收UART丢弃数据帧中的起始位、奇偶校验位和停止位。  <img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/335962-fig-11.svg" alt="Figure 11. The UART data frame at the Rx side.">  </p>
-</li>
-<li><p>接收UART将串行数据转换回并行数据，并将其传输到接收端的数据总线。</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/335962-fig-12.svg" alt="Figure 12. Receiving UART to data bus.">  !</p>
-</li>
-</ol>
-<h2 id="UART工作原理"><a href="#UART工作原理" class="headerlink" title="UART工作原理"></a>UART工作原理</h2><p>使用任何硬件通信协议时，首先必须检查数据手册和硬件参考手册。以下是要遵循的步骤：</p>
-<ol>
-<li><p>检查设备的数据手册接口。</p>
-</li>
-<li><p>在存储器映射下面检查UART地址。</p>
-<p><img src="https://www.analog.com/-/media/images/analog-dialogue/en/volume-54/number-4/articles/uart-a-hardware-communication-protocol/335962-fig-15.jpg?w=900" alt="微控制器存储器映射"></p>
-</li>
-<li><p>检查UART端口的具体信息，例如工作模式、数据位长度、奇偶校验位和停止位。</p>
-</li>
-<li><p>检查UART操作的详细信息，包括波特率计算。波特率通过以下示例公式进行配置。</p>
-</li>
-<li><p>对于波特率，务必检查要使用的外设时钟(PCLK)。此示例有26 MHz PCLK和16 MHz PCLK可用。</p>
-</li>
-<li><p>检查UART配置的详细寄存器。了解计算波特率时的参数.</p>
-</li>
-<li><p>检查每个寄存器下的详细信息，代入值以计算波特率，然后开始实现UART。</p>
-</li>
-</ol>
-]]></content>
-      <categories>
-        <category>计算机体系结构</category>
-      </categories>
-      <tags>
-        <tag>通信协议</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Linux命令参数</title>
     <url>/Linux%E5%91%BD%E4%BB%A4%E5%8F%82%E6%95%B0/</url>
     <content><![CDATA[<h1 id="命令选项，从-a-到-z"><a href="#命令选项，从-a-到-z" class="headerlink" title="命令选项，从 a 到 z"></a>命令选项，从 a 到 z</h1><p>Linux 命令的选项繁复庞杂，让人眼花缭乱。不过这些选项往往具有相对固定的涵义，熟悉了它们，记忆便不再困难</p>
@@ -346,6 +264,88 @@
       </tags>
   </entry>
   <entry>
+    <title>UART</title>
+    <url>/UART/</url>
+    <content><![CDATA[<p>转载总结自<a href="https://www.analog.com/cn/analog-dialogue/articles/uart-a-hardware-communication-protocol.html#">UART：了解通用异步接收器/发送器的硬件通信协议</a></p>
+<p>“沟通最大的问题在于，人们想当然地认为已经沟通了。”  ——乔治·萧伯纳</p>
+<h2 id="一、UART特点"><a href="#一、UART特点" class="headerlink" title="一、UART特点"></a>一、UART特点</h2><ul>
+<li><p><strong>串行</strong></p>
+<p>串行是按位来进行传递，即一位一位的发送和接受。</p>
+</li>
+<li><p><strong>异步</strong></p>
+<p>异步数据传输过程中，不需要时钟线，直接接发数据，但需要约定通讯协议格式</p>
+</li>
+<li><p><strong>全双工</strong></p>
+<p>指可以同时进行收发两方向的数据传递。</p>
+</li>
+</ul>
+<h2 id="二、接口"><a href="#二、接口" class="headerlink" title="二、接口"></a>二、接口</h2><p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/335962-fig-01.svg" alt="Figure 1. Two UARTs directly communicate with each other.">  </p>
+<p>上图是<strong>两个UART彼此直接通信</strong>，其中：</p>
+<ul>
+<li>发送器（TX）</li>
+<li>接收器（RX）</li>
+</ul>
+<p>TX、RX两个信号主要作用是用于串行通信的串行数据的发送和接收。</p>
+<p><img src="https://www.analog.com/-/media/images/analog-dialogue/en/volume-54/number-4/articles/uart-a-hardware-communication-protocol/335962-fig-02.svg?w=900">   </p>
+<p>如上图<strong>带数据总线的UART</strong>，发送UART连接到以并行形式发送数据的控制数据总线。然后，数据将在传输线路（导线）上一位一位地串行传输到接收UART。反过来，对于接收设备，串行数据会被转换为并行数据。</p>
+<h2 id="三、数据传输"><a href="#三、数据传输" class="headerlink" title="三、数据传输"></a>三、数据传输</h2><h3 id="3-1-数据包形式"><a href="#3-1-数据包形式" class="headerlink" title="3.1 数据包形式"></a>3.1 数据包形式</h3><p>UART中，传输模式为数据包形式。数据包由<strong>起始位</strong>、<strong>数据帧</strong>、<strong>奇偶校验位</strong>和<strong>停止位</strong>组成。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/335962-fig-03.svg" alt="Figure 3. UART packet.">  </p>
+<ul>
+<li><p><strong>起始位</strong></p>
+<p>当不传输数据时，UART数据传输线通常保持高电压电平”1“。若要开始数据传输，发送UART会将传输线从高电平拉到<strong>低电平</strong>并保持1个时钟周期。当接收UART检测到高到低电压跃迁时，便开始以波特率对应的频率读取数据帧中的位。</p>
+</li>
+<li><p><strong>数据帧</strong></p>
+<p>数据帧包含所传输的实际数据。如果使用奇偶校验位，数据帧长度可以是5位到8位。如果不使用奇偶校验位，数据帧长度可以是9位。</p>
+</li>
+<li><p><strong>奇偶校验码</strong></p>
+</li>
+<li><p><strong>停止位</strong></p>
+<p>数据结束标志。发送UART将数据传输线保持<strong>高电平</strong>1到2位时间。</p>
+</li>
+</ul>
+<h3 id="3-2-UART传输步骤"><a href="#3-2-UART传输步骤" class="headerlink" title="3.2 UART传输步骤"></a>3.2 UART传输步骤</h3><ol>
+<li><p>发送UART从数据总线并行接收数据。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/335962-fig-08.svg" alt="Figure 8. Data bus to the transmitting UART.">  </p>
+</li>
+<li><p>发送UART将起始位、奇偶校验位和停止位添加到数据帧。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/335962-fig-09.svg" alt="Figure 9. UART data frame at the Tx side."></p>
+</li>
+<li><p>从起始位到结束位，整个数据包以串行方式从发送UART送至接收UART。接收UART以预配置的波特率对数据线进行采样。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/335962-fig-10.svg" alt="Figure 10. UART transmission.">  </p>
+</li>
+<li><p>接收UART丢弃数据帧中的起始位、奇偶校验位和停止位。  <img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/335962-fig-11.svg" alt="Figure 11. The UART data frame at the Rx side.">  </p>
+</li>
+<li><p>接收UART将串行数据转换回并行数据，并将其传输到接收端的数据总线。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/335962-fig-12.svg" alt="Figure 12. Receiving UART to data bus.">  !</p>
+</li>
+</ol>
+<h2 id="UART工作原理"><a href="#UART工作原理" class="headerlink" title="UART工作原理"></a>UART工作原理</h2><p>使用任何硬件通信协议时，首先必须检查数据手册和硬件参考手册。以下是要遵循的步骤：</p>
+<ol>
+<li><p>检查设备的数据手册接口。</p>
+</li>
+<li><p>在存储器映射下面检查UART地址。</p>
+<p><img src="https://www.analog.com/-/media/images/analog-dialogue/en/volume-54/number-4/articles/uart-a-hardware-communication-protocol/335962-fig-15.jpg?w=900" alt="微控制器存储器映射"></p>
+</li>
+<li><p>检查UART端口的具体信息，例如工作模式、数据位长度、奇偶校验位和停止位。</p>
+</li>
+<li><p>检查UART操作的详细信息，包括波特率计算。波特率通过以下示例公式进行配置。</p>
+</li>
+<li><p>对于波特率，务必检查要使用的外设时钟(PCLK)。此示例有26 MHz PCLK和16 MHz PCLK可用。</p>
+</li>
+<li><p>检查UART配置的详细寄存器。了解计算波特率时的参数.</p>
+</li>
+<li><p>检查每个寄存器下的详细信息，代入值以计算波特率，然后开始实现UART。</p>
+</li>
+</ol>
+]]></content>
+      <categories>
+        <category>计算机体系结构</category>
+      </categories>
+      <tags>
+        <tag>通信协议</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>分支预测</title>
     <url>/%E5%88%86%E6%94%AF%E9%A2%84%E6%B5%8B/</url>
     <content><![CDATA[<p>分支预测解决流水线冲突中的控制冒险。在指令集中，分支指令包括条件指令和非条件指令。对无条件指令来说，无需进行条件判断，就可以获得跳转后的地址；但是对条件跳转指令，无论是条件直接跳转还是条件间接跳转指令（RISC-V 无此类指令），都需要在执行阶段才可以确定是否跳转，这样会影响取值阶段的效率。</p>
@@ -384,7 +384,7 @@
 <li><p>某些指令一律预测跳转，其他指令一律预测不跳转</p>
 </li>
 </ul>
-<p><img src="https://images2017.cnblogs.com/blog/421096/201711/421096-20171106023943446-433328795.png" alt="image"></p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/421096-20171106023943446-433328795.png" alt="image"></p>
 <h3 id="2-2-动态预测"><a href="#2-2-动态预测" class="headerlink" title="2.2 动态预测"></a>2.2 动态预测</h3><p>动态分支预测使用运行时收集的关于跳转或未跳转的分支信息来预测分支结果。</p>
 <h4 id="2-2-1-一级预测器"><a href="#2-2-1-一级预测器" class="headerlink" title="2.2.1 一级预测器"></a>2.2.1 一级预测器</h4><p>直接将“两比特饱和计数器”组织成一维表格，称为预测器表格，并直接使用 PC 值的一部分进行索引。譬如使用 PC 的后 10 位作为索引，则仅需要维护 1000 个表项的表格。</p>
 <p>“一级”是指其索引仅仅采用指令本身的 PC 值。</p>
@@ -599,116 +599,6 @@
       <categories>
         <category>计算机体系结构</category>
       </categories>
-  </entry>
-  <entry>
-    <title>物理内存管理：连续内存分配</title>
-    <url>/%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%EF%BC%9A%E8%BF%9E%E7%BB%AD%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D/</url>
-    <content><![CDATA[<h2 id="固定分区分配"><a href="#固定分区分配" class="headerlink" title="固定分区分配"></a>固定分区分配</h2><p>固定分区分配时最简单的一种可运行多道程序的储存管理方式。用户空间被划分为若干个固定的大小区域，每个分区只装入一道作业，这样一来，可以几道作业并发运行。当一有空闲时，可以从外存的后备作业队列中选择一个适当大小的作业装入该分区，由此往复运行作业。</p>
-<p><strong>缺陷</strong>：固定分区限制了活动进程的数目，每次都只能相应地进行作业，进程对于空闲分区的大小要求比较高，使得作业不灵活，降低了内存的空间利用率。</p>
-<h2 id="动态分区分配"><a href="#动态分区分配" class="headerlink" title="动态分区分配"></a>动态分区分配</h2><h3 id="分配算法"><a href="#分配算法" class="headerlink" title="分配算法"></a>分配算法</h3><ol>
-<li><p><strong>最先匹配</strong></p>
-<ul>
-<li><p>原理&amp;实现</p>
-<ul>
-<li>空闲分区列表按地址顺序排序</li>
-<li>分配过程时,搜索第一个合适的分区</li>
-<li>释放分区时,检查是否可与临近的空闲分区合并</li>
-</ul>
-</li>
-<li><p>优点</p>
-<ul>
-<li><p>简单</p>
-</li>
-<li><p>在高地址空间有大块的空闲分区</p>
-</li>
-</ul>
-</li>
-<li><p>缺点</p>
-<ul>
-<li>外部碎片</li>
-<li>分配大块时较慢</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p><strong>最优适配</strong></p>
-<ul>
-<li><p>原理&amp;实现</p>
-<ul>
-<li>空闲分区列表按照大小排序</li>
-<li>分配时,查找一个合适的分区</li>
-<li>释放时,查找并且合并临近的空闲分区(如果找到)</li>
-</ul>
-</li>
-<li><p>优点</p>
-<ul>
-<li>大部分分配的尺可寸较小时,效果很好</li>
-<li>可避免大的空闲分区被拆分</li>
-<li>可减小外部碎片的大小</li>
-<li>相对简单</li>
-</ul>
-</li>
-<li><p>缺点</p>
-<ul>
-<li>外部碎片</li>
-<li>释放分区较慢</li>
-<li>容易产生很多无用的小碎片</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p><strong>最差适配</strong></p>
-<ul>
-<li><p>原理&amp;实现</p>
-<ul>
-<li>空闲分区列表按由大到小排序</li>
-<li>分配时，选最大的分区</li>
-<li>释放时，检查是否可与临近的空闲分区合并,进行可能的合并，并调整空闲分区列表顺序</li>
-</ul>
-</li>
-<li><p>优点</p>
-<ul>
-<li>中等大小的分配较多时,效果最好</li>
-<li>避免出现太多的小碎片</li>
-</ul>
-</li>
-<li><p>缺点</p>
-<ul>
-<li>释放分区较慢</li>
-<li>外部碎片</li>
-<li>容易破坏大的空闲分区,因此后续难以分配大的分区</li>
-</ul>
-</li>
-</ul>
-<p><img src="https://img-blog.csdn.net/20180922084231119?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM1NjQyMDM2/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="img"></p>
-</li>
-</ol>
-<p><img src="https://img-blog.csdn.net/20180922084231364?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM1NjQyMDM2/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="img"></p>
-<p><img src="https://img-blog.csdn.net/20180922084231367?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM1NjQyMDM2/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="img"></p>
-<h3 id="碎片管理"><a href="#碎片管理" class="headerlink" title="碎片管理"></a>碎片管理</h3><ul>
-<li><p>紧凑</p>
-<ul>
-<li>调整进程占用的分区位置来减少或避免分区碎片。</li>
-<li>通过移动分配给进程的内存分区，以合并外部碎片</li>
-<li><strong>碎片紧凑的条件</strong>：所有的应用程序可动态重定位</li>
-</ul>
-</li>
-<li><p>分区对换</p>
-<p>将等待状态的进程放到外存里，释放内存空间。</p>
-</li>
-</ul>
-<p><strong>缺陷</strong>：动态分区算法复杂，回收空间是要进行分区合并，对于系统的开销较大。</p>
-<h2 id="伙伴系统"><a href="#伙伴系统" class="headerlink" title="伙伴系统"></a>伙伴系统</h2><h3 id="分配算法-1"><a href="#分配算法-1" class="headerlink" title="分配算法"></a>分配算法</h3><p>物理内存管理中把页按照2的幂次方大小划分并分组。每次分配内存时，从适当大小的组中分配页面，把余下的另一半内存重新划分并分组。</p>
-<p>伙伴系统既能在系统的运行过程中不断地划分空闲分区，并根据分区的大小进行分类，然后相同的空闲分区单独设立一个空闲分区双向链表，同时也能在进程需要系统为其分配一个存储空间时，通过计算并找到合适的空闲分区分配给进程。</p>
-<p>会产生外碎片，会产生内碎片</p>
-<p>伙伴系统折中了内存分配和碎片管理的问题。</p>
-]]></content>
-      <categories>
-        <category>操作系统</category>
-      </categories>
-      <tags>
-        <tag>内存管理</tag>
-      </tags>
   </entry>
   <entry>
     <title>正则表达式</title>
@@ -994,6 +884,116 @@
       </categories>
       <tags>
         <tag>正则表达式</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>物理内存管理：连续内存分配</title>
+    <url>/%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%EF%BC%9A%E8%BF%9E%E7%BB%AD%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D/</url>
+    <content><![CDATA[<h2 id="固定分区分配"><a href="#固定分区分配" class="headerlink" title="固定分区分配"></a>固定分区分配</h2><p>固定分区分配时最简单的一种可运行多道程序的储存管理方式。用户空间被划分为若干个固定的大小区域，每个分区只装入一道作业，这样一来，可以几道作业并发运行。当一有空闲时，可以从外存的后备作业队列中选择一个适当大小的作业装入该分区，由此往复运行作业。</p>
+<p><strong>缺陷</strong>：固定分区限制了活动进程的数目，每次都只能相应地进行作业，进程对于空闲分区的大小要求比较高，使得作业不灵活，降低了内存的空间利用率。</p>
+<h2 id="动态分区分配"><a href="#动态分区分配" class="headerlink" title="动态分区分配"></a>动态分区分配</h2><h3 id="分配算法"><a href="#分配算法" class="headerlink" title="分配算法"></a>分配算法</h3><ol>
+<li><p><strong>最先匹配</strong></p>
+<ul>
+<li><p>原理&amp;实现</p>
+<ul>
+<li>空闲分区列表按地址顺序排序</li>
+<li>分配过程时,搜索第一个合适的分区</li>
+<li>释放分区时,检查是否可与临近的空闲分区合并</li>
+</ul>
+</li>
+<li><p>优点</p>
+<ul>
+<li><p>简单</p>
+</li>
+<li><p>在高地址空间有大块的空闲分区</p>
+</li>
+</ul>
+</li>
+<li><p>缺点</p>
+<ul>
+<li>外部碎片</li>
+<li>分配大块时较慢</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>最优适配</strong></p>
+<ul>
+<li><p>原理&amp;实现</p>
+<ul>
+<li>空闲分区列表按照大小排序</li>
+<li>分配时,查找一个合适的分区</li>
+<li>释放时,查找并且合并临近的空闲分区(如果找到)</li>
+</ul>
+</li>
+<li><p>优点</p>
+<ul>
+<li>大部分分配的尺可寸较小时,效果很好</li>
+<li>可避免大的空闲分区被拆分</li>
+<li>可减小外部碎片的大小</li>
+<li>相对简单</li>
+</ul>
+</li>
+<li><p>缺点</p>
+<ul>
+<li>外部碎片</li>
+<li>释放分区较慢</li>
+<li>容易产生很多无用的小碎片</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>最差适配</strong></p>
+<ul>
+<li><p>原理&amp;实现</p>
+<ul>
+<li>空闲分区列表按由大到小排序</li>
+<li>分配时，选最大的分区</li>
+<li>释放时，检查是否可与临近的空闲分区合并,进行可能的合并，并调整空闲分区列表顺序</li>
+</ul>
+</li>
+<li><p>优点</p>
+<ul>
+<li>中等大小的分配较多时,效果最好</li>
+<li>避免出现太多的小碎片</li>
+</ul>
+</li>
+<li><p>缺点</p>
+<ul>
+<li>释放分区较慢</li>
+<li>外部碎片</li>
+<li>容易破坏大的空闲分区,因此后续难以分配大的分区</li>
+</ul>
+</li>
+</ul>
+<p><img src="https://img-blog.csdn.net/20180922084231119?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM1NjQyMDM2/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="img"></p>
+</li>
+</ol>
+<p><img src="https://img-blog.csdn.net/20180922084231364?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM1NjQyMDM2/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="img"></p>
+<p><img src="https://img-blog.csdn.net/20180922084231367?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM1NjQyMDM2/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="img"></p>
+<h3 id="碎片管理"><a href="#碎片管理" class="headerlink" title="碎片管理"></a>碎片管理</h3><ul>
+<li><p>紧凑</p>
+<ul>
+<li>调整进程占用的分区位置来减少或避免分区碎片。</li>
+<li>通过移动分配给进程的内存分区，以合并外部碎片</li>
+<li><strong>碎片紧凑的条件</strong>：所有的应用程序可动态重定位</li>
+</ul>
+</li>
+<li><p>分区对换</p>
+<p>将等待状态的进程放到外存里，释放内存空间。</p>
+</li>
+</ul>
+<p><strong>缺陷</strong>：动态分区算法复杂，回收空间是要进行分区合并，对于系统的开销较大。</p>
+<h2 id="伙伴系统"><a href="#伙伴系统" class="headerlink" title="伙伴系统"></a>伙伴系统</h2><h3 id="分配算法-1"><a href="#分配算法-1" class="headerlink" title="分配算法"></a>分配算法</h3><p>物理内存管理中把页按照2的幂次方大小划分并分组。每次分配内存时，从适当大小的组中分配页面，把余下的另一半内存重新划分并分组。</p>
+<p>伙伴系统既能在系统的运行过程中不断地划分空闲分区，并根据分区的大小进行分类，然后相同的空闲分区单独设立一个空闲分区双向链表，同时也能在进程需要系统为其分配一个存储空间时，通过计算并找到合适的空闲分区分配给进程。</p>
+<p>会产生外碎片，会产生内碎片</p>
+<p>伙伴系统折中了内存分配和碎片管理的问题。</p>
+]]></content>
+      <categories>
+        <category>操作系统</category>
+      </categories>
+      <tags>
+        <tag>内存管理</tag>
       </tags>
   </entry>
   <entry>
