@@ -20,24 +20,23 @@
     var CONFIG = {"hostname":"monuo2021.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="物理内存管理：连续内存分配">
+  <meta name="description" content="以太网帧是数据链路层协议数据单元，使用底层以太网物理层传输机制。换句话说，以太网链路上的数据单元将以太网帧作为其有效载荷(payload)进行传输。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="物理内存管理：连续内存分配">
-<meta property="og:url" content="https://monuo2021.github.io/%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%EF%BC%9A%E8%BF%9E%E7%BB%AD%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D/index.html">
+<meta property="og:title" content="以太网帧">
+<meta property="og:url" content="https://monuo2021.github.io/%E4%BB%A5%E5%A4%AA%E7%BD%91%E5%B8%A7/index.html">
 <meta property="og:site_name" content="飞光">
-<meta property="og:description" content="物理内存管理：连续内存分配">
+<meta property="og:description" content="以太网帧是数据链路层协议数据单元，使用底层以太网物理层传输机制。换句话说，以太网链路上的数据单元将以太网帧作为其有效载荷(payload)进行传输。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://img-blog.csdn.net/20180922084231119?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM1NjQyMDM2/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
-<meta property="og:image" content="https://img-blog.csdn.net/20180922084231364?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM1NjQyMDM2/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
-<meta property="og:image" content="https://img-blog.csdn.net/20180922084231367?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM1NjQyMDM2/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
-<meta property="article:published_time" content="2021-07-23T12:31:37.000Z">
-<meta property="article:modified_time" content="2021-07-23T12:32:47.304Z">
+<meta property="og:image" content="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211002095359578.png">
+<meta property="og:image" content="c:/Users/谭梁/AppData/Roaming/Typora/typora-user-images/image-20211002104229791.png">
+<meta property="og:image" content="https://pic2.zhimg.com/80/v2-37b23e8384fa64f77503b9d548da5311_1440w.jpg">
+<meta property="article:published_time" content="2022-01-18T01:40:43.000Z">
+<meta property="article:modified_time" content="2022-01-18T01:41:30.738Z">
 <meta property="article:author" content="monuo">
-<meta property="article:tag" content="内存管理">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://img-blog.csdn.net/20180922084231119?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM1NjQyMDM2/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
+<meta name="twitter:image" content="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211002095359578.png">
 
-<link rel="canonical" href="https://monuo2021.github.io/%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%EF%BC%9A%E8%BF%9E%E7%BB%AD%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D/">
+<link rel="canonical" href="https://monuo2021.github.io/%E4%BB%A5%E5%A4%AA%E7%BD%91%E5%B8%A7/">
 
 
 <script id="page-configurations">
@@ -50,7 +49,7 @@
   };
 </script>
 
-  <title>物理内存管理：连续内存分配 | 飞光</title>
+  <title>以太网帧 | 飞光</title>
   
 
 
@@ -161,7 +160,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://monuo2021.github.io/%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%EF%BC%9A%E8%BF%9E%E7%BB%AD%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D/">
+    <link itemprop="mainEntityOfPage" href="https://monuo2021.github.io/%E4%BB%A5%E5%A4%AA%E7%BD%91%E5%B8%A7/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpeg">
@@ -174,7 +173,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          物理内存管理：连续内存分配
+          以太网帧
         </h1>
 
         <div class="post-meta">
@@ -185,7 +184,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2021-07-23 20:31:37 / 修改时间：20:32:47" itemprop="dateCreated datePublished" datetime="2021-07-23T20:31:37+08:00">2021-07-23</time>
+              <time title="创建时间：2022-01-18 09:40:43 / 修改时间：09:41:30" itemprop="dateCreated datePublished" datetime="2022-01-18T09:40:43+08:00">2022-01-18</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -193,12 +192,12 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index"><span itemprop="name">操作系统</span></a>
+                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a>
                 </span>
             </span>
 
           
-            <div class="post-description">物理内存管理：连续内存分配</div>
+            <div class="post-description">以太网帧是数据链路层协议数据单元，使用底层以太网物理层传输机制。换句话说，以太网链路上的数据单元将以太网帧作为其有效载荷(payload)进行传输。</div>
 
         </div>
       </header>
@@ -209,105 +208,61 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="固定分区分配"><a href="#固定分区分配" class="headerlink" title="固定分区分配"></a>固定分区分配</h2><p>固定分区分配时最简单的一种可运行多道程序的储存管理方式。用户空间被划分为若干个固定的大小区域，每个分区只装入一道作业，这样一来，可以几道作业并发运行。当一有空闲时，可以从外存的后备作业队列中选择一个适当大小的作业装入该分区，由此往复运行作业。</p>
-<p><strong>缺陷</strong>：固定分区限制了活动进程的数目，每次都只能相应地进行作业，进程对于空闲分区的大小要求比较高，使得作业不灵活，降低了内存的空间利用率。</p>
-<h2 id="动态分区分配"><a href="#动态分区分配" class="headerlink" title="动态分区分配"></a>动态分区分配</h2><h3 id="分配算法"><a href="#分配算法" class="headerlink" title="分配算法"></a>分配算法</h3><ol>
-<li><p><strong>最先匹配</strong></p>
-<ul>
-<li><p>原理&amp;实现</p>
-<ul>
-<li>空闲分区列表按地址顺序排序</li>
-<li>分配过程时,搜索第一个合适的分区</li>
-<li>释放分区时,检查是否可与临近的空闲分区合并</li>
+        <p><strong>以太网帧</strong>是数据链路层协议数据单元，使用底层以太网物理层传输机制。换句话说，以太网链路上的数据单元将以太网帧作为其有效载荷(payload)进行传输。</p>
+<h2 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h2><p>以太网帧前面有<strong>前同步码(preamble)<strong>和</strong>帧开始定界符 (SFD)<strong>，它们都是物理层以太网数据包的一部分。每个以太网帧都以</strong>以太网报头</strong>开始，其中包含目标和源 MAC 地址作为其前两个字段。帧的中间部分是**有效载荷数据(payload)<strong>，包括帧中携带的其他协议（例如 Internet 协议）的首部。帧以</strong>帧校验序列(FCS)**结束，FCS 是一种 32 位循环冗余校验(CRC)，用于检测任何传输中的数据损坏。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211002095359578.png" alt="IEEE 802.3以太网数据包和帧结构"></p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>前同步码</td>
+<td>用来使接收端的适配器在接收 MAC 帧时能够迅速调整时钟频率，使它和发送端的频率相同。前同步码为 7 个字节，1 和 0 交替。</td>
+</tr>
+<tr>
+<td>帧开始定界符（SFD）</td>
+<td>帧的起始符，为 1 个字节。前 6 位 1 和 0 交替，最后的两个连续的 1 表示告诉接收端适配器：“帧信息要来了，准备接收”。</td>
+</tr>
+<tr>
+<td>目的地址</td>
+<td>接收端的物理地址（MAC 地址），为 6 个字节（48 比特）。</td>
+</tr>
+<tr>
+<td>源地址</td>
+<td>发送端的物理地址（MAC 地址），为 6 个字节（48 比特）。</td>
+</tr>
+<tr>
+<td>类型</td>
+<td>上层协议的类型。由于上层协议众多，所以在处理数据的时候必须设置该字段，标识数据交付哪个协议处理。例如，字段为 0x0800 时，表示将数据交付给 IP 协议。</td>
+</tr>
+<tr>
+<td>数据</td>
+<td>也称为效载荷，表示交付给上层的数据。以太网帧数据长度最小为 46 字节，最大为 1500 字节。如果不足 46 字节时，会填充到最小长度。最大值也叫最大传输单元（MTU）。</td>
+</tr>
+<tr>
+<td>帧检验序列 FCS</td>
+<td>检测该帧是否出现差错，占 4 个字节（32 比特）。发送端计算帧的循环冗余码校验（CRC）值，把这个值写到帧里。接收端重新计算 CRC，与 FCS 字段的值进行比较。如果两个值不相同，则表示传输过程中发生了数据丢失或改变。这时，就需要重新传输这一帧。</td>
+</tr>
+<tr>
+<td>包间间隙(Interpacket gap)</td>
+<td>包间间隙(IPG) 是包之间的空闲时间。发送一个数据包后，发送器需要在发送下一个数据包之前传输最少 96 位（12 个八位字节）的空闲线路状态。</td>
+</tr>
+</tbody></table>
+<h2 id="类型"><a href="#类型" class="headerlink" title="类型"></a>类型</h2><ul>
+<li>Ethernet II</li>
+<li>Novell raw IEEE 802.3</li>
+<li>IEEE 802.2 Logical Link Control (LLC)</li>
+<li>IEEE 802.2 Subnetwork Access Protocol (SNAP)</li>
 </ul>
-</li>
-<li><p>优点</p>
-<ul>
-<li><p>简单</p>
-</li>
-<li><p>在高地址空间有大块的空闲分区</p>
-</li>
-</ul>
-</li>
-<li><p>缺点</p>
-<ul>
-<li>外部碎片</li>
-<li>分配大块时较慢</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p><strong>最优适配</strong></p>
-<ul>
-<li><p>原理&amp;实现</p>
-<ul>
-<li>空闲分区列表按照大小排序</li>
-<li>分配时,查找一个合适的分区</li>
-<li>释放时,查找并且合并临近的空闲分区(如果找到)</li>
-</ul>
-</li>
-<li><p>优点</p>
-<ul>
-<li>大部分分配的尺可寸较小时,效果很好</li>
-<li>可避免大的空闲分区被拆分</li>
-<li>可减小外部碎片的大小</li>
-<li>相对简单</li>
-</ul>
-</li>
-<li><p>缺点</p>
-<ul>
-<li>外部碎片</li>
-<li>释放分区较慢</li>
-<li>容易产生很多无用的小碎片</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p><strong>最差适配</strong></p>
-<ul>
-<li><p>原理&amp;实现</p>
-<ul>
-<li>空闲分区列表按由大到小排序</li>
-<li>分配时，选最大的分区</li>
-<li>释放时，检查是否可与临近的空闲分区合并,进行可能的合并，并调整空闲分区列表顺序</li>
-</ul>
-</li>
-<li><p>优点</p>
-<ul>
-<li>中等大小的分配较多时,效果最好</li>
-<li>避免出现太多的小碎片</li>
-</ul>
-</li>
-<li><p>缺点</p>
-<ul>
-<li>释放分区较慢</li>
-<li>外部碎片</li>
-<li>容易破坏大的空闲分区,因此后续难以分配大的分区</li>
-</ul>
-</li>
-</ul>
-<p><img src="https://img-blog.csdn.net/20180922084231119?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM1NjQyMDM2/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="img"></p>
-</li>
-</ol>
-<p><img src="https://img-blog.csdn.net/20180922084231364?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM1NjQyMDM2/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="img"></p>
-<p><img src="https://img-blog.csdn.net/20180922084231367?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM1NjQyMDM2/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="img"></p>
-<h3 id="碎片管理"><a href="#碎片管理" class="headerlink" title="碎片管理"></a>碎片管理</h3><ul>
-<li><p>紧凑</p>
-<ul>
-<li>调整进程占用的分区位置来减少或避免分区碎片。</li>
-<li>通过移动分配给进程的内存分区，以合并外部碎片</li>
-<li><strong>碎片紧凑的条件</strong>：所有的应用程序可动态重定位</li>
-</ul>
-</li>
-<li><p>分区对换</p>
-<p>将等待状态的进程放到外存里，释放内存空间。</p>
-</li>
-</ul>
-<p><strong>缺陷</strong>：动态分区算法复杂，回收空间是要进行分区合并，对于系统的开销较大。</p>
-<h2 id="伙伴系统"><a href="#伙伴系统" class="headerlink" title="伙伴系统"></a>伙伴系统</h2><h3 id="分配算法-1"><a href="#分配算法-1" class="headerlink" title="分配算法"></a>分配算法</h3><p>物理内存管理中把页按照2的幂次方大小划分并分组。每次分配内存时，从适当大小的组中分配页面，把余下的另一半内存重新划分并分组。</p>
-<p>伙伴系统既能在系统的运行过程中不断地划分空闲分区，并根据分区的大小进行分类，然后相同的空闲分区单独设立一个空闲分区双向链表，同时也能在进程需要系统为其分配一个存储空间时，通过计算并找到合适的空闲分区分配给进程。</p>
-<p>会产生外碎片，会产生内碎片</p>
-<p>伙伴系统折中了内存分配和碎片管理的问题。</p>
+<p>不同的帧类型具有不同的格式和 MTU 值，但可以共存于同一物理介质上。根据下表可以区分帧类型。</p>
+<p>此外，所有四种以太网帧类型都可以选择包含一个 IEEE 802.1Q 标记，以标识它属于哪个 VLAN 及其优先级（服务质量）。这种封装在 IEEE 802.3ac 规范中定义，并将最大帧增加 4 个八位字节。</p>
+<img src="C:\Users\谭梁\AppData\Roaming\Typora\typora-user-images\image-20211002104229791.png" alt="image-20211002104229791" style="zoom: 80%;" />
+
+<p><strong>Ethernet II 帧格式</strong>和<strong>IEEE 802.3 格式</strong>，这两种格式的主要区别在于，Ethernet II 格式中包含一个<strong>Type 字段</strong>，标识以太帧处理完成之后将被发送到哪个上层协议进行处理。IEEE802.3 格式中，同样的位置是<strong>长度字段(Length)<strong>。不同的</strong>Type 字段值/Length 字段</strong>可以用来区别这两种帧的类型，当该字段小于等于 1500（或者十六进制的 0x05DC）时，帧使用的是 IEEE 802.3 格式。当该字段值大于等于 1536 （或者十六进制的 0x0600）时，帧使用的是 Ethernet II 格式。以太网中大多数的数据帧使用的是 Ethernet II 格式。</p>
+<p><img src="https://pic2.zhimg.com/80/v2-37b23e8384fa64f77503b9d548da5311_1440w.jpg" alt="img"></p>
 
     </div>
 
@@ -316,9 +271,6 @@
     
 
       <footer class="post-footer">
-          <div class="post-tags">
-              <a href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" rel="tag"># 内存管理</a>
-          </div>
 
         
 
@@ -326,13 +278,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/%E7%A8%8B%E5%BA%8F%E8%BD%AC%E6%8D%A2%E5%A4%84%E7%90%86%E8%BF%87%E7%A8%8B/" rel="prev" title="程序转换处理过程">
-      <i class="fa fa-chevron-left"></i> 程序转换处理过程
+    <a href="/RISC-V%E7%89%B9%E6%9D%83%E6%9E%B6%E6%9E%84/" rel="prev" title="RISC-V特权架构">
+      <i class="fa fa-chevron-left"></i> RISC-V特权架构
     </a></div>
-      <div class="post-nav-item">
-    <a href="/%E7%AC%A6%E5%8F%B7%E4%B8%8E%E7%AC%A6%E5%8F%B7%E8%A1%A8/" rel="next" title="符号与符号表">
-      符号与符号表 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -391,7 +340,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%BA%E5%AE%9A%E5%88%86%E5%8C%BA%E5%88%86%E9%85%8D"><span class="nav-text">固定分区分配</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E5%88%86%E5%8C%BA%E5%88%86%E9%85%8D"><span class="nav-text">动态分区分配</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E9%85%8D%E7%AE%97%E6%B3%95"><span class="nav-text">分配算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A2%8E%E7%89%87%E7%AE%A1%E7%90%86"><span class="nav-text">碎片管理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%99%E4%BC%B4%E7%B3%BB%E7%BB%9F"><span class="nav-text">伙伴系统</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E9%85%8D%E7%AE%97%E6%B3%95-1"><span class="nav-text">分配算法</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E6%9E%84"><span class="nav-text">结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B1%BB%E5%9E%8B"><span class="nav-text">类型</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -514,6 +463,59 @@
   
 
   
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
 
   
 

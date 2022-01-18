@@ -163,6 +163,69 @@
       </categories>
   </entry>
   <entry>
+    <title>以太网帧</title>
+    <url>/%E4%BB%A5%E5%A4%AA%E7%BD%91%E5%B8%A7/</url>
+    <content><![CDATA[<p><strong>以太网帧</strong>是数据链路层协议数据单元，使用底层以太网物理层传输机制。换句话说，以太网链路上的数据单元将以太网帧作为其有效载荷(payload)进行传输。</p>
+<h2 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h2><p>以太网帧前面有<strong>前同步码(preamble)<strong>和</strong>帧开始定界符 (SFD)<strong>，它们都是物理层以太网数据包的一部分。每个以太网帧都以</strong>以太网报头</strong>开始，其中包含目标和源 MAC 地址作为其前两个字段。帧的中间部分是**有效载荷数据(payload)<strong>，包括帧中携带的其他协议（例如 Internet 协议）的首部。帧以</strong>帧校验序列(FCS)**结束，FCS 是一种 32 位循环冗余校验(CRC)，用于检测任何传输中的数据损坏。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211002095359578.png" alt="IEEE 802.3以太网数据包和帧结构"></p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>前同步码</td>
+<td>用来使接收端的适配器在接收 MAC 帧时能够迅速调整时钟频率，使它和发送端的频率相同。前同步码为 7 个字节，1 和 0 交替。</td>
+</tr>
+<tr>
+<td>帧开始定界符（SFD）</td>
+<td>帧的起始符，为 1 个字节。前 6 位 1 和 0 交替，最后的两个连续的 1 表示告诉接收端适配器：“帧信息要来了，准备接收”。</td>
+</tr>
+<tr>
+<td>目的地址</td>
+<td>接收端的物理地址（MAC 地址），为 6 个字节（48 比特）。</td>
+</tr>
+<tr>
+<td>源地址</td>
+<td>发送端的物理地址（MAC 地址），为 6 个字节（48 比特）。</td>
+</tr>
+<tr>
+<td>类型</td>
+<td>上层协议的类型。由于上层协议众多，所以在处理数据的时候必须设置该字段，标识数据交付哪个协议处理。例如，字段为 0x0800 时，表示将数据交付给 IP 协议。</td>
+</tr>
+<tr>
+<td>数据</td>
+<td>也称为效载荷，表示交付给上层的数据。以太网帧数据长度最小为 46 字节，最大为 1500 字节。如果不足 46 字节时，会填充到最小长度。最大值也叫最大传输单元（MTU）。</td>
+</tr>
+<tr>
+<td>帧检验序列 FCS</td>
+<td>检测该帧是否出现差错，占 4 个字节（32 比特）。发送端计算帧的循环冗余码校验（CRC）值，把这个值写到帧里。接收端重新计算 CRC，与 FCS 字段的值进行比较。如果两个值不相同，则表示传输过程中发生了数据丢失或改变。这时，就需要重新传输这一帧。</td>
+</tr>
+<tr>
+<td>包间间隙(Interpacket gap)</td>
+<td>包间间隙(IPG) 是包之间的空闲时间。发送一个数据包后，发送器需要在发送下一个数据包之前传输最少 96 位（12 个八位字节）的空闲线路状态。</td>
+</tr>
+</tbody></table>
+<h2 id="类型"><a href="#类型" class="headerlink" title="类型"></a>类型</h2><ul>
+<li>Ethernet II</li>
+<li>Novell raw IEEE 802.3</li>
+<li>IEEE 802.2 Logical Link Control (LLC)</li>
+<li>IEEE 802.2 Subnetwork Access Protocol (SNAP)</li>
+</ul>
+<p>不同的帧类型具有不同的格式和 MTU 值，但可以共存于同一物理介质上。根据下表可以区分帧类型。</p>
+<p>此外，所有四种以太网帧类型都可以选择包含一个 IEEE 802.1Q 标记，以标识它属于哪个 VLAN 及其优先级（服务质量）。这种封装在 IEEE 802.3ac 规范中定义，并将最大帧增加 4 个八位字节。</p>
+<img src="C:\Users\谭梁\AppData\Roaming\Typora\typora-user-images\image-20211002104229791.png" alt="image-20211002104229791" style="zoom: 80%;" />
+
+<p><strong>Ethernet II 帧格式</strong>和<strong>IEEE 802.3 格式</strong>，这两种格式的主要区别在于，Ethernet II 格式中包含一个<strong>Type 字段</strong>，标识以太帧处理完成之后将被发送到哪个上层协议进行处理。IEEE802.3 格式中，同样的位置是<strong>长度字段(Length)<strong>。不同的</strong>Type 字段值/Length 字段</strong>可以用来区别这两种帧的类型，当该字段小于等于 1500（或者十六进制的 0x05DC）时，帧使用的是 IEEE 802.3 格式。当该字段值大于等于 1536 （或者十六进制的 0x0600）时，帧使用的是 Ethernet II 格式。以太网中大多数的数据帧使用的是 Ethernet II 格式。</p>
+<p><img src="https://pic2.zhimg.com/80/v2-37b23e8384fa64f77503b9d548da5311_1440w.jpg" alt="img"></p>
+]]></content>
+      <categories>
+        <category>计算机网络</category>
+      </categories>
+  </entry>
+  <entry>
     <title>分支预测</title>
     <url>/%E5%88%86%E6%94%AF%E9%A2%84%E6%B5%8B/</url>
     <content><![CDATA[<p>分支预测解决流水线冲突中的控制冒险。在指令集中，分支指令包括条件指令和非条件指令。对无条件指令来说，无需进行条件判断，就可以获得跳转后的地址；但是对条件跳转指令，无论是条件直接跳转还是条件间接跳转指令（RISC-V 无此类指令），都需要在执行阶段才可以确定是否跳转，这样会影响取值阶段的效率。</p>
@@ -808,78 +871,6 @@
       </tags>
   </entry>
   <entry>
-    <title>程序转换处理过程</title>
-    <url>/%E7%A8%8B%E5%BA%8F%E8%BD%AC%E6%8D%A2%E5%A4%84%E7%90%86%E8%BF%87%E7%A8%8B/</url>
-    <content><![CDATA[<p>一个由高级语言编写的程序，必须转换成二进制代码，才能在机器上运行。这种可以在机器上运行是二进制代码被称为<strong>可执行目标文件</strong>。</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/sp20210723_083211_152.png" alt="源程序处理过程"></p>
-<p>上述过程可分为四步：</p>
-<ul>
-<li><strong>预处理</strong></li>
-<li><strong>编译</strong></li>
-<li><strong>汇编</strong></li>
-<li><strong>链接</strong></li>
-</ul>
-<h2 id="一、预处理"><a href="#一、预处理" class="headerlink" title="一、预处理"></a>一、预处理</h2><p>预处理过程主要<strong>处理源文件中以“#”开头的预编译指令</strong>，如：</p>
-<ul>
-<li>删除“#define”并展开所定义的宏。</li>
-<li>处理所有条件预编译指令，如“#if”,“#ifdef”, “#endif”等。</li>
-<li>插入头文件到“#include”处，可以递归方式进行处理。</li>
-<li>删除所有的注释“//”和“/* */”。</li>
-<li> 添加行号和文件名标识，以便编译时编译器产生调试用的行号信息。</li>
-<li>保留所有#pragma编译指令（编译器需要用）</li>
-</ul>
-<p>经过预处理后得到的是 <strong>.i 文件</strong>（预处理文件），该文件是一个可读的文本文件 ，但不包含任何宏定义。</p>
-<h3 id="预处理命令"><a href="#预处理命令" class="headerlink" title="预处理命令"></a>预处理命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc –E hello.c –o hello.i</span><br></pre></td></tr></table></figure>
-
-<p>或者</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cpp hello.c &gt; hello.i</span><br></pre></td></tr></table></figure>
-
-<h2 id="二、编译"><a href="#二、编译" class="headerlink" title="二、编译"></a>二、编译</h2><p>编译过程就是将预处理后得到的预处理文件（如 hello.i）进行一系列分析，<strong>生成汇编代码文件</strong>的过程。用来进行编译处理的程序称为<strong>编译程序（编译器，Compiler）</strong></p>
-<p>编译包括以下过程：</p>
-<ul>
-<li>词法分析</li>
-<li>语法分析</li>
-<li>语义分析</li>
-<li>中间代码生成</li>
-<li>代码优化</li>
-</ul>
-<p>经过编译后，得到**.s文件**（汇编代码文件）还是可读的文本文件，CPU无法理解和执行它。</p>
-<h3 id="编译命令"><a href="#编译命令" class="headerlink" title="编译命令"></a>编译命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc -S hello.i -o hello.s</span><br></pre></td></tr></table></figure>
-
-<p>或</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc -S hello.c -o hello.s</span><br></pre></td></tr></table></figure>
-
-<p>或</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">/user/lib/gcc/i486-linux-gnu/4.1/cc1 hello.c</span><br></pre></td></tr></table></figure>
-
-<h2 id="三、汇编"><a href="#三、汇编" class="headerlink" title="三、汇编"></a>三、汇编</h2><p>汇编是<strong>将汇编语言源程序转换为机器指令序列</strong>，每条汇编语句几乎都对应一条机器指令。汇编过程相比编译较为简单，没有复杂的语法，没有语义，也不需要指令优化，只需根据汇编指令和机器指令的对照表一一翻译即可。</p>
-<p>汇编结果是一个 <strong>.o 文件（可重定位目标文件）</strong>，其中包含的是不可读的二进制代码。</p>
-<h3 id="汇编命令"><a href="#汇编命令" class="headerlink" title="汇编命令"></a>汇编命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc –c hello.s –o hello.o</span><br></pre></td></tr></table></figure>
-
-<p>或</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">gcc –c hello.c –o hello.o</span><br></pre></td></tr></table></figure>
-
-<p>或（as是一个汇编程序）</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">as hello.s –o hello.o</span><br></pre></td></tr></table></figure>
-
-<h2 id="四、链接"><a href="#四、链接" class="headerlink" title="四、链接"></a>四、链接</h2><p>链接过程<strong>将多个可重定位目标文件合并以生成可执行目标文件</strong>。</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/sp20210723_101021_361.png" alt="sp20210723_101021_361"></p>
-<h3 id="链接命令"><a href="#链接命令" class="headerlink" title="链接命令"></a>链接命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc –static –o myproc main.o swap.o</span><br></pre></td></tr></table></figure>
-
-<p>或</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ld –static –o myproc main.o swap.o</span><br></pre></td></tr></table></figure>
-
-<p>其中，static 表示静态链接，如果不指定 -o 选项，则可执行文件名 为“a.out”。</p>
-<p><strong>a.out 就是最终的可执行文件。</strong></p>
-]]></content>
-      <categories>
-        <category>链接、装载与库</category>
-      </categories>
-      <tags>
-        <tag>程序员的自我修养</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>物理内存管理：连续内存分配</title>
     <url>/%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%EF%BC%9A%E8%BF%9E%E7%BB%AD%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D/</url>
     <content><![CDATA[<h2 id="固定分区分配"><a href="#固定分区分配" class="headerlink" title="固定分区分配"></a>固定分区分配</h2><p>固定分区分配时最简单的一种可运行多道程序的储存管理方式。用户空间被划分为若干个固定的大小区域，每个分区只装入一道作业，这样一来，可以几道作业并发运行。当一有空闲时，可以从外存的后备作业队列中选择一个适当大小的作业装入该分区，由此往复运行作业。</p>
@@ -987,6 +978,78 @@
       </categories>
       <tags>
         <tag>内存管理</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>程序转换处理过程</title>
+    <url>/%E7%A8%8B%E5%BA%8F%E8%BD%AC%E6%8D%A2%E5%A4%84%E7%90%86%E8%BF%87%E7%A8%8B/</url>
+    <content><![CDATA[<p>一个由高级语言编写的程序，必须转换成二进制代码，才能在机器上运行。这种可以在机器上运行是二进制代码被称为<strong>可执行目标文件</strong>。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/sp20210723_083211_152.png" alt="源程序处理过程"></p>
+<p>上述过程可分为四步：</p>
+<ul>
+<li><strong>预处理</strong></li>
+<li><strong>编译</strong></li>
+<li><strong>汇编</strong></li>
+<li><strong>链接</strong></li>
+</ul>
+<h2 id="一、预处理"><a href="#一、预处理" class="headerlink" title="一、预处理"></a>一、预处理</h2><p>预处理过程主要<strong>处理源文件中以“#”开头的预编译指令</strong>，如：</p>
+<ul>
+<li>删除“#define”并展开所定义的宏。</li>
+<li>处理所有条件预编译指令，如“#if”,“#ifdef”, “#endif”等。</li>
+<li>插入头文件到“#include”处，可以递归方式进行处理。</li>
+<li>删除所有的注释“//”和“/* */”。</li>
+<li> 添加行号和文件名标识，以便编译时编译器产生调试用的行号信息。</li>
+<li>保留所有#pragma编译指令（编译器需要用）</li>
+</ul>
+<p>经过预处理后得到的是 <strong>.i 文件</strong>（预处理文件），该文件是一个可读的文本文件 ，但不包含任何宏定义。</p>
+<h3 id="预处理命令"><a href="#预处理命令" class="headerlink" title="预处理命令"></a>预处理命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc –E hello.c –o hello.i</span><br></pre></td></tr></table></figure>
+
+<p>或者</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cpp hello.c &gt; hello.i</span><br></pre></td></tr></table></figure>
+
+<h2 id="二、编译"><a href="#二、编译" class="headerlink" title="二、编译"></a>二、编译</h2><p>编译过程就是将预处理后得到的预处理文件（如 hello.i）进行一系列分析，<strong>生成汇编代码文件</strong>的过程。用来进行编译处理的程序称为<strong>编译程序（编译器，Compiler）</strong></p>
+<p>编译包括以下过程：</p>
+<ul>
+<li>词法分析</li>
+<li>语法分析</li>
+<li>语义分析</li>
+<li>中间代码生成</li>
+<li>代码优化</li>
+</ul>
+<p>经过编译后，得到**.s文件**（汇编代码文件）还是可读的文本文件，CPU无法理解和执行它。</p>
+<h3 id="编译命令"><a href="#编译命令" class="headerlink" title="编译命令"></a>编译命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc -S hello.i -o hello.s</span><br></pre></td></tr></table></figure>
+
+<p>或</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc -S hello.c -o hello.s</span><br></pre></td></tr></table></figure>
+
+<p>或</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">/user/lib/gcc/i486-linux-gnu/4.1/cc1 hello.c</span><br></pre></td></tr></table></figure>
+
+<h2 id="三、汇编"><a href="#三、汇编" class="headerlink" title="三、汇编"></a>三、汇编</h2><p>汇编是<strong>将汇编语言源程序转换为机器指令序列</strong>，每条汇编语句几乎都对应一条机器指令。汇编过程相比编译较为简单，没有复杂的语法，没有语义，也不需要指令优化，只需根据汇编指令和机器指令的对照表一一翻译即可。</p>
+<p>汇编结果是一个 <strong>.o 文件（可重定位目标文件）</strong>，其中包含的是不可读的二进制代码。</p>
+<h3 id="汇编命令"><a href="#汇编命令" class="headerlink" title="汇编命令"></a>汇编命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc –c hello.s –o hello.o</span><br></pre></td></tr></table></figure>
+
+<p>或</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">gcc –c hello.c –o hello.o</span><br></pre></td></tr></table></figure>
+
+<p>或（as是一个汇编程序）</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">as hello.s –o hello.o</span><br></pre></td></tr></table></figure>
+
+<h2 id="四、链接"><a href="#四、链接" class="headerlink" title="四、链接"></a>四、链接</h2><p>链接过程<strong>将多个可重定位目标文件合并以生成可执行目标文件</strong>。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/sp20210723_101021_361.png" alt="sp20210723_101021_361"></p>
+<h3 id="链接命令"><a href="#链接命令" class="headerlink" title="链接命令"></a>链接命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc –static –o myproc main.o swap.o</span><br></pre></td></tr></table></figure>
+
+<p>或</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ld –static –o myproc main.o swap.o</span><br></pre></td></tr></table></figure>
+
+<p>其中，static 表示静态链接，如果不指定 -o 选项，则可执行文件名 为“a.out”。</p>
+<p><strong>a.out 就是最终的可执行文件。</strong></p>
+]]></content>
+      <categories>
+        <category>链接、装载与库</category>
+      </categories>
+      <tags>
+        <tag>程序员的自我修养</tag>
       </tags>
   </entry>
   <entry>
