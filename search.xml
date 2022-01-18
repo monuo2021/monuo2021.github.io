@@ -83,6 +83,69 @@
       </tags>
   </entry>
   <entry>
+    <title>以太网帧</title>
+    <url>/%E4%BB%A5%E5%A4%AA%E7%BD%91%E5%B8%A7/</url>
+    <content><![CDATA[<p><strong>以太网帧</strong>是数据链路层协议数据单元，使用底层以太网物理层传输机制。换句话说，以太网链路上的数据单元将以太网帧作为其有效载荷(payload)进行传输。</p>
+<h2 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h2><p>以太网帧前面有<strong>前同步码(preamble)<strong>和</strong>帧开始定界符 (SFD)<strong>，它们都是物理层以太网数据包的一部分。每个以太网帧都以</strong>以太网报头</strong>开始，其中包含目标和源 MAC 地址作为其前两个字段。帧的中间部分是**有效载荷数据(payload)<strong>，包括帧中携带的其他协议（例如 Internet 协议）的首部。帧以</strong>帧校验序列(FCS)**结束，FCS 是一种 32 位循环冗余校验(CRC)，用于检测任何传输中的数据损坏。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211002095359578.png" alt="IEEE 802.3以太网数据包和帧结构"></p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>前同步码</td>
+<td>用来使接收端的适配器在接收 MAC 帧时能够迅速调整时钟频率，使它和发送端的频率相同。前同步码为 7 个字节，1 和 0 交替。</td>
+</tr>
+<tr>
+<td>帧开始定界符（SFD）</td>
+<td>帧的起始符，为 1 个字节。前 6 位 1 和 0 交替，最后的两个连续的 1 表示告诉接收端适配器：“帧信息要来了，准备接收”。</td>
+</tr>
+<tr>
+<td>目的地址</td>
+<td>接收端的物理地址（MAC 地址），为 6 个字节（48 比特）。</td>
+</tr>
+<tr>
+<td>源地址</td>
+<td>发送端的物理地址（MAC 地址），为 6 个字节（48 比特）。</td>
+</tr>
+<tr>
+<td>类型</td>
+<td>上层协议的类型。由于上层协议众多，所以在处理数据的时候必须设置该字段，标识数据交付哪个协议处理。例如，字段为 0x0800 时，表示将数据交付给 IP 协议。</td>
+</tr>
+<tr>
+<td>数据</td>
+<td>也称为效载荷，表示交付给上层的数据。以太网帧数据长度最小为 46 字节，最大为 1500 字节。如果不足 46 字节时，会填充到最小长度。最大值也叫最大传输单元（MTU）。</td>
+</tr>
+<tr>
+<td>帧检验序列 FCS</td>
+<td>检测该帧是否出现差错，占 4 个字节（32 比特）。发送端计算帧的循环冗余码校验（CRC）值，把这个值写到帧里。接收端重新计算 CRC，与 FCS 字段的值进行比较。如果两个值不相同，则表示传输过程中发生了数据丢失或改变。这时，就需要重新传输这一帧。</td>
+</tr>
+<tr>
+<td>包间间隙(Interpacket gap)</td>
+<td>包间间隙(IPG) 是包之间的空闲时间。发送一个数据包后，发送器需要在发送下一个数据包之前传输最少 96 位（12 个八位字节）的空闲线路状态。</td>
+</tr>
+</tbody></table>
+<h2 id="类型"><a href="#类型" class="headerlink" title="类型"></a>类型</h2><ul>
+<li>Ethernet II</li>
+<li>Novell raw IEEE 802.3</li>
+<li>IEEE 802.2 Logical Link Control (LLC)</li>
+<li>IEEE 802.2 Subnetwork Access Protocol (SNAP)</li>
+</ul>
+<p>不同的帧类型具有不同的格式和 MTU 值，但可以共存于同一物理介质上。根据下表可以区分帧类型。</p>
+<p>此外，所有四种以太网帧类型都可以选择包含一个 IEEE 802.1Q 标记，以标识它属于哪个 VLAN 及其优先级（服务质量）。这种封装在 IEEE 802.3ac 规范中定义，并将最大帧增加 4 个八位字节。</p>
+<img src="C:\Users\谭梁\AppData\Roaming\Typora\typora-user-images\image-20211002104229791.png" alt="image-20211002104229791" style="zoom: 80%;" />
+
+<p><strong>Ethernet II 帧格式</strong>和<strong>IEEE 802.3 格式</strong>，这两种格式的主要区别在于，Ethernet II 格式中包含一个<strong>Type 字段</strong>，标识以太帧处理完成之后将被发送到哪个上层协议进行处理。IEEE802.3 格式中，同样的位置是<strong>长度字段(Length)<strong>。不同的</strong>Type 字段值/Length 字段</strong>可以用来区别这两种帧的类型，当该字段小于等于 1500（或者十六进制的 0x05DC）时，帧使用的是 IEEE 802.3 格式。当该字段值大于等于 1536 （或者十六进制的 0x0600）时，帧使用的是 Ethernet II 格式。以太网中大多数的数据帧使用的是 Ethernet II 格式。</p>
+<p><img src="https://pic2.zhimg.com/80/v2-37b23e8384fa64f77503b9d548da5311_1440w.jpg" alt="img"></p>
+]]></content>
+      <categories>
+        <category>计算机网络</category>
+      </categories>
+  </entry>
+  <entry>
     <title>中断与异常</title>
     <url>/%E4%B8%AD%E6%96%AD%E4%B8%8E%E5%BC%82%E5%B8%B8/</url>
     <content><![CDATA[<h2 id="一、什么是中断-异常"><a href="#一、什么是中断-异常" class="headerlink" title="一、什么是中断/异常"></a>一、什么是中断/异常</h2><p>中断和异常是指系统、处理器在执行指令过程中突然被别的请求打断而终止当前的程序，转而去处理其他程序。待该中断处理程序处理完后回到该程序中断点继续执行之前程序。</p>
@@ -163,106 +226,164 @@
       </categories>
   </entry>
   <entry>
-    <title>以太网帧</title>
-    <url>/%E4%BB%A5%E5%A4%AA%E7%BD%91%E5%B8%A7/</url>
-    <content><![CDATA[<p><strong>以太网帧</strong>是数据链路层协议数据单元，使用底层以太网物理层传输机制。换句话说，以太网链路上的数据单元将以太网帧作为其有效载荷(payload)进行传输。</p>
-<h2 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h2><p>以太网帧前面有<strong>前同步码(preamble)<strong>和</strong>帧开始定界符 (SFD)<strong>，它们都是物理层以太网数据包的一部分。每个以太网帧都以</strong>以太网报头</strong>开始，其中包含目标和源 MAC 地址作为其前两个字段。帧的中间部分是**有效载荷数据(payload)<strong>，包括帧中携带的其他协议（例如 Internet 协议）的首部。帧以</strong>帧校验序列(FCS)**结束，FCS 是一种 32 位循环冗余校验(CRC)，用于检测任何传输中的数据损坏。</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211002095359578.png" alt="IEEE 802.3以太网数据包和帧结构"></p>
-<table>
-<thead>
-<tr>
-<th>字段</th>
-<th>含义</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>前同步码</td>
-<td>用来使接收端的适配器在接收 MAC 帧时能够迅速调整时钟频率，使它和发送端的频率相同。前同步码为 7 个字节，1 和 0 交替。</td>
-</tr>
-<tr>
-<td>帧开始定界符（SFD）</td>
-<td>帧的起始符，为 1 个字节。前 6 位 1 和 0 交替，最后的两个连续的 1 表示告诉接收端适配器：“帧信息要来了，准备接收”。</td>
-</tr>
-<tr>
-<td>目的地址</td>
-<td>接收端的物理地址（MAC 地址），为 6 个字节（48 比特）。</td>
-</tr>
-<tr>
-<td>源地址</td>
-<td>发送端的物理地址（MAC 地址），为 6 个字节（48 比特）。</td>
-</tr>
-<tr>
-<td>类型</td>
-<td>上层协议的类型。由于上层协议众多，所以在处理数据的时候必须设置该字段，标识数据交付哪个协议处理。例如，字段为 0x0800 时，表示将数据交付给 IP 协议。</td>
-</tr>
-<tr>
-<td>数据</td>
-<td>也称为效载荷，表示交付给上层的数据。以太网帧数据长度最小为 46 字节，最大为 1500 字节。如果不足 46 字节时，会填充到最小长度。最大值也叫最大传输单元（MTU）。</td>
-</tr>
-<tr>
-<td>帧检验序列 FCS</td>
-<td>检测该帧是否出现差错，占 4 个字节（32 比特）。发送端计算帧的循环冗余码校验（CRC）值，把这个值写到帧里。接收端重新计算 CRC，与 FCS 字段的值进行比较。如果两个值不相同，则表示传输过程中发生了数据丢失或改变。这时，就需要重新传输这一帧。</td>
-</tr>
-<tr>
-<td>包间间隙(Interpacket gap)</td>
-<td>包间间隙(IPG) 是包之间的空闲时间。发送一个数据包后，发送器需要在发送下一个数据包之前传输最少 96 位（12 个八位字节）的空闲线路状态。</td>
-</tr>
-</tbody></table>
-<h2 id="类型"><a href="#类型" class="headerlink" title="类型"></a>类型</h2><ul>
-<li>Ethernet II</li>
-<li>Novell raw IEEE 802.3</li>
-<li>IEEE 802.2 Logical Link Control (LLC)</li>
-<li>IEEE 802.2 Subnetwork Access Protocol (SNAP)</li>
-</ul>
-<p>不同的帧类型具有不同的格式和 MTU 值，但可以共存于同一物理介质上。根据下表可以区分帧类型。</p>
-<p>此外，所有四种以太网帧类型都可以选择包含一个 IEEE 802.1Q 标记，以标识它属于哪个 VLAN 及其优先级（服务质量）。这种封装在 IEEE 802.3ac 规范中定义，并将最大帧增加 4 个八位字节。</p>
-<img src="C:\Users\谭梁\AppData\Roaming\Typora\typora-user-images\image-20211002104229791.png" alt="image-20211002104229791" style="zoom: 80%;" />
-
-<p><strong>Ethernet II 帧格式</strong>和<strong>IEEE 802.3 格式</strong>，这两种格式的主要区别在于，Ethernet II 格式中包含一个<strong>Type 字段</strong>，标识以太帧处理完成之后将被发送到哪个上层协议进行处理。IEEE802.3 格式中，同样的位置是<strong>长度字段(Length)<strong>。不同的</strong>Type 字段值/Length 字段</strong>可以用来区别这两种帧的类型，当该字段小于等于 1500（或者十六进制的 0x05DC）时，帧使用的是 IEEE 802.3 格式。当该字段值大于等于 1536 （或者十六进制的 0x0600）时，帧使用的是 Ethernet II 格式。以太网中大多数的数据帧使用的是 Ethernet II 格式。</p>
-<p><img src="https://pic2.zhimg.com/80/v2-37b23e8384fa64f77503b9d548da5311_1440w.jpg" alt="img"></p>
-]]></content>
-      <categories>
-        <category>计算机网络</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>处理器性能公式</title>
-    <url>/%E5%A4%84%E7%90%86%E5%99%A8%E6%80%A7%E8%83%BD%E5%85%AC%E5%BC%8F/</url>
-    <content><![CDATA[<h3 id="CPU-性能及其度量因素"><a href="#CPU-性能及其度量因素" class="headerlink" title="CPU 性能及其度量因素"></a>CPU 性能及其度量因素</h3><p>CPU 性能度量的基本指标是<strong>CPU 执行时间</strong>。而几乎所有发的计算机都有一个以固定频率运行的时钟，称为<strong>时钟周期</strong>，或脉冲周期等。所以，我们可以利用时钟周期来表示 CPU 时间：</p>
-<p>$$<br>程序CPU执行时间 = 程序CPU时钟周期数 × 时钟周期长度<br>$$</p>
-<p>其中，时钟周期长度与时钟频率互为倒数，所以该公式也可表示为：</p>
-<p>$$<br>程序CPU执行时间 =  \frac {程序CPU时钟周期数}{时钟频率}<br>$$</p>
-<h3 id="指令性能"><a href="#指令性能" class="headerlink" title="指令性能"></a>指令性能</h3><p>除了时钟周期外，我们还需注意<strong>指令数</strong>，因为计算机必须通过执行指令来运行程序。</p>
-<p>$$<br>CPU时钟周期 = 程序指令数 × 指令平均时钟周期数<br>$$</p>
-<blockquote>
-<p><strong>指令平均时钟周期数（CPI）</strong>：表示执行某个程序或者程序片段时每条指令所需的时钟周期平均数。</p>
-</blockquote>
-<h3 id="经典的-CPU-性能公式"><a href="#经典的-CPU-性能公式" class="headerlink" title="经典的 CPU 性能公式"></a>经典的 CPU 性能公式</h3><p>结合公式（1）、（2）、（3），我们可以得出<strong>经典的 CPU 性能公式</strong>：</p>
-<p>$$<br>CPU时间 = 指令数 × CPI × 时钟周期长度<br>$$</p>
-<p>或</p>
-<p>$$<br>CPU时间 = \frac{指令数 × CPI}{时钟频率}<br>$$</p>
-<h3 id="影响处理器性能的因素"><a href="#影响处理器性能的因素" class="headerlink" title="影响处理器性能的因素"></a>影响处理器性能的因素</h3><p>从该公式可以看出，<strong>处理器性能取决于三个特性：时钟周期、CPI、指令数</strong>。</p>
+    <title>同步互斥</title>
+    <url>/%E5%90%8C%E6%AD%A5%E4%BA%92%E6%96%A5/</url>
+    <content><![CDATA[<p>在操作系统中，不同核心上的多个进程(线程)可能会协作完成同一个任务，导致对共享数据的竞争。为了辅助多个进程(线程)之间进行同步，保证程序的正确性，操作系统提供了一系列同步原语供应用使用。</p>
+<h2 id="一、并发术语"><a href="#一、并发术语" class="headerlink" title="一、并发术语"></a>一、并发术语</h2><h3 id="1-1-临界区"><a href="#1-1-临界区" class="headerlink" title="1.1 临界区"></a>1.1 临界区</h3><p>临界区(critical section)是访问共享资源的一段代码，资源通常是一个变量或数据结构。</p>
+<h3 id="1-2-竞态条件"><a href="#1-2-竞态条件" class="headerlink" title="1.2 竞态条件"></a>1.2 竞态条件</h3><p>竞态条件(race condition)出现在多个执行线程大致同时进入临界区时，它们都试图更新共享的数据结构，导致了我们不希望的结果，比如数据覆盖。</p>
+<h3 id="1-3-不确定性"><a href="#1-3-不确定性" class="headerlink" title="1.3 不确定性"></a>1.3 不确定性</h3><p>不确定性(indeterminate)程序由一个或多个竞态条件组成，程序的输出因运行而异，具体取决于哪些线程在何时运行。这导致结果不是确定的，而我们通常期望计算机系统给出确定的结果。</p>
+<h3 id="1-4-同步原语"><a href="#1-4-同步原语" class="headerlink" title="1.4 同步原语"></a>1.4 同步原语</h3><p>为了避免这些问题，线程应该使用某种互斥（同步）原语，这样做可以保证只有一个线程进入临界区，从而避免出现竞态，并产生确定的程序输出。下图是对同步原语的总结，从这张图中可以看到同步方法的整体框架。</p>
+<p><img src="https://pic2.zhimg.com/v2-f8e6c430020f3bb6dbf7dec16bde3ce1_b.jpg" alt="img"></p>
+<h2 id="二、同步机制遵循的原则"><a href="#二、同步机制遵循的原则" class="headerlink" title="二、同步机制遵循的原则"></a>二、同步机制遵循的原则</h2><p>无论是硬件方法实现同步互斥，还是软件方法，亦或者是高级抽象的方法，都必须遵循以下原则：</p>
 <ul>
-<li>时钟周期：硬件技术与组成</li>
-<li>CPI：组成与指令集体系结构</li>
-<li>指令数：指令集体系结构与编译器技术</li>
+<li><p><strong>空闲让进</strong></p>
+<p>当没有进程在临界区时，任何进程可进入以有效利用资源。</p>
+</li>
+<li><p><strong>忙则等待</strong></p>
+<p>当有进程在临界区，其他进程不能进入。</p>
+</li>
+<li><p><strong>有限等待</strong></p>
+<p>等待进入临界区的进程，不能无限期的等待，以免陷入“永远等待”。</p>
+</li>
+<li><p><strong>让权等待（可选）</strong></p>
+<p>进程不能进入临界区时，立即释放 CPU，以免 CPU 陷入“忙等”。</p>
+</li>
 </ul>
-<h4 id="如何测量这些因素"><a href="#如何测量这些因素" class="headerlink" title="如何测量这些因素"></a>如何测量这些因素</h4><p>首先，通过运行程序来测量 CPU 时间，并且计算机说明书上通常介绍了时钟周期长度。</p>
-<p>难以测量的时指令数与 CPI。</p>
-<p>可以使用体系结构仿真器预先执行程序来测量执行的指令数，或者用大多数处理器中的硬件计数器来测量执行的指令数、平均 CPI 和性能损失。</p>
-<p>但是，CPI 与计算机的各种设计细节密切相关（如存储系统、处理器结构、应用程序中不同类型的指令所占的比例），对于不同的应用程序它是不同的。</p>
-<h3 id="Amdal-定律"><a href="#Amdal-定律" class="headerlink" title="Amdal 定律"></a>Amdal 定律</h3><p>Amdal 定律阐述了<strong>对于特定改进的性能提升可能由所使用的改进特征的数量所限制</strong>。也就是说，当提升系统的某部分性能时，对整个系统性能的影响取决于:</p>
+<h2 id="三、互斥锁"><a href="#三、互斥锁" class="headerlink" title="三、互斥锁"></a>三、互斥锁</h2><h3 id="3-1-软件实现：皮特森算法"><a href="#3-1-软件实现：皮特森算法" class="headerlink" title="3.1 软件实现：皮特森算法"></a>3.1 软件实现：皮特森算法</h3><p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211113141013741.png" alt="image-20211113141013741"></p>
+<p>在这个算法中有两个重要的变量：</p>
+<ul>
+<li><p><strong>全局</strong>数组 flag</p>
+<p>有两个布尔成员 flag[0] 和 flag[1]，分别代表线程 0 与线程 1 是否尝试进入临界区。</p>
+</li>
+<li><p><strong>全局</strong>变量 turn</p>
+<p>如果两个线程都申请进入临界区，turn 将决定最终进入临界区的线程。如上图，线程 0 和线程 2 都申请进入临界区，即 flag[0] 和 flag[1] 都为 true； 如果线程 0 先执行 turn = 1，线程 1 后执行 turn = 0，则 turn 最终等于 0，此时线程 0 进入临界区。</p>
+</li>
+</ul>
+<h3 id="3-2-原子操作"><a href="#3-2-原子操作" class="headerlink" title="3.2 原子操作"></a>3.2 原子操作</h3><p>原子操作是指<strong>不可被打断</strong>的一个或一系列的操作。也就是说，这一系列指令相当于一条指令，<strong>要么都执行完，要么就一条也不执行</strong>。</p>
+<p>那么如何实现原子操作？</p>
+<p>首先我们要知道，靠编译器自动生成原子操作不太可能。</p>
 <ol>
-<li>这一部分有多重要(ɑ)</li>
-<li>这一部分性能提升了多少(k)</li>
+<li>编译器并不能检测出哪个变量需要原子操作；</li>
+<li>编译器必须要考虑代码的移植性。有些硬件平台支持原子操作的机器指令，有的硬件平台不支持。</li>
 </ol>
-<p>$$<br>加速比S = \frac{1}{(1-ɑ)+\frac{ɑ}{k}}<br>$$</p>
+<p>因此，我们需要其他方法实现原子操作。在 x86 平台有很多原子指令，比如原子加、原子减，原子读写等。我们可以使用这些指令，用在 C 函数中嵌入汇编代码就写出需要的原子操作函数。</p>
+<p>例如<strong>比较与置换（CAS）</strong>原子操作：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">atomic_CAS</span><span class="params">(<span class="keyword">int</span> *addr, <span class="keyword">int</span> expected, <span class="keyword">int</span> new_value)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">asm</span> <span class="title">volatile</span><span class="params">(<span class="string">&quot;lock cmpxchg %[new], %[ptr]&quot;</span></span></span></span><br><span class="line"><span class="params"><span class="function">		:<span class="string">&quot;+a&quot;</span>(expected), [ptr] <span class="string">&quot;+m&quot;</span>(*addr)</span></span></span><br><span class="line"><span class="params"><span class="function">    :[<span class="keyword">new</span>] <span class="string">&quot;r&quot;</span>(new_value)</span></span></span><br><span class="line"><span class="params"><span class="function">    :<span class="string">&quot;memory&quot;</span>)</span></span>;</span><br><span class="line">  <span class="keyword">return</span> expected;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>值得注意的是，原子操作只有<strong>单个变量全局数据</strong>的情况下，这种变量非常实用，如全局计数器、状态标志变量等。当要<strong>操作的数据很多</strong>的情况下，用原子操作就不适合。</p>
+<h3 id="3-3-硬件实现：关闭中断"><a href="#3-3-硬件实现：关闭中断" class="headerlink" title="3.3 硬件实现：关闭中断"></a>3.3 硬件实现：关闭中断</h3><p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211113123344198.png" alt="image-20211113123344198"></p>
+<p>那么关闭中断是否满足同步机制的原则呢？关闭中断可以防止执行临界区的线程被抢占，满足<strong>忙则等待</strong>；而<strong>有限等待</strong>依赖于内核中的调度器，如果能在有限时间内调度到该线程，则该线程就可以在有限时间内进入临界区，满足<strong>有限等待</strong>；每个线程离开临界区时都开启了中断，允许调度器调度其他线程执行，从而达到了<strong>空闲让进</strong>的要求。</p>
+<p>当然，关闭中断并不能解决所有的临界区问题。在上图可知，关闭中断可以解决单 CPU 核的临界区问题。但如果是<strong>多核处理器</strong>，关闭中断不能阻塞其他进程的执行。</p>
+<h3 id="3-4-互斥锁"><a href="#3-4-互斥锁" class="headerlink" title="3.4 互斥锁"></a>3.4 互斥锁</h3><p>由于关闭中断只能解决单核处理器的临界区问题，而现代处理器基本都是多核处理器，因此我们需要新的机制来解决同步互斥问题。</p>
+<p>利用硬件保证的原子操作，我们可以实现互斥锁来解决。顾名思义，互斥锁类似于锁，有 lock 和 unlock 两种操作，并且一把锁在同一时刻只能被一个线程拥有。当线程试图访问临界区时，操作系统会给它加锁（lock），只有拥有锁的线程才能执行临界区的代码。在线程离开临界区时，线程会释放锁（unlock）。</p>
+<p>互斥锁种类有很多，下面介绍两种互斥锁：<strong>自旋锁和排号锁</strong>。</p>
+<h4 id="3-4-1-自旋锁"><a href="#3-4-1-自旋锁" class="headerlink" title="3.4.1 自旋锁"></a>3.4.1 自旋锁</h4><p>下面两图时自旋锁的原理和实现方法，原理较为简单，实现也不是太难，不细讲。要点就是利用原子操作 CAS 判断 lock 是否空闲（是否为 0），空闲则加锁（lock = 1），否则就一直循环。</p>
+<img src="https://static001.geekbang.org/resource/image/61/88/619c27c6400344db2310fb82ce8d5788.jpg?wh=2195*2405" alt="img" style="zoom: 20%;" />
+
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">lock_init</span><span class="params">(<span class="keyword">int</span> *lock)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  *lock = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">lock</span><span class="params">(<span class="keyword">int</span> *lock)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">while</span>(atomic_CAS(lock, <span class="number">0</span>, <span class="number">1</span>) != <span class="number">0</span>)</span><br><span class="line">    ;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">unlock</span><span class="params">(<span class="keyword">int</span> *lock)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  *lock = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>知道自旋锁原理和实现方法后，来看看它是不是满足同步机制应遵循的原则。首先很容易知道，自旋锁满足空闲让进、忙则等待（分析方法如关闭中断）。但自旋锁并不能保证<strong>有限等待</strong>。从实现可以看出，自旋锁获取锁成功与否主要取决于原子指令 CAS，而原子指令的成功与否取决于硬件特性。如果在异构环境，小核由于运行频率低，在与大核竞争时成功完成原子操作的概率远小于大核。因此运行在小核的线程永远都获取不到锁。</p>
+<h4 id="3-4-2-排号锁"><a href="#3-4-2-排号锁" class="headerlink" title="3.4.2 排号锁"></a>3.4.2 排号锁</h4><p>为了解决自旋锁的不公平性，于是产生了排号锁。排号锁采用了一种更加公平的选择策略：按照竞争者申请锁的顺序传递锁。因此可以认为，排号锁是一个先进先出（FIFO）的等待序列。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">lock</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">  <span class="keyword">volatile</span> <span class="keyword">int</span> owner;</span><br><span class="line">  <span class="keyword">volatile</span> <span class="keyword">int</span> next;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">lock_init</span><span class="params">(struct lock *lock)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  lock-&gt;owner = <span class="number">0</span>;</span><br><span class="line">  lock-&gt;next = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">lock</span><span class="params">(struct lock *lock)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="comment">// 拿取自己的序号</span></span><br><span class="line">  <span class="keyword">volatile</span> <span class="keyword">int</span> my_ticket = atomic_FAA(&amp;lock-&gt;next, <span class="number">1</span>); <span class="comment">// FAA是原子操作——获取并累加</span></span><br><span class="line">  <span class="keyword">while</span>(lock-&gt;owner !=  my_ticket)</span><br><span class="line">    ;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">unlock</span><span class="params">(struct lock *lock)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="comment">// 传递给下一个竞争者</span></span><br><span class="line">  lock-&gt;owner++;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="四、条件变量"><a href="#四、条件变量" class="headerlink" title="四、条件变量"></a>四、条件变量</h2><p>对线程同步而言，有两点很重要（从同步机制遵循的原则可以看出）：</p>
+<ul>
+<li>互斥访问</li>
+<li>等待</li>
+</ul>
+<p>互斥锁用于解决临界区问题，保证互斥访问共享资源。当共享资源被某一线程占用时，其他线程会陷入<strong>循环等待</strong>。无意义的循环等待不仅浪费 CPU 资源，还增加了系统的能耗。我们可以采用一种机制，在没有资源时将线程挂起，在有资源时将其唤醒。而条件变量就是我们需要的这种机制。</p>
+<h4 id="4-1-条件变量的实现"><a href="#4-1-条件变量的实现" class="headerlink" title="4.1 条件变量的实现"></a>4.1 条件变量的实现</h4><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">cond</span> &#123;</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">thread</span> *<span class="title">wait_list</span>;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">cond_wait</span><span class="params">(struct cond *cond, struct lock *mutex)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  list_append(cond-&gt;wait_list, thread_self());</span><br><span class="line">  atomic_block_unlock(mutex);	<span class="comment">// 原子挂起并放锁</span></span><br><span class="line">  lock(mutex);	<span class="comment">// 重新获得互斥锁</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">cond_signal</span><span class="params">(struct cond *cond)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">if</span>(!list_empty(cond-&gt;wait_list))</span><br><span class="line">    wakeup(list_remove(cond-&gt;wait_list));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 唤醒所有等待在条件变量的线程</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">cond_broadcast</span><span class="params">(struct cond *cond)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">while</span>(!list_empty(cond-&gt;wait_list))</span><br><span class="line">    wakeup(list_remove(cond-&gt;wait_list));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <blockquote>
-<p>ɑ 是升级模块占比，k 是该部分性能提升比例</p>
+<p>互斥锁 VS 条件变量</p>
+<p>互斥锁用于解决临界区问题，保证互斥访问共享资源。</p>
+<p>条件变量通过提供挂起/唤醒机制来避免循环等待，节省 CPU 资源。条件变量需要和互斥锁搭配使用。</p>
 </blockquote>
+<h2 id="五、信号量"><a href="#五、信号量" class="headerlink" title="五、信号量"></a>五、信号量</h2><p>以我目前的理解，<strong>信号量 = 互斥锁 + 条件变量</strong>。</p>
+<p>一个信号量 S 是个整型变量，它除了初始化外只能通过两个标准原子操作：wait () 和 signal() 来访问：</p>
+<ul>
+<li>操作 wait() 最初称为 P（荷兰语 proberen，测试）；</li>
+<li>操作 signal() 最初称为 V（荷兰语 verhogen，增加）；</li>
+</ul>
+<h3 id="5-1-信号量语义"><a href="#5-1-信号量语义" class="headerlink" title="5.1 信号量语义"></a>5.1 信号量语义</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">wait</span><span class="params">(<span class="keyword">int</span> *s)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">while</span>(*s &lt; <span class="number">0</span>)</span><br><span class="line">    ;	<span class="comment">// 循环忙等</span></span><br><span class="line">  *s = *s <span class="number">-1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">signal</span><span class="params">(<span class="keyword">int</span> *s)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  *s = *s + <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>wait 用于等待，当<strong>信号量的值（其代表资源数量）</strong>小于或等于 0 时进入循环等待。只有信号量的值大于 0 时，才停止等待并消耗该资源（第五行，减少信号量的值）。</p>
+<p>signal 用于通知，它会增加信号量的值供 wait 的线程使用。</p>
+<blockquote>
+<p>注意：上面代码只是为了解释信号量的语义。如果想要保证多个线程并发执行的正确，需要添加很多东西。</p>
+</blockquote>
+<h3 id="5-2-信号量实现"><a href="#5-2-信号量实现" class="headerlink" title="5.2 信号量实现"></a>5.2 信号量实现</h3><p>目前我看到的信号量实现有两种：</p>
+<ul>
+<li>只使用互斥锁</li>
+<li>使用了互斥锁和条件变量</li>
+</ul>
+<h4 id="5-2-1-基于互斥锁的信号量实现"><a href="#5-2-1-基于互斥锁的信号量实现" class="headerlink" title="5.2.1 基于互斥锁的信号量实现"></a>5.2.1 基于互斥锁的信号量实现</h4><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sem</span> &#123;</span></span><br><span class="line">  <span class="keyword">int</span> value;</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">process</span> *<span class="title">list</span>;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">wait</span><span class="params">(struct sem *S)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  S-&gt;value--;</span><br><span class="line">  <span class="keyword">if</span> (S-&gt;value &lt; <span class="number">0</span>) &#123;</span><br><span class="line">    add <span class="keyword">this</span> process to S-&gt;<span class="built_in">list</span>;</span><br><span class="line">    block();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">signal</span><span class="params">(struct sem *S)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  S-&gt;value++;</span><br><span class="line">  <span class="keyword">if</span> (S-&gt;value &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">    remove a process P from S-&gt;<span class="built_in">list</span>;</span><br><span class="line">    wakeup(P);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="5-2-2-基于互斥锁和条件变量的信号量实现"><a href="#5-2-2-基于互斥锁和条件变量的信号量实现" class="headerlink" title="5.2.2 基于互斥锁和条件变量的信号量实现"></a>5.2.2 基于互斥锁和条件变量的信号量实现</h4><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">semaphore</span> &#123;</span></span><br><span class="line">  <span class="keyword">int</span> value;	<span class="comment">// 无线程等待时，代表剩余的资源数量；有时，其绝对值代表正在等待的线程数量</span></span><br><span class="line">  <span class="keyword">int</span> wakeup;	<span class="comment">// 有线程等待时可用的资源数量</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">lock</span> <span class="title">sem_lock</span>;</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">cond</span> <span class="title">sem_cond</span>;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">wait</span><span class="params">(struct sem *S)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  lock(&amp;S-&gt;sem_lock);</span><br><span class="line">  S-&gt;value--;</span><br><span class="line">  <span class="keyword">if</span> (S-&gt;value &lt; <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">do</span> &#123;</span><br><span class="line">			cond_wait(&amp;S-&gt;sem_cond, &amp;S-&gt;sem_lock);</span><br><span class="line">    &#125; <span class="keyword">while</span>(S-&gt;wakeup == <span class="number">0</span>);</span><br><span class="line">    S-&gt;wakeup--;</span><br><span class="line">  &#125;</span><br><span class="line">  unlock(&amp;S-&gt;sem_lock);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">signal</span><span class="params">(struct sem *S)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  lock(&amp;S-&gt;sem_lock);</span><br><span class="line">  S-&gt;value++;</span><br><span class="line">  <span class="keyword">if</span> (S-&gt;value &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">    S-&gt;wakeup++;</span><br><span class="line">    cond_signal(&amp;S-&gt;sem_cond);</span><br><span class="line">  &#125;</span><br><span class="line">  unlock(&amp;S-&gt;sem_lock);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>两种实现方式疏导同归，本质上就是一样的。在之后的同步问题——生产者消费者问题那里我们可以看到两者的异同。</p>
+<h3 id="5-3-信号量与互斥锁"><a href="#5-3-信号量与互斥锁" class="headerlink" title="5.3 信号量与互斥锁"></a>5.3 信号量与互斥锁</h3><p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211113221732982.png" alt="image-20211113221732982"></p>
+<h2 id="六、读写锁"><a href="#六、读写锁" class="headerlink" title="六、读写锁"></a>六、读写锁</h2><h2 id="七、RCU"><a href="#七、RCU" class="headerlink" title="七、RCU"></a>七、RCU</h2><h2 id="八、管程"><a href="#八、管程" class="headerlink" title="八、管程"></a>八、管程</h2><p>管程是一种用于多线程互斥访问共享资源的程序结构</p>
+<ul>
+<li>采用面向对象方法,简化了线程间的同步控制</li>
+<li>任一时刻最多只有一个线程执行管程代码</li>
+<li>正在管程中的线程可临时放弃管程的互斥访问,</li>
+<li>等待事件出现时恢复</li>
+</ul>
+<p>管程的使用</p>
+<ul>
+<li>在对象/模块中,收集相关共享数据</li>
+<li>定义访问共享数据的方法</li>
+</ul>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/2-1Q105163152440.gif" alt="具有条件变量的管程"></p>
+<h2 id="九、同步带来的问题"><a href="#九、同步带来的问题" class="headerlink" title="九、同步带来的问题"></a>九、同步带来的问题</h2><h3 id="9-1-死锁"><a href="#9-1-死锁" class="headerlink" title="9.1 死锁"></a>9.1 死锁</h3><p>当有多个线程为有限资源竞争时，有点线程就会因为再某一时刻没有空闲的资源而陷入等待。<strong>死锁</strong>就是指这一组中的每一个线程都在等待组内其他线程释放资源从而导致的无线等待。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">proc_A</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  lock(A);</span><br><span class="line">  <span class="comment">// t0时刻</span></span><br><span class="line">  lock(B);</span><br><span class="line">  <span class="comment">// 临界区</span></span><br><span class="line">  unlock(B);</span><br><span class="line">  ublock(A);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">proc_B</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  lock(B);</span><br><span class="line">  <span class="comment">// t0时刻</span></span><br><span class="line">  lock(A);</span><br><span class="line">  <span class="comment">// 临界区</span></span><br><span class="line">  unlock(A);</span><br><span class="line">  ublock(B);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在 t0 时刻，线程 A 获得了锁 A，并试图获取锁 B；同一时刻，线程 B 获取了锁 B，并试图获取锁 A。由于两线程都持有对方想要的资源，但两者都不能进入临界区继续执行，从而陷入无限等待。</p>
+<h4 id="9-1-1-死锁产生的必要条件"><a href="#9-1-1-死锁产生的必要条件" class="headerlink" title="9.1.1 死锁产生的必要条件"></a>9.1.1 死锁产生的必要条件</h4><ul>
+<li><p><strong>互斥访问</strong></p>
+</li>
+<li><p><strong>持有并等待</strong></p>
+<p>线程持有一些资源，并等待一些资源。</p>
+</li>
+<li><p><strong>资源非抢占</strong></p>
+<p>一旦一个资源被持有，除非持有者主动放弃，否则其他竞争者都得不到这个资源 。</p>
+</li>
+<li><p><strong>循环等待</strong></p>
+<p>指存在一系列线程 T0、T1、T2、…… 、Tn，其中 T0 等待 T1，T1 等待 T2，…… ，Tn 等待 T0。因此形成一个循环。由于循环中任一线程都不能等待资源，因而不能释放已占有的资源，导致了循环等待。</p>
+</li>
+</ul>
+<h4 id="9-1-2-死锁解决方法"><a href="#9-1-2-死锁解决方法" class="headerlink" title="9.1.2 死锁解决方法"></a>9.1.2 死锁解决方法</h4><ul>
+<li><p><strong>出问题再解决：死锁的检测与恢复</strong></p>
+<p>当死锁出现时，需要一个第三者来打破僵局，操作系统就扮演这个角色。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211114100017507.png" alt="image-20211114100017507"></p>
+</li>
+<li><p><strong>设计时避免：死锁预防</strong></p>
+<ul>
+<li>避免互斥访问：通过其他手段(如代理执行)</li>
+<li>不允许持有并等待：一次性申请所有资源</li>
+<li>资源允许抢占：需要考虑如何恢复</li>
+<li>打破循环等待：按照特定顺序获取资源<ul>
+<li>所有资源进行编号</li>
+<li>所有进程递增获取</li>
+<li>任意时刻：获取最大资源号的进程可以继续执行,然后释放资源</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>运行时避免：死锁避免</strong></p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211114100403523.png" alt="image-20211114100403523"></p>
+</li>
+</ul>
+<h3 id="9-2-活锁"><a href="#9-2-活锁" class="headerlink" title="9.2 活锁"></a>9.2 活锁</h3><h3 id="9-3-优先级反转"><a href="#9-3-优先级反转" class="headerlink" title="9.3 优先级反转"></a>9.3 优先级反转</h3><h2 id="十、参考资料"><a href="#十、参考资料" class="headerlink" title="十、参考资料"></a>十、参考资料</h2><ul>
+<li>《现代操作系统：原理与实现》</li>
+<li>《操作系统导论》</li>
+<li>极客时间：操作系统实战 45 讲</li>
+<li>学堂在线-清华大学-操作系统(2021 秋)</li>
+</ul>
 ]]></content>
       <categories>
-        <category>计算机体系结构</category>
+        <category>操作系统</category>
       </categories>
   </entry>
   <entry>
@@ -366,6 +487,46 @@
 <li><p><a href="https://www.wikiwand.com/en/Branch_predictor">wiki-Branch predictor</a></p>
 </li>
 </ul>
+]]></content>
+      <categories>
+        <category>计算机体系结构</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>处理器性能公式</title>
+    <url>/%E5%A4%84%E7%90%86%E5%99%A8%E6%80%A7%E8%83%BD%E5%85%AC%E5%BC%8F/</url>
+    <content><![CDATA[<h3 id="CPU-性能及其度量因素"><a href="#CPU-性能及其度量因素" class="headerlink" title="CPU 性能及其度量因素"></a>CPU 性能及其度量因素</h3><p>CPU 性能度量的基本指标是<strong>CPU 执行时间</strong>。而几乎所有发的计算机都有一个以固定频率运行的时钟，称为<strong>时钟周期</strong>，或脉冲周期等。所以，我们可以利用时钟周期来表示 CPU 时间：</p>
+<p>$$<br>程序CPU执行时间 = 程序CPU时钟周期数 × 时钟周期长度<br>$$</p>
+<p>其中，时钟周期长度与时钟频率互为倒数，所以该公式也可表示为：</p>
+<p>$$<br>程序CPU执行时间 =  \frac {程序CPU时钟周期数}{时钟频率}<br>$$</p>
+<h3 id="指令性能"><a href="#指令性能" class="headerlink" title="指令性能"></a>指令性能</h3><p>除了时钟周期外，我们还需注意<strong>指令数</strong>，因为计算机必须通过执行指令来运行程序。</p>
+<p>$$<br>CPU时钟周期 = 程序指令数 × 指令平均时钟周期数<br>$$</p>
+<blockquote>
+<p><strong>指令平均时钟周期数（CPI）</strong>：表示执行某个程序或者程序片段时每条指令所需的时钟周期平均数。</p>
+</blockquote>
+<h3 id="经典的-CPU-性能公式"><a href="#经典的-CPU-性能公式" class="headerlink" title="经典的 CPU 性能公式"></a>经典的 CPU 性能公式</h3><p>结合公式（1）、（2）、（3），我们可以得出<strong>经典的 CPU 性能公式</strong>：</p>
+<p>$$<br>CPU时间 = 指令数 × CPI × 时钟周期长度<br>$$</p>
+<p>或</p>
+<p>$$<br>CPU时间 = \frac{指令数 × CPI}{时钟频率}<br>$$</p>
+<h3 id="影响处理器性能的因素"><a href="#影响处理器性能的因素" class="headerlink" title="影响处理器性能的因素"></a>影响处理器性能的因素</h3><p>从该公式可以看出，<strong>处理器性能取决于三个特性：时钟周期、CPI、指令数</strong>。</p>
+<ul>
+<li>时钟周期：硬件技术与组成</li>
+<li>CPI：组成与指令集体系结构</li>
+<li>指令数：指令集体系结构与编译器技术</li>
+</ul>
+<h4 id="如何测量这些因素"><a href="#如何测量这些因素" class="headerlink" title="如何测量这些因素"></a>如何测量这些因素</h4><p>首先，通过运行程序来测量 CPU 时间，并且计算机说明书上通常介绍了时钟周期长度。</p>
+<p>难以测量的时指令数与 CPI。</p>
+<p>可以使用体系结构仿真器预先执行程序来测量执行的指令数，或者用大多数处理器中的硬件计数器来测量执行的指令数、平均 CPI 和性能损失。</p>
+<p>但是，CPI 与计算机的各种设计细节密切相关（如存储系统、处理器结构、应用程序中不同类型的指令所占的比例），对于不同的应用程序它是不同的。</p>
+<h3 id="Amdal-定律"><a href="#Amdal-定律" class="headerlink" title="Amdal 定律"></a>Amdal 定律</h3><p>Amdal 定律阐述了<strong>对于特定改进的性能提升可能由所使用的改进特征的数量所限制</strong>。也就是说，当提升系统的某部分性能时，对整个系统性能的影响取决于:</p>
+<ol>
+<li>这一部分有多重要(ɑ)</li>
+<li>这一部分性能提升了多少(k)</li>
+</ol>
+<p>$$<br>加速比S = \frac{1}{(1-ɑ)+\frac{ɑ}{k}}<br>$$</p>
+<blockquote>
+<p>ɑ 是升级模块占比，k 是该部分性能提升比例</p>
+</blockquote>
 ]]></content>
       <categories>
         <category>计算机体系结构</category>
@@ -776,6 +937,116 @@
       </tags>
   </entry>
   <entry>
+    <title>物理内存管理：连续内存分配</title>
+    <url>/%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%EF%BC%9A%E8%BF%9E%E7%BB%AD%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D/</url>
+    <content><![CDATA[<h2 id="固定分区分配"><a href="#固定分区分配" class="headerlink" title="固定分区分配"></a>固定分区分配</h2><p>固定分区分配时最简单的一种可运行多道程序的储存管理方式。用户空间被划分为若干个固定的大小区域，每个分区只装入一道作业，这样一来，可以几道作业并发运行。当一有空闲时，可以从外存的后备作业队列中选择一个适当大小的作业装入该分区，由此往复运行作业。</p>
+<p><strong>缺陷</strong>：固定分区限制了活动进程的数目，每次都只能相应地进行作业，进程对于空闲分区的大小要求比较高，使得作业不灵活，降低了内存的空间利用率。</p>
+<h2 id="动态分区分配"><a href="#动态分区分配" class="headerlink" title="动态分区分配"></a>动态分区分配</h2><h3 id="分配算法"><a href="#分配算法" class="headerlink" title="分配算法"></a>分配算法</h3><ol>
+<li><p><strong>最先匹配</strong></p>
+<ul>
+<li><p>原理&amp;实现</p>
+<ul>
+<li>空闲分区列表按地址顺序排序</li>
+<li>分配过程时,搜索第一个合适的分区</li>
+<li>释放分区时,检查是否可与临近的空闲分区合并</li>
+</ul>
+</li>
+<li><p>优点</p>
+<ul>
+<li><p>简单</p>
+</li>
+<li><p>在高地址空间有大块的空闲分区</p>
+</li>
+</ul>
+</li>
+<li><p>缺点</p>
+<ul>
+<li>外部碎片</li>
+<li>分配大块时较慢</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>最优适配</strong></p>
+<ul>
+<li><p>原理&amp;实现</p>
+<ul>
+<li>空闲分区列表按照大小排序</li>
+<li>分配时,查找一个合适的分区</li>
+<li>释放时,查找并且合并临近的空闲分区(如果找到)</li>
+</ul>
+</li>
+<li><p>优点</p>
+<ul>
+<li>大部分分配的尺可寸较小时,效果很好</li>
+<li>可避免大的空闲分区被拆分</li>
+<li>可减小外部碎片的大小</li>
+<li>相对简单</li>
+</ul>
+</li>
+<li><p>缺点</p>
+<ul>
+<li>外部碎片</li>
+<li>释放分区较慢</li>
+<li>容易产生很多无用的小碎片</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>最差适配</strong></p>
+<ul>
+<li><p>原理&amp;实现</p>
+<ul>
+<li>空闲分区列表按由大到小排序</li>
+<li>分配时，选最大的分区</li>
+<li>释放时，检查是否可与临近的空闲分区合并,进行可能的合并，并调整空闲分区列表顺序</li>
+</ul>
+</li>
+<li><p>优点</p>
+<ul>
+<li>中等大小的分配较多时,效果最好</li>
+<li>避免出现太多的小碎片</li>
+</ul>
+</li>
+<li><p>缺点</p>
+<ul>
+<li>释放分区较慢</li>
+<li>外部碎片</li>
+<li>容易破坏大的空闲分区,因此后续难以分配大的分区</li>
+</ul>
+</li>
+</ul>
+<p><img src="https://img-blog.csdn.net/20180922084231119?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM1NjQyMDM2/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="img"></p>
+</li>
+</ol>
+<p><img src="https://img-blog.csdn.net/20180922084231364?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM1NjQyMDM2/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="img"></p>
+<p><img src="https://img-blog.csdn.net/20180922084231367?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM1NjQyMDM2/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="img"></p>
+<h3 id="碎片管理"><a href="#碎片管理" class="headerlink" title="碎片管理"></a>碎片管理</h3><ul>
+<li><p>紧凑</p>
+<ul>
+<li>调整进程占用的分区位置来减少或避免分区碎片。</li>
+<li>通过移动分配给进程的内存分区，以合并外部碎片</li>
+<li><strong>碎片紧凑的条件</strong>：所有的应用程序可动态重定位</li>
+</ul>
+</li>
+<li><p>分区对换</p>
+<p>将等待状态的进程放到外存里，释放内存空间。</p>
+</li>
+</ul>
+<p><strong>缺陷</strong>：动态分区算法复杂，回收空间是要进行分区合并，对于系统的开销较大。</p>
+<h2 id="伙伴系统"><a href="#伙伴系统" class="headerlink" title="伙伴系统"></a>伙伴系统</h2><h3 id="分配算法-1"><a href="#分配算法-1" class="headerlink" title="分配算法"></a>分配算法</h3><p>物理内存管理中把页按照2的幂次方大小划分并分组。每次分配内存时，从适当大小的组中分配页面，把余下的另一半内存重新划分并分组。</p>
+<p>伙伴系统既能在系统的运行过程中不断地划分空闲分区，并根据分区的大小进行分类，然后相同的空闲分区单独设立一个空闲分区双向链表，同时也能在进程需要系统为其分配一个存储空间时，通过计算并找到合适的空闲分区分配给进程。</p>
+<p>会产生外碎片，会产生内碎片</p>
+<p>伙伴系统折中了内存分配和碎片管理的问题。</p>
+]]></content>
+      <categories>
+        <category>操作系统</category>
+      </categories>
+      <tags>
+        <tag>内存管理</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>流水线技术</title>
     <url>/%E6%B5%81%E6%B0%B4%E7%BA%BF%E6%8A%80%E6%9C%AF/</url>
     <content><![CDATA[<h2 id="一、流水线技术介绍"><a href="#一、流水线技术介绍" class="headerlink" title="一、流水线技术介绍"></a>一、流水线技术介绍</h2><h3 id="1-1-什么是流水线"><a href="#1-1-什么是流水线" class="headerlink" title="1.1 什么是流水线"></a>1.1 什么是流水线</h3><p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211013131217427.png"></p>
@@ -940,116 +1211,6 @@
       </categories>
       <tags>
         <tag>程序员的自我修养</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>物理内存管理：连续内存分配</title>
-    <url>/%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%EF%BC%9A%E8%BF%9E%E7%BB%AD%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D/</url>
-    <content><![CDATA[<h2 id="固定分区分配"><a href="#固定分区分配" class="headerlink" title="固定分区分配"></a>固定分区分配</h2><p>固定分区分配时最简单的一种可运行多道程序的储存管理方式。用户空间被划分为若干个固定的大小区域，每个分区只装入一道作业，这样一来，可以几道作业并发运行。当一有空闲时，可以从外存的后备作业队列中选择一个适当大小的作业装入该分区，由此往复运行作业。</p>
-<p><strong>缺陷</strong>：固定分区限制了活动进程的数目，每次都只能相应地进行作业，进程对于空闲分区的大小要求比较高，使得作业不灵活，降低了内存的空间利用率。</p>
-<h2 id="动态分区分配"><a href="#动态分区分配" class="headerlink" title="动态分区分配"></a>动态分区分配</h2><h3 id="分配算法"><a href="#分配算法" class="headerlink" title="分配算法"></a>分配算法</h3><ol>
-<li><p><strong>最先匹配</strong></p>
-<ul>
-<li><p>原理&amp;实现</p>
-<ul>
-<li>空闲分区列表按地址顺序排序</li>
-<li>分配过程时,搜索第一个合适的分区</li>
-<li>释放分区时,检查是否可与临近的空闲分区合并</li>
-</ul>
-</li>
-<li><p>优点</p>
-<ul>
-<li><p>简单</p>
-</li>
-<li><p>在高地址空间有大块的空闲分区</p>
-</li>
-</ul>
-</li>
-<li><p>缺点</p>
-<ul>
-<li>外部碎片</li>
-<li>分配大块时较慢</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p><strong>最优适配</strong></p>
-<ul>
-<li><p>原理&amp;实现</p>
-<ul>
-<li>空闲分区列表按照大小排序</li>
-<li>分配时,查找一个合适的分区</li>
-<li>释放时,查找并且合并临近的空闲分区(如果找到)</li>
-</ul>
-</li>
-<li><p>优点</p>
-<ul>
-<li>大部分分配的尺可寸较小时,效果很好</li>
-<li>可避免大的空闲分区被拆分</li>
-<li>可减小外部碎片的大小</li>
-<li>相对简单</li>
-</ul>
-</li>
-<li><p>缺点</p>
-<ul>
-<li>外部碎片</li>
-<li>释放分区较慢</li>
-<li>容易产生很多无用的小碎片</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p><strong>最差适配</strong></p>
-<ul>
-<li><p>原理&amp;实现</p>
-<ul>
-<li>空闲分区列表按由大到小排序</li>
-<li>分配时，选最大的分区</li>
-<li>释放时，检查是否可与临近的空闲分区合并,进行可能的合并，并调整空闲分区列表顺序</li>
-</ul>
-</li>
-<li><p>优点</p>
-<ul>
-<li>中等大小的分配较多时,效果最好</li>
-<li>避免出现太多的小碎片</li>
-</ul>
-</li>
-<li><p>缺点</p>
-<ul>
-<li>释放分区较慢</li>
-<li>外部碎片</li>
-<li>容易破坏大的空闲分区,因此后续难以分配大的分区</li>
-</ul>
-</li>
-</ul>
-<p><img src="https://img-blog.csdn.net/20180922084231119?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM1NjQyMDM2/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="img"></p>
-</li>
-</ol>
-<p><img src="https://img-blog.csdn.net/20180922084231364?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM1NjQyMDM2/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="img"></p>
-<p><img src="https://img-blog.csdn.net/20180922084231367?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM1NjQyMDM2/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="img"></p>
-<h3 id="碎片管理"><a href="#碎片管理" class="headerlink" title="碎片管理"></a>碎片管理</h3><ul>
-<li><p>紧凑</p>
-<ul>
-<li>调整进程占用的分区位置来减少或避免分区碎片。</li>
-<li>通过移动分配给进程的内存分区，以合并外部碎片</li>
-<li><strong>碎片紧凑的条件</strong>：所有的应用程序可动态重定位</li>
-</ul>
-</li>
-<li><p>分区对换</p>
-<p>将等待状态的进程放到外存里，释放内存空间。</p>
-</li>
-</ul>
-<p><strong>缺陷</strong>：动态分区算法复杂，回收空间是要进行分区合并，对于系统的开销较大。</p>
-<h2 id="伙伴系统"><a href="#伙伴系统" class="headerlink" title="伙伴系统"></a>伙伴系统</h2><h3 id="分配算法-1"><a href="#分配算法-1" class="headerlink" title="分配算法"></a>分配算法</h3><p>物理内存管理中把页按照2的幂次方大小划分并分组。每次分配内存时，从适当大小的组中分配页面，把余下的另一半内存重新划分并分组。</p>
-<p>伙伴系统既能在系统的运行过程中不断地划分空闲分区，并根据分区的大小进行分类，然后相同的空闲分区单独设立一个空闲分区双向链表，同时也能在进程需要系统为其分配一个存储空间时，通过计算并找到合适的空闲分区分配给进程。</p>
-<p>会产生外碎片，会产生内碎片</p>
-<p>伙伴系统折中了内存分配和碎片管理的问题。</p>
-]]></content>
-      <categories>
-        <category>操作系统</category>
-      </categories>
-      <tags>
-        <tag>内存管理</tag>
       </tags>
   </entry>
   <entry>

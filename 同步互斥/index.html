@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.lug.ustc.edu.cn/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic|Roboto Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"monuo2021.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="在操作系统中，不同核心上的多个进程(线程)可能会协作完成同一个任务，导致对共享数据的竞争。为了辅助多个进程(线程)之间进行同步，保证程序的正确性，操作系统提供了一系列同步原语供应用使用。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="同步互斥">
+<meta property="og:url" content="https://monuo2021.github.io/%E5%90%8C%E6%AD%A5%E4%BA%92%E6%96%A5/index.html">
+<meta property="og:site_name" content="飞光">
+<meta property="og:description" content="在操作系统中，不同核心上的多个进程(线程)可能会协作完成同一个任务，导致对共享数据的竞争。为了辅助多个进程(线程)之间进行同步，保证程序的正确性，操作系统提供了一系列同步原语供应用使用。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://pic2.zhimg.com/v2-f8e6c430020f3bb6dbf7dec16bde3ce1_b.jpg">
+<meta property="og:image" content="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211113141013741.png">
+<meta property="og:image" content="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211113123344198.png">
+<meta property="og:image" content="https://static001.geekbang.org/resource/image/61/88/619c27c6400344db2310fb82ce8d5788.jpg?wh=2195*2405">
+<meta property="og:image" content="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211113221732982.png">
+<meta property="og:image" content="https://gitee.com/tanliang-TL/blogpic/raw/master/img/2-1Q105163152440.gif">
+<meta property="og:image" content="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211114100017507.png">
+<meta property="og:image" content="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211114100403523.png">
+<meta property="article:published_time" content="2022-01-18T02:00:35.000Z">
+<meta property="article:modified_time" content="2022-01-18T02:11:04.778Z">
+<meta property="article:author" content="monuo">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pic2.zhimg.com/v2-f8e6c430020f3bb6dbf7dec16bde3ce1_b.jpg">
+
+<link rel="canonical" href="https://monuo2021.github.io/%E5%90%8C%E6%AD%A5%E4%BA%92%E6%96%A5/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>同步互斥 | 飞光</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">飞光</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://monuo2021.github.io/%E5%90%8C%E6%AD%A5%E4%BA%92%E6%96%A5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="monuo">
+      <meta itemprop="description" content="悲莫悲兮生别离，乐莫乐兮新相知">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="飞光">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          同步互斥
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-01-18 10:00:35 / 修改时间：10:11:04" itemprop="dateCreated datePublished" datetime="2022-01-18T10:00:35+08:00">2022-01-18</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index"><span itemprop="name">操作系统</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description">在操作系统中，不同核心上的多个进程(线程)可能会协作完成同一个任务，导致对共享数据的竞争。为了辅助多个进程(线程)之间进行同步，保证程序的正确性，操作系统提供了一系列同步原语供应用使用。</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>在操作系统中，不同核心上的多个进程(线程)可能会协作完成同一个任务，导致对共享数据的竞争。为了辅助多个进程(线程)之间进行同步，保证程序的正确性，操作系统提供了一系列同步原语供应用使用。</p>
+<h2 id="一、并发术语"><a href="#一、并发术语" class="headerlink" title="一、并发术语"></a>一、并发术语</h2><h3 id="1-1-临界区"><a href="#1-1-临界区" class="headerlink" title="1.1 临界区"></a>1.1 临界区</h3><p>临界区(critical section)是访问共享资源的一段代码，资源通常是一个变量或数据结构。</p>
+<h3 id="1-2-竞态条件"><a href="#1-2-竞态条件" class="headerlink" title="1.2 竞态条件"></a>1.2 竞态条件</h3><p>竞态条件(race condition)出现在多个执行线程大致同时进入临界区时，它们都试图更新共享的数据结构，导致了我们不希望的结果，比如数据覆盖。</p>
+<h3 id="1-3-不确定性"><a href="#1-3-不确定性" class="headerlink" title="1.3 不确定性"></a>1.3 不确定性</h3><p>不确定性(indeterminate)程序由一个或多个竞态条件组成，程序的输出因运行而异，具体取决于哪些线程在何时运行。这导致结果不是确定的，而我们通常期望计算机系统给出确定的结果。</p>
+<h3 id="1-4-同步原语"><a href="#1-4-同步原语" class="headerlink" title="1.4 同步原语"></a>1.4 同步原语</h3><p>为了避免这些问题，线程应该使用某种互斥（同步）原语，这样做可以保证只有一个线程进入临界区，从而避免出现竞态，并产生确定的程序输出。下图是对同步原语的总结，从这张图中可以看到同步方法的整体框架。</p>
+<p><img src="https://pic2.zhimg.com/v2-f8e6c430020f3bb6dbf7dec16bde3ce1_b.jpg" alt="img"></p>
+<h2 id="二、同步机制遵循的原则"><a href="#二、同步机制遵循的原则" class="headerlink" title="二、同步机制遵循的原则"></a>二、同步机制遵循的原则</h2><p>无论是硬件方法实现同步互斥，还是软件方法，亦或者是高级抽象的方法，都必须遵循以下原则：</p>
+<ul>
+<li><p><strong>空闲让进</strong></p>
+<p>当没有进程在临界区时，任何进程可进入以有效利用资源。</p>
+</li>
+<li><p><strong>忙则等待</strong></p>
+<p>当有进程在临界区，其他进程不能进入。</p>
+</li>
+<li><p><strong>有限等待</strong></p>
+<p>等待进入临界区的进程，不能无限期的等待，以免陷入“永远等待”。</p>
+</li>
+<li><p><strong>让权等待（可选）</strong></p>
+<p>进程不能进入临界区时，立即释放 CPU，以免 CPU 陷入“忙等”。</p>
+</li>
+</ul>
+<h2 id="三、互斥锁"><a href="#三、互斥锁" class="headerlink" title="三、互斥锁"></a>三、互斥锁</h2><h3 id="3-1-软件实现：皮特森算法"><a href="#3-1-软件实现：皮特森算法" class="headerlink" title="3.1 软件实现：皮特森算法"></a>3.1 软件实现：皮特森算法</h3><p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211113141013741.png" alt="image-20211113141013741"></p>
+<p>在这个算法中有两个重要的变量：</p>
+<ul>
+<li><p><strong>全局</strong>数组 flag</p>
+<p>有两个布尔成员 flag[0] 和 flag[1]，分别代表线程 0 与线程 1 是否尝试进入临界区。</p>
+</li>
+<li><p><strong>全局</strong>变量 turn</p>
+<p>如果两个线程都申请进入临界区，turn 将决定最终进入临界区的线程。如上图，线程 0 和线程 2 都申请进入临界区，即 flag[0] 和 flag[1] 都为 true； 如果线程 0 先执行 turn = 1，线程 1 后执行 turn = 0，则 turn 最终等于 0，此时线程 0 进入临界区。</p>
+</li>
+</ul>
+<h3 id="3-2-原子操作"><a href="#3-2-原子操作" class="headerlink" title="3.2 原子操作"></a>3.2 原子操作</h3><p>原子操作是指<strong>不可被打断</strong>的一个或一系列的操作。也就是说，这一系列指令相当于一条指令，<strong>要么都执行完，要么就一条也不执行</strong>。</p>
+<p>那么如何实现原子操作？</p>
+<p>首先我们要知道，靠编译器自动生成原子操作不太可能。</p>
+<ol>
+<li>编译器并不能检测出哪个变量需要原子操作；</li>
+<li>编译器必须要考虑代码的移植性。有些硬件平台支持原子操作的机器指令，有的硬件平台不支持。</li>
+</ol>
+<p>因此，我们需要其他方法实现原子操作。在 x86 平台有很多原子指令，比如原子加、原子减，原子读写等。我们可以使用这些指令，用在 C 函数中嵌入汇编代码就写出需要的原子操作函数。</p>
+<p>例如<strong>比较与置换（CAS）</strong>原子操作：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">atomic_CAS</span><span class="params">(<span class="keyword">int</span> *addr, <span class="keyword">int</span> expected, <span class="keyword">int</span> new_value)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">asm</span> <span class="title">volatile</span><span class="params">(<span class="string">&quot;lock cmpxchg %[new], %[ptr]&quot;</span></span></span></span><br><span class="line"><span class="params"><span class="function">		:<span class="string">&quot;+a&quot;</span>(expected), [ptr] <span class="string">&quot;+m&quot;</span>(*addr)</span></span></span><br><span class="line"><span class="params"><span class="function">    :[<span class="keyword">new</span>] <span class="string">&quot;r&quot;</span>(new_value)</span></span></span><br><span class="line"><span class="params"><span class="function">    :<span class="string">&quot;memory&quot;</span>)</span></span>;</span><br><span class="line">  <span class="keyword">return</span> expected;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>值得注意的是，原子操作只有<strong>单个变量全局数据</strong>的情况下，这种变量非常实用，如全局计数器、状态标志变量等。当要<strong>操作的数据很多</strong>的情况下，用原子操作就不适合。</p>
+<h3 id="3-3-硬件实现：关闭中断"><a href="#3-3-硬件实现：关闭中断" class="headerlink" title="3.3 硬件实现：关闭中断"></a>3.3 硬件实现：关闭中断</h3><p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211113123344198.png" alt="image-20211113123344198"></p>
+<p>那么关闭中断是否满足同步机制的原则呢？关闭中断可以防止执行临界区的线程被抢占，满足<strong>忙则等待</strong>；而<strong>有限等待</strong>依赖于内核中的调度器，如果能在有限时间内调度到该线程，则该线程就可以在有限时间内进入临界区，满足<strong>有限等待</strong>；每个线程离开临界区时都开启了中断，允许调度器调度其他线程执行，从而达到了<strong>空闲让进</strong>的要求。</p>
+<p>当然，关闭中断并不能解决所有的临界区问题。在上图可知，关闭中断可以解决单 CPU 核的临界区问题。但如果是<strong>多核处理器</strong>，关闭中断不能阻塞其他进程的执行。</p>
+<h3 id="3-4-互斥锁"><a href="#3-4-互斥锁" class="headerlink" title="3.4 互斥锁"></a>3.4 互斥锁</h3><p>由于关闭中断只能解决单核处理器的临界区问题，而现代处理器基本都是多核处理器，因此我们需要新的机制来解决同步互斥问题。</p>
+<p>利用硬件保证的原子操作，我们可以实现互斥锁来解决。顾名思义，互斥锁类似于锁，有 lock 和 unlock 两种操作，并且一把锁在同一时刻只能被一个线程拥有。当线程试图访问临界区时，操作系统会给它加锁（lock），只有拥有锁的线程才能执行临界区的代码。在线程离开临界区时，线程会释放锁（unlock）。</p>
+<p>互斥锁种类有很多，下面介绍两种互斥锁：<strong>自旋锁和排号锁</strong>。</p>
+<h4 id="3-4-1-自旋锁"><a href="#3-4-1-自旋锁" class="headerlink" title="3.4.1 自旋锁"></a>3.4.1 自旋锁</h4><p>下面两图时自旋锁的原理和实现方法，原理较为简单，实现也不是太难，不细讲。要点就是利用原子操作 CAS 判断 lock 是否空闲（是否为 0），空闲则加锁（lock = 1），否则就一直循环。</p>
+<img src="https://static001.geekbang.org/resource/image/61/88/619c27c6400344db2310fb82ce8d5788.jpg?wh=2195*2405" alt="img" style="zoom: 20%;" />
+
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">lock_init</span><span class="params">(<span class="keyword">int</span> *lock)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  *lock = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">lock</span><span class="params">(<span class="keyword">int</span> *lock)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">while</span>(atomic_CAS(lock, <span class="number">0</span>, <span class="number">1</span>) != <span class="number">0</span>)</span><br><span class="line">    ;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">unlock</span><span class="params">(<span class="keyword">int</span> *lock)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  *lock = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>知道自旋锁原理和实现方法后，来看看它是不是满足同步机制应遵循的原则。首先很容易知道，自旋锁满足空闲让进、忙则等待（分析方法如关闭中断）。但自旋锁并不能保证<strong>有限等待</strong>。从实现可以看出，自旋锁获取锁成功与否主要取决于原子指令 CAS，而原子指令的成功与否取决于硬件特性。如果在异构环境，小核由于运行频率低，在与大核竞争时成功完成原子操作的概率远小于大核。因此运行在小核的线程永远都获取不到锁。</p>
+<h4 id="3-4-2-排号锁"><a href="#3-4-2-排号锁" class="headerlink" title="3.4.2 排号锁"></a>3.4.2 排号锁</h4><p>为了解决自旋锁的不公平性，于是产生了排号锁。排号锁采用了一种更加公平的选择策略：按照竞争者申请锁的顺序传递锁。因此可以认为，排号锁是一个先进先出（FIFO）的等待序列。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">lock</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">  <span class="keyword">volatile</span> <span class="keyword">int</span> owner;</span><br><span class="line">  <span class="keyword">volatile</span> <span class="keyword">int</span> next;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">lock_init</span><span class="params">(struct lock *lock)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  lock-&gt;owner = <span class="number">0</span>;</span><br><span class="line">  lock-&gt;next = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">lock</span><span class="params">(struct lock *lock)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="comment">// 拿取自己的序号</span></span><br><span class="line">  <span class="keyword">volatile</span> <span class="keyword">int</span> my_ticket = atomic_FAA(&amp;lock-&gt;next, <span class="number">1</span>); <span class="comment">// FAA是原子操作——获取并累加</span></span><br><span class="line">  <span class="keyword">while</span>(lock-&gt;owner !=  my_ticket)</span><br><span class="line">    ;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">unlock</span><span class="params">(struct lock *lock)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="comment">// 传递给下一个竞争者</span></span><br><span class="line">  lock-&gt;owner++;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="四、条件变量"><a href="#四、条件变量" class="headerlink" title="四、条件变量"></a>四、条件变量</h2><p>对线程同步而言，有两点很重要（从同步机制遵循的原则可以看出）：</p>
+<ul>
+<li>互斥访问</li>
+<li>等待</li>
+</ul>
+<p>互斥锁用于解决临界区问题，保证互斥访问共享资源。当共享资源被某一线程占用时，其他线程会陷入<strong>循环等待</strong>。无意义的循环等待不仅浪费 CPU 资源，还增加了系统的能耗。我们可以采用一种机制，在没有资源时将线程挂起，在有资源时将其唤醒。而条件变量就是我们需要的这种机制。</p>
+<h4 id="4-1-条件变量的实现"><a href="#4-1-条件变量的实现" class="headerlink" title="4.1 条件变量的实现"></a>4.1 条件变量的实现</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">cond</span> &#123;</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">thread</span> *<span class="title">wait_list</span>;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">cond_wait</span><span class="params">(struct cond *cond, struct lock *mutex)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  list_append(cond-&gt;wait_list, thread_self());</span><br><span class="line">  atomic_block_unlock(mutex);	<span class="comment">// 原子挂起并放锁</span></span><br><span class="line">  lock(mutex);	<span class="comment">// 重新获得互斥锁</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">cond_signal</span><span class="params">(struct cond *cond)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">if</span>(!list_empty(cond-&gt;wait_list))</span><br><span class="line">    wakeup(list_remove(cond-&gt;wait_list));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 唤醒所有等待在条件变量的线程</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">cond_broadcast</span><span class="params">(struct cond *cond)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">while</span>(!list_empty(cond-&gt;wait_list))</span><br><span class="line">    wakeup(list_remove(cond-&gt;wait_list));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>互斥锁 VS 条件变量</p>
+<p>互斥锁用于解决临界区问题，保证互斥访问共享资源。</p>
+<p>条件变量通过提供挂起/唤醒机制来避免循环等待，节省 CPU 资源。条件变量需要和互斥锁搭配使用。</p>
+</blockquote>
+<h2 id="五、信号量"><a href="#五、信号量" class="headerlink" title="五、信号量"></a>五、信号量</h2><p>以我目前的理解，<strong>信号量 = 互斥锁 + 条件变量</strong>。</p>
+<p>一个信号量 S 是个整型变量，它除了初始化外只能通过两个标准原子操作：wait () 和 signal() 来访问：</p>
+<ul>
+<li>操作 wait() 最初称为 P（荷兰语 proberen，测试）；</li>
+<li>操作 signal() 最初称为 V（荷兰语 verhogen，增加）；</li>
+</ul>
+<h3 id="5-1-信号量语义"><a href="#5-1-信号量语义" class="headerlink" title="5.1 信号量语义"></a>5.1 信号量语义</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">wait</span><span class="params">(<span class="keyword">int</span> *s)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">while</span>(*s &lt; <span class="number">0</span>)</span><br><span class="line">    ;	<span class="comment">// 循环忙等</span></span><br><span class="line">  *s = *s <span class="number">-1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">signal</span><span class="params">(<span class="keyword">int</span> *s)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  *s = *s + <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>wait 用于等待，当<strong>信号量的值（其代表资源数量）</strong>小于或等于 0 时进入循环等待。只有信号量的值大于 0 时，才停止等待并消耗该资源（第五行，减少信号量的值）。</p>
+<p>signal 用于通知，它会增加信号量的值供 wait 的线程使用。</p>
+<blockquote>
+<p>注意：上面代码只是为了解释信号量的语义。如果想要保证多个线程并发执行的正确，需要添加很多东西。</p>
+</blockquote>
+<h3 id="5-2-信号量实现"><a href="#5-2-信号量实现" class="headerlink" title="5.2 信号量实现"></a>5.2 信号量实现</h3><p>目前我看到的信号量实现有两种：</p>
+<ul>
+<li>只使用互斥锁</li>
+<li>使用了互斥锁和条件变量</li>
+</ul>
+<h4 id="5-2-1-基于互斥锁的信号量实现"><a href="#5-2-1-基于互斥锁的信号量实现" class="headerlink" title="5.2.1 基于互斥锁的信号量实现"></a>5.2.1 基于互斥锁的信号量实现</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sem</span> &#123;</span></span><br><span class="line">  <span class="keyword">int</span> value;</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">process</span> *<span class="title">list</span>;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">wait</span><span class="params">(struct sem *S)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  S-&gt;value--;</span><br><span class="line">  <span class="keyword">if</span> (S-&gt;value &lt; <span class="number">0</span>) &#123;</span><br><span class="line">    add <span class="keyword">this</span> process to S-&gt;<span class="built_in">list</span>;</span><br><span class="line">    block();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">signal</span><span class="params">(struct sem *S)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  S-&gt;value++;</span><br><span class="line">  <span class="keyword">if</span> (S-&gt;value &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">    remove a process P from S-&gt;<span class="built_in">list</span>;</span><br><span class="line">    wakeup(P);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="5-2-2-基于互斥锁和条件变量的信号量实现"><a href="#5-2-2-基于互斥锁和条件变量的信号量实现" class="headerlink" title="5.2.2 基于互斥锁和条件变量的信号量实现"></a>5.2.2 基于互斥锁和条件变量的信号量实现</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">semaphore</span> &#123;</span></span><br><span class="line">  <span class="keyword">int</span> value;	<span class="comment">// 无线程等待时，代表剩余的资源数量；有时，其绝对值代表正在等待的线程数量</span></span><br><span class="line">  <span class="keyword">int</span> wakeup;	<span class="comment">// 有线程等待时可用的资源数量</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">lock</span> <span class="title">sem_lock</span>;</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">cond</span> <span class="title">sem_cond</span>;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">wait</span><span class="params">(struct sem *S)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  lock(&amp;S-&gt;sem_lock);</span><br><span class="line">  S-&gt;value--;</span><br><span class="line">  <span class="keyword">if</span> (S-&gt;value &lt; <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">do</span> &#123;</span><br><span class="line">			cond_wait(&amp;S-&gt;sem_cond, &amp;S-&gt;sem_lock);</span><br><span class="line">    &#125; <span class="keyword">while</span>(S-&gt;wakeup == <span class="number">0</span>);</span><br><span class="line">    S-&gt;wakeup--;</span><br><span class="line">  &#125;</span><br><span class="line">  unlock(&amp;S-&gt;sem_lock);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">signal</span><span class="params">(struct sem *S)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  lock(&amp;S-&gt;sem_lock);</span><br><span class="line">  S-&gt;value++;</span><br><span class="line">  <span class="keyword">if</span> (S-&gt;value &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">    S-&gt;wakeup++;</span><br><span class="line">    cond_signal(&amp;S-&gt;sem_cond);</span><br><span class="line">  &#125;</span><br><span class="line">  unlock(&amp;S-&gt;sem_lock);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>两种实现方式疏导同归，本质上就是一样的。在之后的同步问题——生产者消费者问题那里我们可以看到两者的异同。</p>
+<h3 id="5-3-信号量与互斥锁"><a href="#5-3-信号量与互斥锁" class="headerlink" title="5.3 信号量与互斥锁"></a>5.3 信号量与互斥锁</h3><p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211113221732982.png" alt="image-20211113221732982"></p>
+<h2 id="六、读写锁"><a href="#六、读写锁" class="headerlink" title="六、读写锁"></a>六、读写锁</h2><h2 id="七、RCU"><a href="#七、RCU" class="headerlink" title="七、RCU"></a>七、RCU</h2><h2 id="八、管程"><a href="#八、管程" class="headerlink" title="八、管程"></a>八、管程</h2><p>管程是一种用于多线程互斥访问共享资源的程序结构</p>
+<ul>
+<li>采用面向对象方法,简化了线程间的同步控制</li>
+<li>任一时刻最多只有一个线程执行管程代码</li>
+<li>正在管程中的线程可临时放弃管程的互斥访问,</li>
+<li>等待事件出现时恢复</li>
+</ul>
+<p>管程的使用</p>
+<ul>
+<li>在对象/模块中,收集相关共享数据</li>
+<li>定义访问共享数据的方法</li>
+</ul>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/2-1Q105163152440.gif" alt="具有条件变量的管程"></p>
+<h2 id="九、同步带来的问题"><a href="#九、同步带来的问题" class="headerlink" title="九、同步带来的问题"></a>九、同步带来的问题</h2><h3 id="9-1-死锁"><a href="#9-1-死锁" class="headerlink" title="9.1 死锁"></a>9.1 死锁</h3><p>当有多个线程为有限资源竞争时，有点线程就会因为再某一时刻没有空闲的资源而陷入等待。<strong>死锁</strong>就是指这一组中的每一个线程都在等待组内其他线程释放资源从而导致的无线等待。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">proc_A</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  lock(A);</span><br><span class="line">  <span class="comment">// t0时刻</span></span><br><span class="line">  lock(B);</span><br><span class="line">  <span class="comment">// 临界区</span></span><br><span class="line">  unlock(B);</span><br><span class="line">  ublock(A);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">proc_B</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  lock(B);</span><br><span class="line">  <span class="comment">// t0时刻</span></span><br><span class="line">  lock(A);</span><br><span class="line">  <span class="comment">// 临界区</span></span><br><span class="line">  unlock(A);</span><br><span class="line">  ublock(B);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在 t0 时刻，线程 A 获得了锁 A，并试图获取锁 B；同一时刻，线程 B 获取了锁 B，并试图获取锁 A。由于两线程都持有对方想要的资源，但两者都不能进入临界区继续执行，从而陷入无限等待。</p>
+<h4 id="9-1-1-死锁产生的必要条件"><a href="#9-1-1-死锁产生的必要条件" class="headerlink" title="9.1.1 死锁产生的必要条件"></a>9.1.1 死锁产生的必要条件</h4><ul>
+<li><p><strong>互斥访问</strong></p>
+</li>
+<li><p><strong>持有并等待</strong></p>
+<p>线程持有一些资源，并等待一些资源。</p>
+</li>
+<li><p><strong>资源非抢占</strong></p>
+<p>一旦一个资源被持有，除非持有者主动放弃，否则其他竞争者都得不到这个资源 。</p>
+</li>
+<li><p><strong>循环等待</strong></p>
+<p>指存在一系列线程 T0、T1、T2、…… 、Tn，其中 T0 等待 T1，T1 等待 T2，…… ，Tn 等待 T0。因此形成一个循环。由于循环中任一线程都不能等待资源，因而不能释放已占有的资源，导致了循环等待。</p>
+</li>
+</ul>
+<h4 id="9-1-2-死锁解决方法"><a href="#9-1-2-死锁解决方法" class="headerlink" title="9.1.2 死锁解决方法"></a>9.1.2 死锁解决方法</h4><ul>
+<li><p><strong>出问题再解决：死锁的检测与恢复</strong></p>
+<p>当死锁出现时，需要一个第三者来打破僵局，操作系统就扮演这个角色。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211114100017507.png" alt="image-20211114100017507"></p>
+</li>
+<li><p><strong>设计时避免：死锁预防</strong></p>
+<ul>
+<li>避免互斥访问：通过其他手段(如代理执行)</li>
+<li>不允许持有并等待：一次性申请所有资源</li>
+<li>资源允许抢占：需要考虑如何恢复</li>
+<li>打破循环等待：按照特定顺序获取资源<ul>
+<li>所有资源进行编号</li>
+<li>所有进程递增获取</li>
+<li>任意时刻：获取最大资源号的进程可以继续执行,然后释放资源</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>运行时避免：死锁避免</strong></p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211114100403523.png" alt="image-20211114100403523"></p>
+</li>
+</ul>
+<h3 id="9-2-活锁"><a href="#9-2-活锁" class="headerlink" title="9.2 活锁"></a>9.2 活锁</h3><h3 id="9-3-优先级反转"><a href="#9-3-优先级反转" class="headerlink" title="9.3 优先级反转"></a>9.3 优先级反转</h3><h2 id="十、参考资料"><a href="#十、参考资料" class="headerlink" title="十、参考资料"></a>十、参考资料</h2><ul>
+<li>《现代操作系统：原理与实现》</li>
+<li>《操作系统导论》</li>
+<li>极客时间：操作系统实战 45 讲</li>
+<li>学堂在线-清华大学-操作系统(2021 秋)</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/%E4%BB%A5%E5%A4%AA%E7%BD%91%E5%B8%A7/" rel="prev" title="以太网帧">
+      <i class="fa fa-chevron-left"></i> 以太网帧
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%B9%B6%E5%8F%91%E6%9C%AF%E8%AF%AD"><span class="nav-text">一、并发术语</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E4%B8%B4%E7%95%8C%E5%8C%BA"><span class="nav-text">1.1 临界区</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-%E7%AB%9E%E6%80%81%E6%9D%A1%E4%BB%B6"><span class="nav-text">1.2 竞态条件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-%E4%B8%8D%E7%A1%AE%E5%AE%9A%E6%80%A7"><span class="nav-text">1.3 不确定性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-%E5%90%8C%E6%AD%A5%E5%8E%9F%E8%AF%AD"><span class="nav-text">1.4 同步原语</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%90%8C%E6%AD%A5%E6%9C%BA%E5%88%B6%E9%81%B5%E5%BE%AA%E7%9A%84%E5%8E%9F%E5%88%99"><span class="nav-text">二、同步机制遵循的原则</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E4%BA%92%E6%96%A5%E9%94%81"><span class="nav-text">三、互斥锁</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E8%BD%AF%E4%BB%B6%E5%AE%9E%E7%8E%B0%EF%BC%9A%E7%9A%AE%E7%89%B9%E6%A3%AE%E7%AE%97%E6%B3%95"><span class="nav-text">3.1 软件实现：皮特森算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C"><span class="nav-text">3.2 原子操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-%E7%A1%AC%E4%BB%B6%E5%AE%9E%E7%8E%B0%EF%BC%9A%E5%85%B3%E9%97%AD%E4%B8%AD%E6%96%AD"><span class="nav-text">3.3 硬件实现：关闭中断</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-%E4%BA%92%E6%96%A5%E9%94%81"><span class="nav-text">3.4 互斥锁</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-4-1-%E8%87%AA%E6%97%8B%E9%94%81"><span class="nav-text">3.4.1 自旋锁</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-4-2-%E6%8E%92%E5%8F%B7%E9%94%81"><span class="nav-text">3.4.2 排号锁</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E6%9D%A1%E4%BB%B6%E5%8F%98%E9%87%8F"><span class="nav-text">四、条件变量</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-1-%E6%9D%A1%E4%BB%B6%E5%8F%98%E9%87%8F%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="nav-text">4.1 条件变量的实现</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E4%BF%A1%E5%8F%B7%E9%87%8F"><span class="nav-text">五、信号量</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-%E4%BF%A1%E5%8F%B7%E9%87%8F%E8%AF%AD%E4%B9%89"><span class="nav-text">5.1 信号量语义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-%E4%BF%A1%E5%8F%B7%E9%87%8F%E5%AE%9E%E7%8E%B0"><span class="nav-text">5.2 信号量实现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#5-2-1-%E5%9F%BA%E4%BA%8E%E4%BA%92%E6%96%A5%E9%94%81%E7%9A%84%E4%BF%A1%E5%8F%B7%E9%87%8F%E5%AE%9E%E7%8E%B0"><span class="nav-text">5.2.1 基于互斥锁的信号量实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-2-2-%E5%9F%BA%E4%BA%8E%E4%BA%92%E6%96%A5%E9%94%81%E5%92%8C%E6%9D%A1%E4%BB%B6%E5%8F%98%E9%87%8F%E7%9A%84%E4%BF%A1%E5%8F%B7%E9%87%8F%E5%AE%9E%E7%8E%B0"><span class="nav-text">5.2.2 基于互斥锁和条件变量的信号量实现</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-%E4%BF%A1%E5%8F%B7%E9%87%8F%E4%B8%8E%E4%BA%92%E6%96%A5%E9%94%81"><span class="nav-text">5.3 信号量与互斥锁</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E8%AF%BB%E5%86%99%E9%94%81"><span class="nav-text">六、读写锁</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81RCU"><span class="nav-text">七、RCU</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E3%80%81%E7%AE%A1%E7%A8%8B"><span class="nav-text">八、管程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%9D%E3%80%81%E5%90%8C%E6%AD%A5%E5%B8%A6%E6%9D%A5%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-text">九、同步带来的问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#9-1-%E6%AD%BB%E9%94%81"><span class="nav-text">9.1 死锁</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#9-1-1-%E6%AD%BB%E9%94%81%E4%BA%A7%E7%94%9F%E7%9A%84%E5%BF%85%E8%A6%81%E6%9D%A1%E4%BB%B6"><span class="nav-text">9.1.1 死锁产生的必要条件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#9-1-2-%E6%AD%BB%E9%94%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95"><span class="nav-text">9.1.2 死锁解决方法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-2-%E6%B4%BB%E9%94%81"><span class="nav-text">9.2 活锁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-3-%E4%BC%98%E5%85%88%E7%BA%A7%E5%8F%8D%E8%BD%AC"><span class="nav-text">9.3 优先级反转</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E3%80%81%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-text">十、参考资料</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="monuo"
+      src="/images/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">monuo</p>
+  <div class="site-description" itemprop="description">悲莫悲兮生别离，乐莫乐兮新相知</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/monuo2021" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;monuo2021" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">monuo</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/medium-zoom@1/dist/medium-zoom.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>
