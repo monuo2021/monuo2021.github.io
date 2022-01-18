@@ -226,6 +226,46 @@
       </categories>
   </entry>
   <entry>
+    <title>处理器性能公式</title>
+    <url>/%E5%A4%84%E7%90%86%E5%99%A8%E6%80%A7%E8%83%BD%E5%85%AC%E5%BC%8F/</url>
+    <content><![CDATA[<h3 id="CPU-性能及其度量因素"><a href="#CPU-性能及其度量因素" class="headerlink" title="CPU 性能及其度量因素"></a>CPU 性能及其度量因素</h3><p>CPU 性能度量的基本指标是<strong>CPU 执行时间</strong>。而几乎所有发的计算机都有一个以固定频率运行的时钟，称为<strong>时钟周期</strong>，或脉冲周期等。所以，我们可以利用时钟周期来表示 CPU 时间：</p>
+<p>$$<br>程序CPU执行时间 = 程序CPU时钟周期数 × 时钟周期长度<br>$$</p>
+<p>其中，时钟周期长度与时钟频率互为倒数，所以该公式也可表示为：</p>
+<p>$$<br>程序CPU执行时间 =  \frac {程序CPU时钟周期数}{时钟频率}<br>$$</p>
+<h3 id="指令性能"><a href="#指令性能" class="headerlink" title="指令性能"></a>指令性能</h3><p>除了时钟周期外，我们还需注意<strong>指令数</strong>，因为计算机必须通过执行指令来运行程序。</p>
+<p>$$<br>CPU时钟周期 = 程序指令数 × 指令平均时钟周期数<br>$$</p>
+<blockquote>
+<p><strong>指令平均时钟周期数（CPI）</strong>：表示执行某个程序或者程序片段时每条指令所需的时钟周期平均数。</p>
+</blockquote>
+<h3 id="经典的-CPU-性能公式"><a href="#经典的-CPU-性能公式" class="headerlink" title="经典的 CPU 性能公式"></a>经典的 CPU 性能公式</h3><p>结合公式（1）、（2）、（3），我们可以得出<strong>经典的 CPU 性能公式</strong>：</p>
+<p>$$<br>CPU时间 = 指令数 × CPI × 时钟周期长度<br>$$</p>
+<p>或</p>
+<p>$$<br>CPU时间 = \frac{指令数 × CPI}{时钟频率}<br>$$</p>
+<h3 id="影响处理器性能的因素"><a href="#影响处理器性能的因素" class="headerlink" title="影响处理器性能的因素"></a>影响处理器性能的因素</h3><p>从该公式可以看出，<strong>处理器性能取决于三个特性：时钟周期、CPI、指令数</strong>。</p>
+<ul>
+<li>时钟周期：硬件技术与组成</li>
+<li>CPI：组成与指令集体系结构</li>
+<li>指令数：指令集体系结构与编译器技术</li>
+</ul>
+<h4 id="如何测量这些因素"><a href="#如何测量这些因素" class="headerlink" title="如何测量这些因素"></a>如何测量这些因素</h4><p>首先，通过运行程序来测量 CPU 时间，并且计算机说明书上通常介绍了时钟周期长度。</p>
+<p>难以测量的时指令数与 CPI。</p>
+<p>可以使用体系结构仿真器预先执行程序来测量执行的指令数，或者用大多数处理器中的硬件计数器来测量执行的指令数、平均 CPI 和性能损失。</p>
+<p>但是，CPI 与计算机的各种设计细节密切相关（如存储系统、处理器结构、应用程序中不同类型的指令所占的比例），对于不同的应用程序它是不同的。</p>
+<h3 id="Amdal-定律"><a href="#Amdal-定律" class="headerlink" title="Amdal 定律"></a>Amdal 定律</h3><p>Amdal 定律阐述了<strong>对于特定改进的性能提升可能由所使用的改进特征的数量所限制</strong>。也就是说，当提升系统的某部分性能时，对整个系统性能的影响取决于:</p>
+<ol>
+<li>这一部分有多重要(ɑ)</li>
+<li>这一部分性能提升了多少(k)</li>
+</ol>
+<p>$$<br>加速比S = \frac{1}{(1-ɑ)+\frac{ɑ}{k}}<br>$$</p>
+<blockquote>
+<p>ɑ 是升级模块占比，k 是该部分性能提升比例</p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>计算机体系结构</category>
+      </categories>
+  </entry>
+  <entry>
     <title>分支预测</title>
     <url>/%E5%88%86%E6%94%AF%E9%A2%84%E6%B5%8B/</url>
     <content><![CDATA[<p>分支预测解决流水线冲突中的控制冒险。在指令集中，分支指令包括条件指令和非条件指令。对无条件指令来说，无需进行条件判断，就可以获得跳转后的地址；但是对条件跳转指令，无论是条件直接跳转还是条件间接跳转指令（RISC-V 无此类指令），都需要在执行阶段才可以确定是否跳转，这样会影响取值阶段的效率。</p>
@@ -326,46 +366,6 @@
 <li><p><a href="https://www.wikiwand.com/en/Branch_predictor">wiki-Branch predictor</a></p>
 </li>
 </ul>
-]]></content>
-      <categories>
-        <category>计算机体系结构</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>处理器性能公式</title>
-    <url>/%E5%A4%84%E7%90%86%E5%99%A8%E6%80%A7%E8%83%BD%E5%85%AC%E5%BC%8F/</url>
-    <content><![CDATA[<h3 id="CPU-性能及其度量因素"><a href="#CPU-性能及其度量因素" class="headerlink" title="CPU 性能及其度量因素"></a>CPU 性能及其度量因素</h3><p>CPU 性能度量的基本指标是<strong>CPU 执行时间</strong>。而几乎所有发的计算机都有一个以固定频率运行的时钟，称为<strong>时钟周期</strong>，或脉冲周期等。所以，我们可以利用时钟周期来表示 CPU 时间：</p>
-<p>$$<br>程序CPU执行时间 = 程序CPU时钟周期数 × 时钟周期长度<br>$$</p>
-<p>其中，时钟周期长度与时钟频率互为倒数，所以该公式也可表示为：</p>
-<p>$$<br>程序CPU执行时间 =  \frac {程序CPU时钟周期数}{时钟频率}<br>$$</p>
-<h3 id="指令性能"><a href="#指令性能" class="headerlink" title="指令性能"></a>指令性能</h3><p>除了时钟周期外，我们还需注意<strong>指令数</strong>，因为计算机必须通过执行指令来运行程序。</p>
-<p>$$<br>CPU时钟周期 = 程序指令数 × 指令平均时钟周期数<br>$$</p>
-<blockquote>
-<p><strong>指令平均时钟周期数（CPI）</strong>：表示执行某个程序或者程序片段时每条指令所需的时钟周期平均数。</p>
-</blockquote>
-<h3 id="经典的-CPU-性能公式"><a href="#经典的-CPU-性能公式" class="headerlink" title="经典的 CPU 性能公式"></a>经典的 CPU 性能公式</h3><p>结合公式（1）、（2）、（3），我们可以得出<strong>经典的 CPU 性能公式</strong>：</p>
-<p>$$<br>CPU时间 = 指令数 × CPI × 时钟周期长度<br>$$</p>
-<p>或</p>
-<p>$$<br>CPU时间 = \frac{指令数 × CPI}{时钟频率}<br>$$</p>
-<h3 id="影响处理器性能的因素"><a href="#影响处理器性能的因素" class="headerlink" title="影响处理器性能的因素"></a>影响处理器性能的因素</h3><p>从该公式可以看出，<strong>处理器性能取决于三个特性：时钟周期、CPI、指令数</strong>。</p>
-<ul>
-<li>时钟周期：硬件技术与组成</li>
-<li>CPI：组成与指令集体系结构</li>
-<li>指令数：指令集体系结构与编译器技术</li>
-</ul>
-<h4 id="如何测量这些因素"><a href="#如何测量这些因素" class="headerlink" title="如何测量这些因素"></a>如何测量这些因素</h4><p>首先，通过运行程序来测量 CPU 时间，并且计算机说明书上通常介绍了时钟周期长度。</p>
-<p>难以测量的时指令数与 CPI。</p>
-<p>可以使用体系结构仿真器预先执行程序来测量执行的指令数，或者用大多数处理器中的硬件计数器来测量执行的指令数、平均 CPI 和性能损失。</p>
-<p>但是，CPI 与计算机的各种设计细节密切相关（如存储系统、处理器结构、应用程序中不同类型的指令所占的比例），对于不同的应用程序它是不同的。</p>
-<h3 id="Amdal-定律"><a href="#Amdal-定律" class="headerlink" title="Amdal 定律"></a>Amdal 定律</h3><p>Amdal 定律阐述了<strong>对于特定改进的性能提升可能由所使用的改进特征的数量所限制</strong>。也就是说，当提升系统的某部分性能时，对整个系统性能的影响取决于:</p>
-<ol>
-<li>这一部分有多重要(ɑ)</li>
-<li>这一部分性能提升了多少(k)</li>
-</ol>
-<p>$$<br>加速比S = \frac{1}{(1-ɑ)+\frac{ɑ}{k}}<br>$$</p>
-<blockquote>
-<p>ɑ 是升级模块占比，k 是该部分性能提升比例</p>
-</blockquote>
 ]]></content>
       <categories>
         <category>计算机体系结构</category>
@@ -483,101 +483,6 @@
 <h2 id="五、写回"><a href="#五、写回" class="headerlink" title="五、写回"></a>五、写回</h2><p>最终写回仲裁、长指令写回仲裁、OITF</p>
 <p>最终写回仲裁：长指令比单指令有更高优先级。如果没有长指令写回，单指令可以比更早位置的长指令写回。</p>
 <p>长指令写回仲裁：根据 OITF 判断长指令的先后关系，严格控制长指令的写回顺序</p>
-]]></content>
-      <categories>
-        <category>计算机体系结构</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>流水线技术</title>
-    <url>/%E6%B5%81%E6%B0%B4%E7%BA%BF%E6%8A%80%E6%9C%AF/</url>
-    <content><![CDATA[<h2 id="一、流水线技术介绍"><a href="#一、流水线技术介绍" class="headerlink" title="一、流水线技术介绍"></a>一、流水线技术介绍</h2><h3 id="1-1-什么是流水线"><a href="#1-1-什么是流水线" class="headerlink" title="1.1 什么是流水线"></a>1.1 什么是流水线</h3><p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211013131217427.png"></p>
-<p>流水线是实现<strong>多条指令重叠执行</strong>的技术，其目的是在硬件尽可能的情况下<strong>增加吞吐量</strong>。一条指令的执行需要多个操作，流水线技术充分利用了这些操作之间的<strong>并行性</strong>。<strong>流水线是加快 CPU 速度的关键实现技术</strong>。</p>
-<p>拿洗衣服来举例子，假设洗衣服有四个步骤（每个步骤用时相同）：</p>
-<ul>
-<li>洗衣机洗衣</li>
-<li>烘干机烘干</li>
-<li>叠好衣服</li>
-<li>放进衣柜</li>
-</ul>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211013131302027.png"></p>
-<p>如上图一所示，每个人洗完自己的衣服，下一个人才可以开始洗自己的衣服，总共需要花费 16 个步骤时间；上图二所示，每个人并行洗衣。当一个人洗衣机用完时，进入烘干机阶段，另一人立刻进入洗衣机阶段。此时总共只要花费 7 个步骤时间。</p>
-<h3 id="1-2-经典的五级流水线"><a href="#1-2-经典的五级流水线" class="headerlink" title="1.2 经典的五级流水线"></a>1.2 经典的五级流水线</h3><p>流水线是指将计算机指令过程分为多个步骤，并通过多个硬件处理单元并行执行来加快指令执行速度。其中有两个关键点：</p>
-<ul>
-<li>拆分过程</li>
-<li>并行</li>
-</ul>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211013083408358.png" alt="image-20211013083408358"></p>
-<ul>
-<li><p><strong>取指令（fetch）</strong></p>
-<p>根据 PC 将指令从存储器中读取出来的过程。</p>
-</li>
-<li><p><strong>译码（decode）</strong></p>
-<p>对指令进行译码，从通用寄存器堆（Regfile）中将操作数读出。</p>
-</li>
-<li><p><strong>执行（execute）</strong></p>
-<p>对指令进行真正运算的过程。</p>
-</li>
-<li><p><strong>访存（memory access）</strong></p>
-<p>指存储器访问指令将数据从存储器中读出，或者写入存储器的过程</p>
-</li>
-<li><p><strong>写回（write back）</strong></p>
-<p>指将指令执行的结果写回通用寄存器组的过程。如果是普通运算指令，该结果值来自于“执行”阶段计算的结果：如果是存储器读指令，该结果来自于“访存”阶段从存储器中读取出来的数据。</p>
-</li>
-</ul>
-<h3 id="1-3-流水线划分"><a href="#1-3-流水线划分" class="headerlink" title="1.3 流水线划分"></a>1.3 流水线划分</h3><p>流水线划分条件：</p>
-<ul>
-<li>流水线中每个阶段所需的时间近乎相等。</li>
-<li>流水线中每个阶段的操作都会被重复执行。</li>
-<li>流水线中每个阶段的操作都与其他流水段相互独立。</li>
-</ul>
-<p>不同的指令集，流水线实现的难易也是不同的。对于复杂的 CISC 指令集，如 x86，指令长度不同，并且执行时间 也不同，所以直接实现流水线是比较复杂的；对 RISC 来说，如 MIPS 和 ARM，由于指令的长度相等，并且每条指令所完成的任务比较规整，所以较容易用流水线实现。</p>
-<h3 id="1-4-流水线的深度"><a href="#1-4-流水线的深度" class="headerlink" title="1.4 流水线的深度"></a>1.4 流水线的深度</h3><ul>
-<li>在两级寄存器（每一级流水线由寄存器组成〉之间的硬件逻辑越少，就意味能够运行到更高的主频。因此， 现代的处理器流水线极深主要是由于处理器追求高频的指标所驱使。主频越高也意味着流水线的吞吐率越高，从而性能越高。</li>
-<li>由于每一级流水线都由寄存器组成，更多的流水线级数要消耗更多的寄存器，以及更多的面积开销。</li>
-<li>较深的处理器流水线还有一个问题，那就是由于在流水线的取指令阶段无法得知条件跳转的结果是到底跳还是不跳，因此只能进行预测，而到了流水线的末端才能够通过实际的运算得知该分支是真的该跳还是不该跳。如果发现真实的结果与之前预测的结果不相符，则意味着预测失败，需要将所有预取的错误指令流全部丢弃掉。重新取正确的指令流，这个过程叫作“流水线冲刷（ Pipeline Flush ）” 。那么，流水线的深度越深，意味着己经预取了更多的错误指令流，需要将其全部抛弃然后重启，不仅白白浪费了功耗，还造成了性能的损失。</li>
-</ul>
-<h2 id="二、流水线冲突"><a href="#二、流水线冲突" class="headerlink" title="二、流水线冲突"></a>二、流水线冲突</h2><h3 id="2-1-结构冒险"><a href="#2-1-结构冒险" class="headerlink" title="2.1 结构冒险"></a>2.1 结构冒险</h3><p><strong>同一个部件同时被不同指令所使用。</strong>比如说，当处理器是冯诺依曼结构时，只有一个存储器。在访存阶段，一条需要读出一条数据，而另一条指令需要写入一条数据，这时就会产生结构冒险。</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/structural-dependency-scenario.png" alt="Structural dependency scenario"></p>
-<h3 id="2-2-数据冒险"><a href="#2-2-数据冒险" class="headerlink" title="2.2 数据冒险"></a>2.2 数据冒险</h3><ul>
-<li><p><strong>WAR（Write After Read）</strong></p>
-<p>假设指令 j 是在指令 i 后面执行的指令，WAR 表示指令 i 读出数据后，指令 j 才能写这个寄存器。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ADD R2, R1, R0</span><br><span class="line">SUB R0, R3, R4</span><br></pre></td></tr></table></figure></li>
-<li><p><strong>WAW（Write After Write）</strong></p>
-<p>假设指令 j 是在指令 i 后面执行的指令，WAW 表示指令 i 将数据写入寄存器后，指令 j 才能将数据写入这个寄存器。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ADD R0, R1, R2</span><br><span class="line">SUB R0, R4, R5</span><br></pre></td></tr></table></figure></li>
-<li><p><strong>RAW（Read After Write）</strong></p>
-<p>假设指令 j 是在指令 i 后面执行的指令，RAW 表示指令 i 将数据写入寄存器后，指令 j 才能从这个寄存器读取数据。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ADD r1,r2,r3</span><br><span class="line">SUB r4,r5,r1</span><br></pre></td></tr></table></figure></li>
-</ul>
-<h3 id="2-3-控制冒险"><a href="#2-3-控制冒险" class="headerlink" title="2.3 控制冒险"></a>2.3 控制冒险</h3><p>转移或异常改变执行流程，顺序执行指令在目标地址产生前已被取出。</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/control-hazard-scenario.png" alt="Control Hazard scenario"></p>
-<h2 id="三、流水线冲突解决方法"><a href="#三、流水线冲突解决方法" class="headerlink" title="三、流水线冲突解决方法"></a>三、流水线冲突解决方法</h2><h3 id="3-1-结构冒险"><a href="#3-1-结构冒险" class="headerlink" title="3.1 结构冒险"></a>3.1 结构冒险</h3><ul>
-<li>采用哈弗结构，指令存储器和数据存储器分离。</li>
-<li>多级缓存</li>
-</ul>
-<h3 id="3-2-数据冒险"><a href="#3-2-数据冒险" class="headerlink" title="3.2 数据冒险"></a>3.2 数据冒险</h3><ul>
-<li><p>流水线阻塞(stall)</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211013155921245.png" alt="image-20211013155921245"></p>
-</li>
-<li><p>软件插入“NOP”指令</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211013160016394.png" alt="image-20211013160016394"></p>
-</li>
-<li><p>寄存器重命名</p>
-</li>
-<li><p>编译优化：调整指令顺序</p>
-</li>
-<li><p>旁路(Bypassing)技术</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/20190401202913338.png" alt="img"></p>
-<p>但是，Bypassing 并不能解决所以的数据冒险问题，它不能解决 Load-use data hazard。</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211013161449294.png" alt="image-20211013161449294"></p>
-</li>
-</ul>
-<h3 id="3-3-控制冒险"><a href="#3-3-控制冒险" class="headerlink" title="3.3 控制冒险"></a>3.3 控制冒险</h3><ul>
-<li><strong>动态分支预测</strong></li>
-<li>硬件阻塞(stall)</li>
-<li>插入三条“NOP”指令</li>
-</ul>
 ]]></content>
       <categories>
         <category>计算机体系结构</category>
@@ -871,6 +776,173 @@
       </tags>
   </entry>
   <entry>
+    <title>流水线技术</title>
+    <url>/%E6%B5%81%E6%B0%B4%E7%BA%BF%E6%8A%80%E6%9C%AF/</url>
+    <content><![CDATA[<h2 id="一、流水线技术介绍"><a href="#一、流水线技术介绍" class="headerlink" title="一、流水线技术介绍"></a>一、流水线技术介绍</h2><h3 id="1-1-什么是流水线"><a href="#1-1-什么是流水线" class="headerlink" title="1.1 什么是流水线"></a>1.1 什么是流水线</h3><p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211013131217427.png"></p>
+<p>流水线是实现<strong>多条指令重叠执行</strong>的技术，其目的是在硬件尽可能的情况下<strong>增加吞吐量</strong>。一条指令的执行需要多个操作，流水线技术充分利用了这些操作之间的<strong>并行性</strong>。<strong>流水线是加快 CPU 速度的关键实现技术</strong>。</p>
+<p>拿洗衣服来举例子，假设洗衣服有四个步骤（每个步骤用时相同）：</p>
+<ul>
+<li>洗衣机洗衣</li>
+<li>烘干机烘干</li>
+<li>叠好衣服</li>
+<li>放进衣柜</li>
+</ul>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211013131302027.png"></p>
+<p>如上图一所示，每个人洗完自己的衣服，下一个人才可以开始洗自己的衣服，总共需要花费 16 个步骤时间；上图二所示，每个人并行洗衣。当一个人洗衣机用完时，进入烘干机阶段，另一人立刻进入洗衣机阶段。此时总共只要花费 7 个步骤时间。</p>
+<h3 id="1-2-经典的五级流水线"><a href="#1-2-经典的五级流水线" class="headerlink" title="1.2 经典的五级流水线"></a>1.2 经典的五级流水线</h3><p>流水线是指将计算机指令过程分为多个步骤，并通过多个硬件处理单元并行执行来加快指令执行速度。其中有两个关键点：</p>
+<ul>
+<li>拆分过程</li>
+<li>并行</li>
+</ul>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211013083408358.png" alt="image-20211013083408358"></p>
+<ul>
+<li><p><strong>取指令（fetch）</strong></p>
+<p>根据 PC 将指令从存储器中读取出来的过程。</p>
+</li>
+<li><p><strong>译码（decode）</strong></p>
+<p>对指令进行译码，从通用寄存器堆（Regfile）中将操作数读出。</p>
+</li>
+<li><p><strong>执行（execute）</strong></p>
+<p>对指令进行真正运算的过程。</p>
+</li>
+<li><p><strong>访存（memory access）</strong></p>
+<p>指存储器访问指令将数据从存储器中读出，或者写入存储器的过程</p>
+</li>
+<li><p><strong>写回（write back）</strong></p>
+<p>指将指令执行的结果写回通用寄存器组的过程。如果是普通运算指令，该结果值来自于“执行”阶段计算的结果：如果是存储器读指令，该结果来自于“访存”阶段从存储器中读取出来的数据。</p>
+</li>
+</ul>
+<h3 id="1-3-流水线划分"><a href="#1-3-流水线划分" class="headerlink" title="1.3 流水线划分"></a>1.3 流水线划分</h3><p>流水线划分条件：</p>
+<ul>
+<li>流水线中每个阶段所需的时间近乎相等。</li>
+<li>流水线中每个阶段的操作都会被重复执行。</li>
+<li>流水线中每个阶段的操作都与其他流水段相互独立。</li>
+</ul>
+<p>不同的指令集，流水线实现的难易也是不同的。对于复杂的 CISC 指令集，如 x86，指令长度不同，并且执行时间 也不同，所以直接实现流水线是比较复杂的；对 RISC 来说，如 MIPS 和 ARM，由于指令的长度相等，并且每条指令所完成的任务比较规整，所以较容易用流水线实现。</p>
+<h3 id="1-4-流水线的深度"><a href="#1-4-流水线的深度" class="headerlink" title="1.4 流水线的深度"></a>1.4 流水线的深度</h3><ul>
+<li>在两级寄存器（每一级流水线由寄存器组成〉之间的硬件逻辑越少，就意味能够运行到更高的主频。因此， 现代的处理器流水线极深主要是由于处理器追求高频的指标所驱使。主频越高也意味着流水线的吞吐率越高，从而性能越高。</li>
+<li>由于每一级流水线都由寄存器组成，更多的流水线级数要消耗更多的寄存器，以及更多的面积开销。</li>
+<li>较深的处理器流水线还有一个问题，那就是由于在流水线的取指令阶段无法得知条件跳转的结果是到底跳还是不跳，因此只能进行预测，而到了流水线的末端才能够通过实际的运算得知该分支是真的该跳还是不该跳。如果发现真实的结果与之前预测的结果不相符，则意味着预测失败，需要将所有预取的错误指令流全部丢弃掉。重新取正确的指令流，这个过程叫作“流水线冲刷（ Pipeline Flush ）” 。那么，流水线的深度越深，意味着己经预取了更多的错误指令流，需要将其全部抛弃然后重启，不仅白白浪费了功耗，还造成了性能的损失。</li>
+</ul>
+<h2 id="二、流水线冲突"><a href="#二、流水线冲突" class="headerlink" title="二、流水线冲突"></a>二、流水线冲突</h2><h3 id="2-1-结构冒险"><a href="#2-1-结构冒险" class="headerlink" title="2.1 结构冒险"></a>2.1 结构冒险</h3><p><strong>同一个部件同时被不同指令所使用。</strong>比如说，当处理器是冯诺依曼结构时，只有一个存储器。在访存阶段，一条需要读出一条数据，而另一条指令需要写入一条数据，这时就会产生结构冒险。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/structural-dependency-scenario.png" alt="Structural dependency scenario"></p>
+<h3 id="2-2-数据冒险"><a href="#2-2-数据冒险" class="headerlink" title="2.2 数据冒险"></a>2.2 数据冒险</h3><ul>
+<li><p><strong>WAR（Write After Read）</strong></p>
+<p>假设指令 j 是在指令 i 后面执行的指令，WAR 表示指令 i 读出数据后，指令 j 才能写这个寄存器。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ADD R2, R1, R0</span><br><span class="line">SUB R0, R3, R4</span><br></pre></td></tr></table></figure></li>
+<li><p><strong>WAW（Write After Write）</strong></p>
+<p>假设指令 j 是在指令 i 后面执行的指令，WAW 表示指令 i 将数据写入寄存器后，指令 j 才能将数据写入这个寄存器。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ADD R0, R1, R2</span><br><span class="line">SUB R0, R4, R5</span><br></pre></td></tr></table></figure></li>
+<li><p><strong>RAW（Read After Write）</strong></p>
+<p>假设指令 j 是在指令 i 后面执行的指令，RAW 表示指令 i 将数据写入寄存器后，指令 j 才能从这个寄存器读取数据。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ADD r1,r2,r3</span><br><span class="line">SUB r4,r5,r1</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="2-3-控制冒险"><a href="#2-3-控制冒险" class="headerlink" title="2.3 控制冒险"></a>2.3 控制冒险</h3><p>转移或异常改变执行流程，顺序执行指令在目标地址产生前已被取出。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/control-hazard-scenario.png" alt="Control Hazard scenario"></p>
+<h2 id="三、流水线冲突解决方法"><a href="#三、流水线冲突解决方法" class="headerlink" title="三、流水线冲突解决方法"></a>三、流水线冲突解决方法</h2><h3 id="3-1-结构冒险"><a href="#3-1-结构冒险" class="headerlink" title="3.1 结构冒险"></a>3.1 结构冒险</h3><ul>
+<li>采用哈弗结构，指令存储器和数据存储器分离。</li>
+<li>多级缓存</li>
+</ul>
+<h3 id="3-2-数据冒险"><a href="#3-2-数据冒险" class="headerlink" title="3.2 数据冒险"></a>3.2 数据冒险</h3><ul>
+<li><p>流水线阻塞(stall)</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211013155921245.png" alt="image-20211013155921245"></p>
+</li>
+<li><p>软件插入“NOP”指令</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211013160016394.png" alt="image-20211013160016394"></p>
+</li>
+<li><p>寄存器重命名</p>
+</li>
+<li><p>编译优化：调整指令顺序</p>
+</li>
+<li><p>旁路(Bypassing)技术</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/20190401202913338.png" alt="img"></p>
+<p>但是，Bypassing 并不能解决所以的数据冒险问题，它不能解决 Load-use data hazard。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211013161449294.png" alt="image-20211013161449294"></p>
+</li>
+</ul>
+<h3 id="3-3-控制冒险"><a href="#3-3-控制冒险" class="headerlink" title="3.3 控制冒险"></a>3.3 控制冒险</h3><ul>
+<li><strong>动态分支预测</strong></li>
+<li>硬件阻塞(stall)</li>
+<li>插入三条“NOP”指令</li>
+</ul>
+]]></content>
+      <categories>
+        <category>计算机体系结构</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>程序转换处理过程</title>
+    <url>/%E7%A8%8B%E5%BA%8F%E8%BD%AC%E6%8D%A2%E5%A4%84%E7%90%86%E8%BF%87%E7%A8%8B/</url>
+    <content><![CDATA[<p>一个由高级语言编写的程序，必须转换成二进制代码，才能在机器上运行。这种可以在机器上运行是二进制代码被称为<strong>可执行目标文件</strong>。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/sp20210723_083211_152.png" alt="源程序处理过程"></p>
+<p>上述过程可分为四步：</p>
+<ul>
+<li><strong>预处理</strong></li>
+<li><strong>编译</strong></li>
+<li><strong>汇编</strong></li>
+<li><strong>链接</strong></li>
+</ul>
+<h2 id="一、预处理"><a href="#一、预处理" class="headerlink" title="一、预处理"></a>一、预处理</h2><p>预处理过程主要<strong>处理源文件中以“#”开头的预编译指令</strong>，如：</p>
+<ul>
+<li>删除“#define”并展开所定义的宏。</li>
+<li>处理所有条件预编译指令，如“#if”,“#ifdef”, “#endif”等。</li>
+<li>插入头文件到“#include”处，可以递归方式进行处理。</li>
+<li>删除所有的注释“//”和“/* */”。</li>
+<li> 添加行号和文件名标识，以便编译时编译器产生调试用的行号信息。</li>
+<li>保留所有#pragma编译指令（编译器需要用）</li>
+</ul>
+<p>经过预处理后得到的是 <strong>.i 文件</strong>（预处理文件），该文件是一个可读的文本文件 ，但不包含任何宏定义。</p>
+<h3 id="预处理命令"><a href="#预处理命令" class="headerlink" title="预处理命令"></a>预处理命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc –E hello.c –o hello.i</span><br></pre></td></tr></table></figure>
+
+<p>或者</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cpp hello.c &gt; hello.i</span><br></pre></td></tr></table></figure>
+
+<h2 id="二、编译"><a href="#二、编译" class="headerlink" title="二、编译"></a>二、编译</h2><p>编译过程就是将预处理后得到的预处理文件（如 hello.i）进行一系列分析，<strong>生成汇编代码文件</strong>的过程。用来进行编译处理的程序称为<strong>编译程序（编译器，Compiler）</strong></p>
+<p>编译包括以下过程：</p>
+<ul>
+<li>词法分析</li>
+<li>语法分析</li>
+<li>语义分析</li>
+<li>中间代码生成</li>
+<li>代码优化</li>
+</ul>
+<p>经过编译后，得到**.s文件**（汇编代码文件）还是可读的文本文件，CPU无法理解和执行它。</p>
+<h3 id="编译命令"><a href="#编译命令" class="headerlink" title="编译命令"></a>编译命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc -S hello.i -o hello.s</span><br></pre></td></tr></table></figure>
+
+<p>或</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc -S hello.c -o hello.s</span><br></pre></td></tr></table></figure>
+
+<p>或</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">/user/lib/gcc/i486-linux-gnu/4.1/cc1 hello.c</span><br></pre></td></tr></table></figure>
+
+<h2 id="三、汇编"><a href="#三、汇编" class="headerlink" title="三、汇编"></a>三、汇编</h2><p>汇编是<strong>将汇编语言源程序转换为机器指令序列</strong>，每条汇编语句几乎都对应一条机器指令。汇编过程相比编译较为简单，没有复杂的语法，没有语义，也不需要指令优化，只需根据汇编指令和机器指令的对照表一一翻译即可。</p>
+<p>汇编结果是一个 <strong>.o 文件（可重定位目标文件）</strong>，其中包含的是不可读的二进制代码。</p>
+<h3 id="汇编命令"><a href="#汇编命令" class="headerlink" title="汇编命令"></a>汇编命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc –c hello.s –o hello.o</span><br></pre></td></tr></table></figure>
+
+<p>或</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">gcc –c hello.c –o hello.o</span><br></pre></td></tr></table></figure>
+
+<p>或（as是一个汇编程序）</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">as hello.s –o hello.o</span><br></pre></td></tr></table></figure>
+
+<h2 id="四、链接"><a href="#四、链接" class="headerlink" title="四、链接"></a>四、链接</h2><p>链接过程<strong>将多个可重定位目标文件合并以生成可执行目标文件</strong>。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/sp20210723_101021_361.png" alt="sp20210723_101021_361"></p>
+<h3 id="链接命令"><a href="#链接命令" class="headerlink" title="链接命令"></a>链接命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc –static –o myproc main.o swap.o</span><br></pre></td></tr></table></figure>
+
+<p>或</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ld –static –o myproc main.o swap.o</span><br></pre></td></tr></table></figure>
+
+<p>其中，static 表示静态链接，如果不指定 -o 选项，则可执行文件名 为“a.out”。</p>
+<p><strong>a.out 就是最终的可执行文件。</strong></p>
+]]></content>
+      <categories>
+        <category>链接、装载与库</category>
+      </categories>
+      <tags>
+        <tag>程序员的自我修养</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>物理内存管理：连续内存分配</title>
     <url>/%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%EF%BC%9A%E8%BF%9E%E7%BB%AD%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D/</url>
     <content><![CDATA[<h2 id="固定分区分配"><a href="#固定分区分配" class="headerlink" title="固定分区分配"></a>固定分区分配</h2><p>固定分区分配时最简单的一种可运行多道程序的储存管理方式。用户空间被划分为若干个固定的大小区域，每个分区只装入一道作业，这样一来，可以几道作业并发运行。当一有空闲时，可以从外存的后备作业队列中选择一个适当大小的作业装入该分区，由此往复运行作业。</p>
@@ -978,78 +1050,6 @@
       </categories>
       <tags>
         <tag>内存管理</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>程序转换处理过程</title>
-    <url>/%E7%A8%8B%E5%BA%8F%E8%BD%AC%E6%8D%A2%E5%A4%84%E7%90%86%E8%BF%87%E7%A8%8B/</url>
-    <content><![CDATA[<p>一个由高级语言编写的程序，必须转换成二进制代码，才能在机器上运行。这种可以在机器上运行是二进制代码被称为<strong>可执行目标文件</strong>。</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/sp20210723_083211_152.png" alt="源程序处理过程"></p>
-<p>上述过程可分为四步：</p>
-<ul>
-<li><strong>预处理</strong></li>
-<li><strong>编译</strong></li>
-<li><strong>汇编</strong></li>
-<li><strong>链接</strong></li>
-</ul>
-<h2 id="一、预处理"><a href="#一、预处理" class="headerlink" title="一、预处理"></a>一、预处理</h2><p>预处理过程主要<strong>处理源文件中以“#”开头的预编译指令</strong>，如：</p>
-<ul>
-<li>删除“#define”并展开所定义的宏。</li>
-<li>处理所有条件预编译指令，如“#if”,“#ifdef”, “#endif”等。</li>
-<li>插入头文件到“#include”处，可以递归方式进行处理。</li>
-<li>删除所有的注释“//”和“/* */”。</li>
-<li> 添加行号和文件名标识，以便编译时编译器产生调试用的行号信息。</li>
-<li>保留所有#pragma编译指令（编译器需要用）</li>
-</ul>
-<p>经过预处理后得到的是 <strong>.i 文件</strong>（预处理文件），该文件是一个可读的文本文件 ，但不包含任何宏定义。</p>
-<h3 id="预处理命令"><a href="#预处理命令" class="headerlink" title="预处理命令"></a>预处理命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc –E hello.c –o hello.i</span><br></pre></td></tr></table></figure>
-
-<p>或者</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cpp hello.c &gt; hello.i</span><br></pre></td></tr></table></figure>
-
-<h2 id="二、编译"><a href="#二、编译" class="headerlink" title="二、编译"></a>二、编译</h2><p>编译过程就是将预处理后得到的预处理文件（如 hello.i）进行一系列分析，<strong>生成汇编代码文件</strong>的过程。用来进行编译处理的程序称为<strong>编译程序（编译器，Compiler）</strong></p>
-<p>编译包括以下过程：</p>
-<ul>
-<li>词法分析</li>
-<li>语法分析</li>
-<li>语义分析</li>
-<li>中间代码生成</li>
-<li>代码优化</li>
-</ul>
-<p>经过编译后，得到**.s文件**（汇编代码文件）还是可读的文本文件，CPU无法理解和执行它。</p>
-<h3 id="编译命令"><a href="#编译命令" class="headerlink" title="编译命令"></a>编译命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc -S hello.i -o hello.s</span><br></pre></td></tr></table></figure>
-
-<p>或</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc -S hello.c -o hello.s</span><br></pre></td></tr></table></figure>
-
-<p>或</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">/user/lib/gcc/i486-linux-gnu/4.1/cc1 hello.c</span><br></pre></td></tr></table></figure>
-
-<h2 id="三、汇编"><a href="#三、汇编" class="headerlink" title="三、汇编"></a>三、汇编</h2><p>汇编是<strong>将汇编语言源程序转换为机器指令序列</strong>，每条汇编语句几乎都对应一条机器指令。汇编过程相比编译较为简单，没有复杂的语法，没有语义，也不需要指令优化，只需根据汇编指令和机器指令的对照表一一翻译即可。</p>
-<p>汇编结果是一个 <strong>.o 文件（可重定位目标文件）</strong>，其中包含的是不可读的二进制代码。</p>
-<h3 id="汇编命令"><a href="#汇编命令" class="headerlink" title="汇编命令"></a>汇编命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc –c hello.s –o hello.o</span><br></pre></td></tr></table></figure>
-
-<p>或</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">gcc –c hello.c –o hello.o</span><br></pre></td></tr></table></figure>
-
-<p>或（as是一个汇编程序）</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">as hello.s –o hello.o</span><br></pre></td></tr></table></figure>
-
-<h2 id="四、链接"><a href="#四、链接" class="headerlink" title="四、链接"></a>四、链接</h2><p>链接过程<strong>将多个可重定位目标文件合并以生成可执行目标文件</strong>。</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/sp20210723_101021_361.png" alt="sp20210723_101021_361"></p>
-<h3 id="链接命令"><a href="#链接命令" class="headerlink" title="链接命令"></a>链接命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc –static –o myproc main.o swap.o</span><br></pre></td></tr></table></figure>
-
-<p>或</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ld –static –o myproc main.o swap.o</span><br></pre></td></tr></table></figure>
-
-<p>其中，static 表示静态链接，如果不指定 -o 选项，则可执行文件名 为“a.out”。</p>
-<p><strong>a.out 就是最终的可执行文件。</strong></p>
-]]></content>
-      <categories>
-        <category>链接、装载与库</category>
-      </categories>
-      <tags>
-        <tag>程序员的自我修养</tag>
       </tags>
   </entry>
   <entry>
