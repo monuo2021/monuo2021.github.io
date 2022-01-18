@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.lug.ustc.edu.cn/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic|Roboto Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"monuo2021.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="RISC-V 的官方标准主要分成两部分：用户指令集（User-Level Instruction Set Architecture）与特权架构（Privileged Architecture）。本文主要介绍RISC-V 特权架构。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[object Object]">
+<meta property="og:url" content="https://monuo2021.github.io/RISC-V%E7%89%B9%E6%9D%83%E6%9E%B6%E6%9E%84/index.html">
+<meta property="og:site_name" content="飞光">
+<meta property="og:description" content="RISC-V 的官方标准主要分成两部分：用户指令集（User-Level Instruction Set Architecture）与特权架构（Privileged Architecture）。本文主要介绍RISC-V 特权架构。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="c:/Users/谭梁/AppData/Roaming/Typora/typora-user-images/image-20210828113747657.png">
+<meta property="og:image" content="c:/Users/谭梁/AppData/Roaming/Typora/typora-user-images/image-20210828113908821.png">
+<meta property="og:image" content="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210828114810829.png">
+<meta property="og:image" content="c:/Users/谭梁/AppData/Roaming/Typora/typora-user-images/image-20210828152215628.png">
+<meta property="og:image" content="c:/Users/谭梁/AppData/Roaming/Typora/typora-user-images/image-20210828153648619.png">
+<meta property="og:image" content="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210828154345445.png">
+<meta property="og:image" content="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210828182542768.png">
+<meta property="og:image" content="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210828213409020.png">
+<meta property="og:image" content="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210828213952453.png">
+<meta property="og:image" content="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210828215518514.png">
+<meta property="og:image" content="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210828220311590.png">
+<meta property="og:image" content="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210829131238711.png">
+<meta property="og:image" content="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210829143423163.png">
+<meta property="og:image" content="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210803103711166.png">
+<meta property="og:image" content="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210803103941671.png">
+<meta property="og:image" content="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210803104254396.png">
+<meta property="og:image" content="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210829223938051.png">
+<meta property="og:image" content="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210830011355846.png">
+<meta property="og:image" content="https://gitee.com/tanliang-TL/blogpic/raw/master/img/machine_25.png">
+<meta property="og:image" content="c:/Users/谭梁/AppData/Roaming/Typora/typora-user-images/image-20210829235334345.png">
+<meta property="og:image" content="https://gitee.com/tanliang-TL/blogpic/raw/master/img/machine_24.png">
+<meta property="og:image" content="https://gitee.com/tanliang-TL/blogpic/raw/master/img/machine_26.png">
+<meta property="og:image" content="https://gitee.com/tanliang-TL/blogpic/raw/master/img/machine_09.png">
+<meta property="og:image" content="c:/Users/谭梁/AppData/Roaming/Typora/typora-user-images/image-20210830011016192.png">
+<meta property="og:image" content="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210830084407189.png">
+<meta property="og:image" content="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210830235250178.png">
+<meta property="og:image" content="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210830164903429.png">
+<meta property="og:image" content="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210830231635457.png">
+<meta property="article:published_time" content="2022-01-18T01:04:27.072Z">
+<meta property="article:modified_time" content="2022-01-18T01:15:13.121Z">
+<meta property="article:author" content="monuo">
+<meta property="article:tag" content="RISC-V">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="c:/Users/谭梁/AppData/Roaming/Typora/typora-user-images/image-20210828113747657.png">
+
+<link rel="canonical" href="https://monuo2021.github.io/RISC-V%E7%89%B9%E6%9D%83%E6%9E%B6%E6%9E%84/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>[object Object] | 飞光</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">飞光</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://monuo2021.github.io/RISC-V%E7%89%B9%E6%9D%83%E6%9E%B6%E6%9E%84/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="monuo">
+      <meta itemprop="description" content="悲莫悲兮生别离，乐莫乐兮新相知">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="飞光">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          [object Object]
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-01-18 09:04:27 / 修改时间：09:15:13" itemprop="dateCreated datePublished" datetime="2022-01-18T09:04:27+08:00">2022-01-18</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">计算机体系结构</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description">RISC-V 的官方标准主要分成两部分：用户指令集（User-Level Instruction Set Architecture）与特权架构（Privileged Architecture）。本文主要介绍RISC-V 特权架构。</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>RISC-V 的官方标准主要分成两部分：<strong>用户指令集</strong>（User-Level Instruction Set Architecture）与<strong>特权架构</strong>（Privileged Architecture）。其目的是希望不同特权架构的处理器可以在 ABI(Application Binary Interface) 互相兼容。也就是说，支持同一用户指令集的处理器可以根据实际需求而在特权架构的设计上采取不同的策略。</p>
+<p>这节主要讨论 RISC-V 特权架构，包括以下部分：</p>
+<ul>
+<li>特权层级，特别是机器模式（Machine Mode, M-Mode）</li>
+<li>控制状态寄存器</li>
+<li>机器层级指令集</li>
+<li>异常和中断</li>
+</ul>
+<h2 id="特权层级"><a href="#特权层级" class="headerlink" title="特权层级"></a>特权层级</h2><p>RISC-V 定义了 3 种工作模式：机器模式(Machine Mode ，M-mode)、超级用户模式(Supervisor Mode，S-Mode)和普通用户模式(User Mode，U-Mode)。每种模式分别对应一个特权层级(Privilege Levels)。其中机器模式的特权层级最高，普通用户模式的特权层级最低。</p>
+<img src="C:\Users\谭梁\AppData\Roaming\Typora\typora-user-images\image-20210828113747657.png" alt="image-20210828113747657" style="zoom: 25%;" />
+
+<img src="C:\Users\谭梁\AppData\Roaming\Typora\typora-user-images\image-20210828113908821.png" alt="image-20210828113908821" style="zoom:50%;" />
+
+<p>机器级别拥有最高的特权，并且是 RISC-V 硬件平台唯一的强制特权级别。在机器模式(M-mode)中运行的代码通常是受信任的，它具有对机器实现的低级访问权限。M-mode 可以用来管理 RISC-V 上的安全执行环境。U-Mode 和 S-Mode 分别用于常规应用和操作系统使用。下面是支持的特权层级组合：</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210828114810829.png" alt="image-20210828114810829"></p>
+<p>从图中可以看出，M-mode 是强迫要求实现的。对于其他的两个模式，一般来说，小规模的嵌入式系统只需要 M-mode 就可以了，而对信息安全有要求的系统，则可能需要 M-mode + U-mode。运行类 UNIX 这样大型操作系统的处理器，则三种模式都需要实现，</p>
+<h2 id="控制状态寄存器"><a href="#控制状态寄存器" class="headerlink" title="控制状态寄存器"></a>控制状态寄存器</h2><p>RISC-V 单独定义了一个控制状态寄存器的地址空间，并分配了 12 位地址来做索引。其中，最高的两位 [11:10] 被用来指示寄存器的读写权限。如果这两位是 2’b11 的话，则表示该寄存器是只读寄存器；否则，该寄存器既可以被读取，又可以被写入。地址位 [9 :8] 表示能访问该寄存器的最低特权层级。例如，对机器模式 CSR，这两位都是 2’b11。</p>
+<img src="C:\Users\谭梁\AppData\Roaming\Typora\typora-user-images\image-20210828152215628.png" alt="image-20210828152215628" style="zoom: 67%;" />
+
+<h3 id="M-mode-CSR-寄存器"><a href="#M-mode-CSR-寄存器" class="headerlink" title="M-mode CSR 寄存器"></a>M-mode CSR 寄存器</h3><img src="C:\Users\谭梁\AppData\Roaming\Typora\typora-user-images\image-20210828153648619.png" alt="image-20210828153648619" style="zoom: 50%;" />
+
+<img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210828154345445.png" alt="image-20210828154345445" style="zoom:50%;" />
+
+<p>下面对一些主要的寄存器进行说明：</p>
+<h4 id="mvendorid-寄存器"><a href="#mvendorid-寄存器" class="headerlink" title="mvendorid 寄存器"></a>mvendorid 寄存器</h4><p>32 位的只读寄存器，<strong>用来存储厂商标识代码</strong>。</p>
+<p>其取值实际上是衍生于 JEDEC 厂商标识代码。JEDEC 的厂商标识代码分为两部分：第一部分是 Bank 域，设其值为 n；第二部分是只有一字节的 Offset 域，设其值为 m。对于这个 8 位的 Offset 域，其最高位是奇数校验码，其余 7 位对应 Bank 域里面的厂商标识。根据 JEDEC 提供的 n 与 m 数值，RISC-V32 位厂商标识代码可以用如下公式产生：</p>
+<p><code>Vendor ID=((n-1) &lt;&lt; 7) + (m &amp; 0x7F)</code></p>
+<h4 id="marchid（体系架构标识代码）"><a href="#marchid（体系架构标识代码）" class="headerlink" title="marchid（体系架构标识代码）"></a>marchid（体系架构标识代码）</h4><p>32 位的只读寄存器，用来<strong>存放 HART 所对应的体系架构的标识代码</strong>。</p>
+<p>对于开源的架构来说，这个寄存器的值由 RISC-V 基金会负责在全球分配，其最高位必须是 0。对于商业公司所研发的架构来说，其值由具体的商业公司来分配，但是其最高位必须为 1，其余的位不能 全为零。如果将该寄存器和 mvendorid 寄存器一起使用，则可以唯一地标识 HART 的体系架构。 如果处理器设计者选择不支持这个寄存器，则应该返回零值。</p>
+<h4 id="mimpid（实现标识代码）"><a href="#mimpid（实现标识代码）" class="headerlink" title="mimpid（实现标识代码）"></a>mimpid（实现标识代码）</h4><p>32 位的只读寄存器，<strong>标明处理器的版本号</strong>。该寄存器的格式完全由处理器设计者自行决定，如果处理器设计者选择不支持该寄存器，则应该返回零值。</p>
+<h4 id="mhartid（硬件线程标识）"><a href="#mhartid（硬件线程标识）" class="headerlink" title="mhartid（硬件线程标识）"></a>mhartid（硬件线程标识）</h4><p>给这些 HART 编号索引。在多处理器系统中，HART 的编号无须连续，但是必须至少有一个 HART 必须被编号为零。</p>
+<h4 id="misa（指令集寄存器）"><a href="#misa（指令集寄存器）" class="headerlink" title="misa（指令集寄存器）"></a>misa（指令集寄存器）</h4><p>misa 寄存器的目的是为了<strong>向软件告知处理器具体支持的字长和扩展</strong>，以方便软件的可移植性。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210828182542768.png" alt="image-20210828182542768"></p>
+<p>CSR 寄存器中有些指定字段行为的定义和缩写：</p>
+<ul>
+<li>WIRI：Reserved Writes Ignored，Read Ignore Values(保留写入忽略，读取忽略值)</li>
+<li>WPRI：Reserved Writes Preserve Values, Reads Ignore Values(保留写入保留值，读取忽略值)</li>
+<li>WLRL：Write/Read Only Legal Values(读写合法值)</li>
+<li>WARL：Write Any Values, Reads Legal Values(任意写，读合法值)</li>
+</ul>
+<p><strong>MXL 域</strong>：</p>
+<ul>
+<li><strong>编码了内部支持的 ISA 宽度</strong>(XLEN).</li>
+<li>当重置时，总是设置为支持的最宽 ISA。</li>
+</ul>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210828213409020.png" alt="image-20210828213409020"></p>
+<p><strong>extensions 域</strong></p>
+<ul>
+<li><p>编码了现有的标准扩展。0-25 分别为 A-Z，代表了不同的扩展指令集。如果该架构需要某扩展指令集，则该位设为 1。[8] 为 I，该位总是 1。</p>
+</li>
+<li><p>重置时为最大的扩展集合</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210828213952453.png" alt="image-20210828213952453"></p>
+</li>
+</ul>
+<h4 id="mstatus（硬件线程状态寄存器）"><a href="#mstatus（硬件线程状态寄存器）" class="headerlink" title="mstatus（硬件线程状态寄存器）"></a>mstatus（硬件线程状态寄存器）</h4><p><strong>标识和控制 HART 的操作状态</strong>。mstatus 寄存器有 32 和 64(128)两个版本</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210828215518514.png" alt="image-20210828215518514"></p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210828220311590.png" alt="image-20210828220311590"></p>
+<p><strong>位描述：</strong></p>
+<ul>
+<li>XIE：全局中断使能位。X 可以为 M、S、U，代表特权层级。当 HART 运行于 X 模式，对应的中断使能位 XIE 置位 1。低优先级的中断总是关闭，高优先级的中断总是使能。高优先级可以改变特定级别的使能位，用于将控制权交给低权限模式。</li>
+<li>XPIE：用于支持嵌套 trap，保存 XIE 进入中断/异常前的值。</li>
+<li>XPP：用于支持嵌套 trap，保存 trap 发生前的特权级。所以，MPP 位 2 比特，SPP 位 1 比特，UPP 位隐式为 0。当发生中断/异常从 y 特权级进入 x 特权级时，XPIE 设为 xIE，xIE 设为 0，XPP 设为 x。</li>
+<li>XRET：用于从 trap 中返回。当发生中断/异常从 x 特权级返回 y 特权级时，xPIE 设为 1，xIE 设为 xPIE，XPP 设为 y。</li>
+<li>MPRV(Modify PRiVilege)：内存优先级域，修改在所有特权模式下执行 load 和 store 的特权级别。当 MPRV = 0 时，加载和存储行为正常，使用当前特权模式的转换和保护机制。当 MPRV=1 时，加载和存储内存地址被转换和保护，就像当前的特权模式被设置为 MPP 一样。</li>
+<li>MXR (Make eXecutable Readable)：内存优先级域，修改加载访问虚拟内存的权限。当 MXR = 0 时，只有加载标记为可读的页面。当 MXR = 1 时，可以加载标记为可读或可执行的页面。</li>
+<li>SUM (permit Supervisor User Memory access) ：内存优先级域，修改 S-mode 载入和存储访问虚拟内存的权限。当 SUM = 0 时，S-mode 内存访问 U-mode 下可访问的页面将出错。当 SUM=1 时，这些访问是允许的。当基于页面的虚拟内存不生效时，SUM 不起作用。注意，当不在 S-mode 下执行时，SUM 通常被忽略，但当 MPRV=1 和 MPP=S 时，SUM 生效。如果不支持 S-mode 模式，SUM 为 0。</li>
+<li>TVM (Trap Virtual Memory)：虚拟内存管理域，</li>
+<li>TW (Timeout Wait)</li>
+<li>TSR (Trap SRET)</li>
+<li>FS</li>
+<li>XS</li>
+<li>SD：用于反映 FS 或者 XS 的位域是否处于脏（dirty）状态。这个位域是 FS，XS 状态的汇总，方便操作系统上下文切换时快速判断</li>
+<li>SXL、UXL：对于 RV64 系统，分别控制 S-mode 和 U-mode 的 XLEN 值。这些字段的编码与 misa 的 MXL 字段相同。 S-mode 和 U-mode 下的有效 XLEN 分别称为 SXLEN 和 UXLEN。对于 RV32 系统，SXL 和 UXL 字段不存在，并且 SXLEN = 32 和 UXLEN = 32。</li>
+</ul>
+<h4 id="mscratch（草稿寄存器）"><a href="#mscratch（草稿寄存器）" class="headerlink" title="mscratch（草稿寄存器）"></a>mscratch（草稿寄存器）</h4><p>一个 MXLEN 位读/写寄存器，专供机器模式使用。通常，它用于保存指向机器模式 hart-local 上下文空间的指针，并在进入 M-mode 时与用户寄存器交换模式陷阱处理程序。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210829131238711.png" alt="image-20210829131238711"></p>
+<h4 id="与中断和异常有关的-CSR-寄存器"><a href="#与中断和异常有关的-CSR-寄存器" class="headerlink" title="与中断和异常有关的 CSR 寄存器"></a>与中断和异常有关的 CSR 寄存器</h4><p>该部分在异常和中断部分会详细说明。</p>
+<ul>
+<li>mtvec（machine trap vector base-address register，机器模式异常向量基地址寄存器）</li>
+<li>mip（machine interrupt register, pending interrupt，机器模式中断等待寄存器）</li>
+<li>mie（machine interrupt register, interrupt enable，机器模式中断使能寄存器）。</li>
+<li>mcause（machine cause register，机器模式异常原因寄存器）。</li>
+<li>mepc（machine exception program counter，机器模式异常 PC 寄存器）。</li>
+<li>mtval（machine trap value register，机器模式异常值寄存器）。</li>
+</ul>
+<h4 id="计数器相关寄存器"><a href="#计数器相关寄存器" class="headerlink" title="计数器相关寄存器"></a>计数器相关寄存器</h4><ul>
+<li><p>mcycle 与 mcycleh</p>
+<p>RISC-V 中为机器模式定义了一个 64 位的 cycle 寄存器，用来记录机器已经运行的时钟周期数。周期数低 32 位和高 32 位分别存放在 mcycle 和 mcycleh 中</p>
+</li>
+<li><p>minstret 与 minstreth</p>
+<p>RISC-V 还为机器模式定义了一个 64 位的 instret 寄存器，用来记录机器已经完 成的指令数（The Number of Instructions Retired）。该寄存器的低 32 位和高 32 位 被分别存放在 minstret 与 minstreth 中</p>
+</li>
+</ul>
+<h3 id="定时器"><a href="#定时器" class="headerlink" title="定时器"></a>定时器</h3><p>RISC-V 在设计时也对 RTC（Real Time Clock，实时时钟）的实现做了考虑。 实际上，要在真正意义上实现一个实时时钟，需要以下几部分的硬件支持：</p>
+<ul>
+<li>需要一个时钟定时器（Timer），运行在固定的频率。</li>
+<li>需要有办法获取当前精确的日期与时间。在桌面系统中，这个时间基准可以通过网络从专门的时间服务器获取。在许多嵌入式系统里，这个时间基准可以通过 GPS 获取。</li>
+<li>需要有办法能保持时钟定时器的不间断运行。这意味着 RTC 需要有自己的电源域，这样即使处理器的其他部分进入深度休眠状态，RTC 可以依然保持运行。而且 RTC 的电源域一般还需要有替代电源，如电池等。</li>
+</ul>
+<p>因此，RISC-V 在其特权架构部分为机器模式定义了两个 64 位的寄存器： mtime 与 mtimecmp。同时，为了方便 RTC 的独立运行，减小实现 RTC 的硬件开销，让多个 HART 能共享 RTC，RISC-V 中将这两个寄存器定义为内存映射寄存器，以映射到内存空间中（而不是像 mcycle 这样定义为 CSR）。而这两个 64 位寄存器在内存空间中的地址，则由具体的实现决定，RISC-V 标准中并没有对它们的地址做硬性规定。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210829143423163.png" alt="image-20210829143423163"></p>
+<h4 id="mtime-寄存器"><a href="#mtime-寄存器" class="headerlink" title="mtime 寄存器"></a>mtime 寄存器</h4><p>mtime 是时钟定时器，在所有 RV32 和 RV64 系统上都具有 64 位精度。它一般以比较精确的石英晶体振荡器为时钟源，并以固定的频率（没有明确规定）做计数。许多系统将该频率设置为 32.768 kHz，因为 32.768 kHz 的晶振容易获得，且 32.768 kHz 频率较低，适合做休眠时钟。而且，32 768 是 2 的整数次幂，容易由 32.768 kHz 产生周期为 1s 的时钟。</p>
+<h4 id="mtimecmp-寄存器"><a href="#mtimecmp-寄存器" class="headerlink" title="mtimecmp 寄存器"></a>mtimecmp 寄存器</h4><p>mtimecmp 的主要作用便是将其与 mtime 的值做比较。当 mtime 的值大于或等 于 mtimecmp 时，便可触发产生时钟中断。中断一直保持到通过写入 mtimecmp 寄存器将其清除。</p>
+<h2 id="异常和中断"><a href="#异常和中断" class="headerlink" title="异常和中断"></a>异常和中断</h2><h3 id="中断与异常的比较"><a href="#中断与异常的比较" class="headerlink" title="中断与异常的比较"></a>中断与异常的比较</h3><ul>
+<li>这种由处理器内部事件或程序执行中的事件引起的通常被称作异常</li>
+<li>这种是由独立于软件运行的外部事件引发的意外事件引起的称为中断。</li>
+</ul>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210803103711166.png" alt="image-20210803103711166"></p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210803103941671.png" alt="image-20210803103941671"></p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210803104254396.png" alt="image-20210803104254396"></p>
+<h3 id="RISC-V-中断和异常的触发"><a href="#RISC-V-中断和异常的触发" class="headerlink" title="RISC-V 中断和异常的触发"></a>RISC-V 中断和异常的触发</h3><p>对于单个 HART 的机器模式，当异常/中断情况发生时，硬件一般要经历以下的处理步骤：</p>
+<ol>
+<li>确定中断是否被屏蔽。</li>
+<li>确定异常情况发生的原因。</li>
+<li>确定异常情况发生的地址。</li>
+<li>确定与异常情况相关的参数。</li>
+<li>改变 PC 值，调用中断/异常处理程序，并设置相应的中断比特状态位。</li>
+</ol>
+<h4 id="确定中断是否被屏蔽"><a href="#确定中断是否被屏蔽" class="headerlink" title="确定中断是否被屏蔽"></a>确定中断是否被屏蔽</h4><p>对于单个 HART 的机器模式，下面两个 CSR 寄存器会影响中断的屏蔽：</p>
+<ul>
+<li>mstatus 寄存器中的 mie 位，这是全局的中断使能位。但是该位不会屏蔽异常处理。</li>
+<li>mie 寄存器中的相关位。</li>
+</ul>
+<h5 id="mie-寄存器"><a href="#mie-寄存器" class="headerlink" title="mie 寄存器"></a>mie 寄存器</h5><p>mie 寄存器是<strong>包含中断使能位</strong>的 XLEN 位读/写寄存器。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210829223938051.png" alt="image-20210829223938051"></p>
+<p><strong>位描述：</strong></p>
+<ul>
+<li>USIE、SSIE、HSIE 是对应特权级的<strong>软中断使能位</strong></li>
+<li>MTIE、STIE、UTIE 是对应特权级的<strong>时钟中断使能位</strong></li>
+<li>MEIE、SEIE、UEIE 是对应特权级的<strong>外部中断使能位</strong></li>
+</ul>
+<h5 id="mip-寄存器"><a href="#mip-寄存器" class="headerlink" title="mip 寄存器"></a>mip 寄存器</h5><p>为对应中断的情况，硬件还需要将 mip 寄存器中的相应位设置为等待(pending)。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210830011355846.png" alt="image-20210830011355846"></p>
+<h4 id="确定异常情况发生的原因。"><a href="#确定异常情况发生的原因。" class="headerlink" title="确定异常情况发生的原因。"></a>确定异常情况发生的原因。</h4><p>当中断或异常发生时，处理器需要正确填写 CSR 寄存器 mcause 中的相关内容。</p>
+<h5 id="mcause-寄存器"><a href="#mcause-寄存器" class="headerlink" title="mcause 寄存器"></a>mcause 寄存器</h5><p>mcause 寄存器是一个 XLEN-bit 可读可写寄存器（这意味着软件也可以修改其内容），用于记录异常/中断发生原因。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/machine_25.png" alt="img"></p>
+<p><strong>位描述：</strong></p>
+<ul>
+<li><p>Interrupt 位(第 31 位)：用来标识这个异常情况是中断还是异常。如果是中断，则该位应该被置 为 1；如果是异常，则该位应被置为 0。</p>
+</li>
+<li><p>Exception Code： 用来作为异常编码。 虽然在标准中称其为异常编码，但其也包括中断的情况（在中断情况下，异常编码实际上是中断源编号）。</p>
+<img src="C:\Users\谭梁\AppData\Roaming\Typora\typora-user-images\image-20210829235334345.png" alt="image-20210829235334345" style="zoom:50%;" /></li>
+</ul>
+<h4 id="确定异常情况发生的地址。"><a href="#确定异常情况发生的地址。" class="headerlink" title="确定异常情况发生的地址。"></a>确定异常情况发生的地址。</h4><p>对于机器模式，RISC-V 在其特权架构标准中定义了 mepc 寄存器，用来存放异常情况发生时的程序计数器的值。</p>
+<h5 id="mepc-寄存器"><a href="#mepc-寄存器" class="headerlink" title="mepc 寄存器"></a>mepc 寄存器</h5><p>XLEN-bit 可读可写寄存器。用来存放异常情况发生时的 PC 的值。对于异常来说，当前触发异常的指令的 PC 值是一个重要参数，所以 mepc = PC。而对中断来说，mepc 值则会被中断处理程序末尾的 MRET（M-Return）指令用来作为中断返回地址。所以，mepc 需要存放下一条指令的地址。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/machine_24.png" alt="img"></p>
+<h4 id="确定与异常情况相关的参数。"><a href="#确定与异常情况相关的参数。" class="headerlink" title="确定与异常情况相关的参数。"></a>确定与异常情况相关的参数。</h4><p>为了帮助异常情况的处理，RISC-V 还在其特权架构标准的机器模式中定义了 mtval 寄存器，以<strong>提供与异常情况相关的参数。</strong></p>
+<h5 id="mtval-寄存器"><a href="#mtval-寄存器" class="headerlink" title="mtval 寄存器"></a>mtval 寄存器</h5><p>XLEN-bit 可读写寄存器。当内存访问出现异常时，对应的内存读写地址应该被保存在这个寄存器里。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/machine_26.png" alt="img"></p>
+<p>mtval 的内容有以下几种写入方式:</p>
+<ul>
+<li><p>写入错误的（虚拟）地址：</p>
+<ul>
+<li>当 breakpoint 被触发</li>
+<li>指令获取、加载或存储地址未对齐</li>
+<li>访问页面错误异常发生时</li>
+</ul>
+</li>
+<li><p>写入第一个故障指令</p>
+<ul>
+<li>在非法指令发生时:</li>
+</ul>
+</li>
+<li><p>设置为零</p>
+<ul>
+<li>对于其他异常，但未来的标准可能会重新定义其他陷阱的 mtval 设置</li>
+</ul>
+</li>
+</ul>
+<h4 id="改变-PC-值，调用中断-异常处理程序，并设置相应的中断比特状态位。"><a href="#改变-PC-值，调用中断-异常处理程序，并设置相应的中断比特状态位。" class="headerlink" title="改变 PC 值，调用中断/异常处理程序，并设置相应的中断比特状态位。"></a>改变 PC 值，调用中断/异常处理程序，并设置相应的中断比特状态位。</h4><p>RISC-V 在其特权架构标准中定义了 mtvec 寄存器，用来<strong>确定异常情况处理程序的地址</strong>。</p>
+<h5 id="mtvec-寄存器"><a href="#mtvec-寄存器" class="headerlink" title="mtvec 寄存器"></a>mtvec 寄存器</h5><p>XLEN-bit 可读可写寄存器。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/machine_09.png" alt="img"></p>
+<p>其中的低两位用来确定中断模式，其余高 30 位被用来作为基地址（BASE）。</p>
+<img src="C:\Users\谭梁\AppData\Roaming\Typora\typora-user-images\image-20210830011016192.png" alt="image-20210830011016192" style="zoom:50%;" />
+
+<h3 id="RISC-V-中断和异常的返回"><a href="#RISC-V-中断和异常的返回" class="headerlink" title="RISC-V 中断和异常的返回"></a>RISC-V 中断和异常的返回</h3><p>在机器模式下，当异常情况处理程序完成所有操作后，需要调用 MRET(M-Return，机器返回指令)指令返回。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210830084407189.png" alt="image-20210830084407189"></p>
+<p>当处理器遇到 MRET 指令时，应将 PC 值置为 mepc 寄存器中的值，这样指令从之前被 异常情况打断的地方继续执行</p>
+<h3 id="异常和中断-软件要做的事"><a href="#异常和中断-软件要做的事" class="headerlink" title="异常和中断(软件要做的事)"></a>异常和中断(软件要做的事)</h3><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210830235250178.png" alt="image-20210830235250178" style="zoom:50%;" />
+
+<h3 id="中断等待指令-WFI，Wait-for-Interrupt"><a href="#中断等待指令-WFI，Wait-for-Interrupt" class="headerlink" title="中断等待指令(WFI，Wait for Interrupt)"></a>中断等待指令(WFI，Wait for Interrupt)</h3><p>为了给操作系统多提供一个调度的方法，RISC-V 在其特权架构标准中还定义了中断等待指令，当处理器遇到该指令时，则进入停顿状态，直到中断的发生。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210830164903429.png" alt="image-20210830164903429"></p>
+<p>当中断发生时，处理器会设置 mepc = PC + 4（即 WFI 之后的那条指令的地址）。 在机器模式下，当中断处理结束，MRET 返回时，则会将 PC 设置为 mepc 的值， 从而使得处理器会执行 WFI 之后的那条指令。</p>
+<h3 id="环境调用与断点"><a href="#环境调用与断点" class="headerlink" title="环境调用与断点"></a>环境调用与断点</h3><p>为了给操作系统和软件调试提供更多调度和中断的方式，RISC-V 标准中还定 义了环境调用指令 ECALL（Environment Call）和断点指令 EBREAK（Environment Breakpoint）。当处理器遇到 ECALL 或 EBREAK 指令时，都会产生异常。其中 ECALL 在机器模式下的异常编码是 11，而 EBREAK 的 异常编码是 3。</p>
+<p>RISC-V 的特权架构标准中特别强调，当遇到 ECALL 和 EBREAK 指令时，应该将 mepc 寄存器（此处仅讨论机器模式）的值设置为当前指令的地址，而不是下一条指令的地址。但如果是这样，当异常处理结束时调用 MRET 指令时，似乎又回到了原来的 ECALL/EBREAK 指令，陷入重复执行的死循环。</p>
+<p>用 GDB 中的软件断点的操作来具体解释。 当我们需要在 GDB 中设置软件断点时，是在 GDB 命令行中键入“break 断点地址”。当处理器执行到该断点地址时，软件中断被触发后，我们可以检查寄存器的值或读取内存中的内容，然后用 continue（继续执行）命令来继续程序的执行。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210830231635457.png" alt="image-20210830231635457"></p>
+<p>当处理器运行到对应的断点地址时，会触发 EBREAK 断点异常，进入调试器事先准备好的断点异常处理程序中。在这里，用户可以查看寄存器和内存中的内容。当用户完成寄存器和内存内容查看后，可以在 GDB 命令行中键入“continue” 以继续运行程序。但是在继续运行之前，GDB 会将内存中的 EBREAK 再替换回原先的指令，以避免调试器可能带来的副作用。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/RISC-V/" rel="tag"># RISC-V</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/%E4%B8%AD%E6%96%AD%E4%B8%8E%E5%BC%82%E5%B8%B8/" rel="prev" title="中断与异常">
+      <i class="fa fa-chevron-left"></i> 中断与异常
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%89%B9%E6%9D%83%E5%B1%82%E7%BA%A7"><span class="nav-text">特权层级</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8E%A7%E5%88%B6%E7%8A%B6%E6%80%81%E5%AF%84%E5%AD%98%E5%99%A8"><span class="nav-text">控制状态寄存器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#M-mode-CSR-%E5%AF%84%E5%AD%98%E5%99%A8"><span class="nav-text">M-mode CSR 寄存器</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#mvendorid-%E5%AF%84%E5%AD%98%E5%99%A8"><span class="nav-text">mvendorid 寄存器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#marchid%EF%BC%88%E4%BD%93%E7%B3%BB%E6%9E%B6%E6%9E%84%E6%A0%87%E8%AF%86%E4%BB%A3%E7%A0%81%EF%BC%89"><span class="nav-text">marchid（体系架构标识代码）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#mimpid%EF%BC%88%E5%AE%9E%E7%8E%B0%E6%A0%87%E8%AF%86%E4%BB%A3%E7%A0%81%EF%BC%89"><span class="nav-text">mimpid（实现标识代码）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#mhartid%EF%BC%88%E7%A1%AC%E4%BB%B6%E7%BA%BF%E7%A8%8B%E6%A0%87%E8%AF%86%EF%BC%89"><span class="nav-text">mhartid（硬件线程标识）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#misa%EF%BC%88%E6%8C%87%E4%BB%A4%E9%9B%86%E5%AF%84%E5%AD%98%E5%99%A8%EF%BC%89"><span class="nav-text">misa（指令集寄存器）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#mstatus%EF%BC%88%E7%A1%AC%E4%BB%B6%E7%BA%BF%E7%A8%8B%E7%8A%B6%E6%80%81%E5%AF%84%E5%AD%98%E5%99%A8%EF%BC%89"><span class="nav-text">mstatus（硬件线程状态寄存器）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#mscratch%EF%BC%88%E8%8D%89%E7%A8%BF%E5%AF%84%E5%AD%98%E5%99%A8%EF%BC%89"><span class="nav-text">mscratch（草稿寄存器）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%8E%E4%B8%AD%E6%96%AD%E5%92%8C%E5%BC%82%E5%B8%B8%E6%9C%89%E5%85%B3%E7%9A%84-CSR-%E5%AF%84%E5%AD%98%E5%99%A8"><span class="nav-text">与中断和异常有关的 CSR 寄存器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%A1%E6%95%B0%E5%99%A8%E7%9B%B8%E5%85%B3%E5%AF%84%E5%AD%98%E5%99%A8"><span class="nav-text">计数器相关寄存器</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E6%97%B6%E5%99%A8"><span class="nav-text">定时器</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#mtime-%E5%AF%84%E5%AD%98%E5%99%A8"><span class="nav-text">mtime 寄存器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#mtimecmp-%E5%AF%84%E5%AD%98%E5%99%A8"><span class="nav-text">mtimecmp 寄存器</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%82%E5%B8%B8%E5%92%8C%E4%B8%AD%E6%96%AD"><span class="nav-text">异常和中断</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AD%E6%96%AD%E4%B8%8E%E5%BC%82%E5%B8%B8%E7%9A%84%E6%AF%94%E8%BE%83"><span class="nav-text">中断与异常的比较</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RISC-V-%E4%B8%AD%E6%96%AD%E5%92%8C%E5%BC%82%E5%B8%B8%E7%9A%84%E8%A7%A6%E5%8F%91"><span class="nav-text">RISC-V 中断和异常的触发</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A1%AE%E5%AE%9A%E4%B8%AD%E6%96%AD%E6%98%AF%E5%90%A6%E8%A2%AB%E5%B1%8F%E8%94%BD"><span class="nav-text">确定中断是否被屏蔽</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#mie-%E5%AF%84%E5%AD%98%E5%99%A8"><span class="nav-text">mie 寄存器</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#mip-%E5%AF%84%E5%AD%98%E5%99%A8"><span class="nav-text">mip 寄存器</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A1%AE%E5%AE%9A%E5%BC%82%E5%B8%B8%E6%83%85%E5%86%B5%E5%8F%91%E7%94%9F%E7%9A%84%E5%8E%9F%E5%9B%A0%E3%80%82"><span class="nav-text">确定异常情况发生的原因。</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#mcause-%E5%AF%84%E5%AD%98%E5%99%A8"><span class="nav-text">mcause 寄存器</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A1%AE%E5%AE%9A%E5%BC%82%E5%B8%B8%E6%83%85%E5%86%B5%E5%8F%91%E7%94%9F%E7%9A%84%E5%9C%B0%E5%9D%80%E3%80%82"><span class="nav-text">确定异常情况发生的地址。</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#mepc-%E5%AF%84%E5%AD%98%E5%99%A8"><span class="nav-text">mepc 寄存器</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A1%AE%E5%AE%9A%E4%B8%8E%E5%BC%82%E5%B8%B8%E6%83%85%E5%86%B5%E7%9B%B8%E5%85%B3%E7%9A%84%E5%8F%82%E6%95%B0%E3%80%82"><span class="nav-text">确定与异常情况相关的参数。</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#mtval-%E5%AF%84%E5%AD%98%E5%99%A8"><span class="nav-text">mtval 寄存器</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%94%B9%E5%8F%98-PC-%E5%80%BC%EF%BC%8C%E8%B0%83%E7%94%A8%E4%B8%AD%E6%96%AD-%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%E7%A8%8B%E5%BA%8F%EF%BC%8C%E5%B9%B6%E8%AE%BE%E7%BD%AE%E7%9B%B8%E5%BA%94%E7%9A%84%E4%B8%AD%E6%96%AD%E6%AF%94%E7%89%B9%E7%8A%B6%E6%80%81%E4%BD%8D%E3%80%82"><span class="nav-text">改变 PC 值，调用中断&#x2F;异常处理程序，并设置相应的中断比特状态位。</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#mtvec-%E5%AF%84%E5%AD%98%E5%99%A8"><span class="nav-text">mtvec 寄存器</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RISC-V-%E4%B8%AD%E6%96%AD%E5%92%8C%E5%BC%82%E5%B8%B8%E7%9A%84%E8%BF%94%E5%9B%9E"><span class="nav-text">RISC-V 中断和异常的返回</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%82%E5%B8%B8%E5%92%8C%E4%B8%AD%E6%96%AD-%E8%BD%AF%E4%BB%B6%E8%A6%81%E5%81%9A%E7%9A%84%E4%BA%8B"><span class="nav-text">异常和中断(软件要做的事)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AD%E6%96%AD%E7%AD%89%E5%BE%85%E6%8C%87%E4%BB%A4-WFI%EF%BC%8CWait-for-Interrupt"><span class="nav-text">中断等待指令(WFI，Wait for Interrupt)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E8%B0%83%E7%94%A8%E4%B8%8E%E6%96%AD%E7%82%B9"><span class="nav-text">环境调用与断点</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="monuo"
+      src="/images/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">monuo</p>
+  <div class="site-description" itemprop="description">悲莫悲兮生别离，乐莫乐兮新相知</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/monuo2021" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;monuo2021" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">monuo</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/medium-zoom@1/dist/medium-zoom.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

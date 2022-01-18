@@ -1,6 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Linux命令参数</title>
+    <url>/Linux%E5%91%BD%E4%BB%A4%E5%8F%82%E6%95%B0/</url>
+    <content><![CDATA[<h1 id="命令选项，从-a-到-z"><a href="#命令选项，从-a-到-z" class="headerlink" title="命令选项，从 a 到 z"></a>命令选项，从 a 到 z</h1><p>Linux 命令的选项繁复庞杂，让人眼花缭乱。不过这些选项往往具有相对固定的涵义，熟悉了它们，记忆便不再困难</p>
+<p><strong>-a</strong></p>
+<p>all : 全部，所有 (ls , lsattr , uname)</p>
+<p>archive : 存档 (cp , rsync)</p>
+<p>append : 附加 (tar -A , 7z)</p>
+<p><strong>-b</strong></p>
+<p>blocksize : 块大小，带参数 (du , df)</p>
+<p>batch : 批处理模式 (交互模式的程序通常拥有此选项，如 top -b)</p>
+<p><strong>-c</strong></p>
+<p>commands : 执行命令，带参数 (bash , ksh , python)</p>
+<p>create : 创建 (tar)</p>
+<p><strong>-d</strong></p>
+<p>debug : 调试</p>
+<p>delete : 删除</p>
+<p>directory : 目录 (ls)</p>
+<p><strong>-e</strong></p>
+<p>execute : 执行，带参数 (xterm , perl)</p>
+<p>edit : 编辑</p>
+<p>exclude : 排除</p>
+<p><strong>-f</strong></p>
+<p>force : 强制，不经确认(cp , rm ,mv)</p>
+<p>file : 文件，带参数 (tar)</p>
+<p>configuration file : 指定配置文件(有些守护进程拥有此选项，如 ssh , lighttpd)</p>
+<p><strong>-g</strong></p>
+<p><strong>-h</strong></p>
+<p>–help : 帮助</p>
+<p>human readable : 人性化显示(ls , du , df)</p>
+<p>headers : 头部</p>
+<p><strong>-i</strong></p>
+<p>interactive : 交互模式，提示(rm , mv)</p>
+<p>include : 包含</p>
+<p><strong>-k</strong></p>
+<p>keep : 保留</p>
+<p>kill</p>
+<p><strong>-l</strong></p>
+<p>long listing format : 长格式(ls)</p>
+<p>list : 列表</p>
+<p>load : 读取 (gcc , emacs)</p>
+<p><strong>-m</strong></p>
+<p>message : 消息 (cvs)</p>
+<p>manual : 手册 (whereis)</p>
+<p>create home : 创建 home 目录 (usermod , useradd)</p>
+<p><strong>-n</strong></p>
+<p>number : 行号、编号 (cat , head , tail , pstree , lspci)</p>
+<p>no : (useradd , make)</p>
+<p><strong>-o</strong></p>
+<p>output : 输出 (cc , sort)</p>
+<p>options : 选项 (mount)</p>
+<p><strong>-p</strong></p>
+<p>port : 端口，带参数 (很多网络工具拥有此选项，如 ssh , lftp )</p>
+<p>protocol : 协议，带参数</p>
+<p>passwd : 密码，带参数</p>
+<p><strong>-q</strong></p>
+<p>quiet : 静默</p>
+<p><strong>-r</strong></p>
+<p>reverse : 反转</p>
+<p>recursive : 递归 (cp , rm , chmod -R)</p>
+<p><strong>-s</strong></p>
+<p>silent : 安静</p>
+<p>size : 大小，带参数</p>
+<p>subject</p>
+<p><strong>-t</strong></p>
+<p>tag</p>
+<p>type : 类型 (mount)</p>
+<p><strong>-u</strong></p>
+<p>user : 用户名、UID，带参数</p>
+<p><strong>-v</strong></p>
+<p>verbose : 冗长</p>
+<p>version : 版本</p>
+<p><strong>-w</strong></p>
+<p>width : 宽度</p>
+<p>warning : 警告</p>
+<p><strong>-x</strong></p>
+<p>exclude : 排除 (tar , zip)</p>
+<p><strong>-y</strong></p>
+<p>yes</p>
+<p><strong>-z</strong></p>
+<p>zip : 启用压缩 (bzip , tar , zcat , zip , cvs)</p>
+<hr>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>ELF文件</title>
     <url>/ELF%E6%96%87%E4%BB%B6/</url>
     <content><![CDATA[<p>ELF文件格式是一个开放标准，各种UNIX系统的可执行文件都采用ELF格式，它有三种不同的类型：</p>
@@ -256,202 +346,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Linux命令参数</title>
-    <url>/Linux%E5%91%BD%E4%BB%A4%E5%8F%82%E6%95%B0/</url>
-    <content><![CDATA[<h1 id="命令选项，从-a-到-z"><a href="#命令选项，从-a-到-z" class="headerlink" title="命令选项，从 a 到 z"></a>命令选项，从 a 到 z</h1><p>Linux 命令的选项繁复庞杂，让人眼花缭乱。不过这些选项往往具有相对固定的涵义，熟悉了它们，记忆便不再困难</p>
-<p><strong>-a</strong></p>
-<p>all : 全部，所有 (ls , lsattr , uname)</p>
-<p>archive : 存档 (cp , rsync)</p>
-<p>append : 附加 (tar -A , 7z)</p>
-<p><strong>-b</strong></p>
-<p>blocksize : 块大小，带参数 (du , df)</p>
-<p>batch : 批处理模式 (交互模式的程序通常拥有此选项，如 top -b)</p>
-<p><strong>-c</strong></p>
-<p>commands : 执行命令，带参数 (bash , ksh , python)</p>
-<p>create : 创建 (tar)</p>
-<p><strong>-d</strong></p>
-<p>debug : 调试</p>
-<p>delete : 删除</p>
-<p>directory : 目录 (ls)</p>
-<p><strong>-e</strong></p>
-<p>execute : 执行，带参数 (xterm , perl)</p>
-<p>edit : 编辑</p>
-<p>exclude : 排除</p>
-<p><strong>-f</strong></p>
-<p>force : 强制，不经确认(cp , rm ,mv)</p>
-<p>file : 文件，带参数 (tar)</p>
-<p>configuration file : 指定配置文件(有些守护进程拥有此选项，如 ssh , lighttpd)</p>
-<p><strong>-g</strong></p>
-<p><strong>-h</strong></p>
-<p>–help : 帮助</p>
-<p>human readable : 人性化显示(ls , du , df)</p>
-<p>headers : 头部</p>
-<p><strong>-i</strong></p>
-<p>interactive : 交互模式，提示(rm , mv)</p>
-<p>include : 包含</p>
-<p><strong>-k</strong></p>
-<p>keep : 保留</p>
-<p>kill</p>
-<p><strong>-l</strong></p>
-<p>long listing format : 长格式(ls)</p>
-<p>list : 列表</p>
-<p>load : 读取 (gcc , emacs)</p>
-<p><strong>-m</strong></p>
-<p>message : 消息 (cvs)</p>
-<p>manual : 手册 (whereis)</p>
-<p>create home : 创建 home 目录 (usermod , useradd)</p>
-<p><strong>-n</strong></p>
-<p>number : 行号、编号 (cat , head , tail , pstree , lspci)</p>
-<p>no : (useradd , make)</p>
-<p><strong>-o</strong></p>
-<p>output : 输出 (cc , sort)</p>
-<p>options : 选项 (mount)</p>
-<p><strong>-p</strong></p>
-<p>port : 端口，带参数 (很多网络工具拥有此选项，如 ssh , lftp )</p>
-<p>protocol : 协议，带参数</p>
-<p>passwd : 密码，带参数</p>
-<p><strong>-q</strong></p>
-<p>quiet : 静默</p>
-<p><strong>-r</strong></p>
-<p>reverse : 反转</p>
-<p>recursive : 递归 (cp , rm , chmod -R)</p>
-<p><strong>-s</strong></p>
-<p>silent : 安静</p>
-<p>size : 大小，带参数</p>
-<p>subject</p>
-<p><strong>-t</strong></p>
-<p>tag</p>
-<p>type : 类型 (mount)</p>
-<p><strong>-u</strong></p>
-<p>user : 用户名、UID，带参数</p>
-<p><strong>-v</strong></p>
-<p>verbose : 冗长</p>
-<p>version : 版本</p>
-<p><strong>-w</strong></p>
-<p>width : 宽度</p>
-<p>warning : 警告</p>
-<p><strong>-x</strong></p>
-<p>exclude : 排除 (tar , zip)</p>
-<p><strong>-y</strong></p>
-<p>yes</p>
-<p><strong>-z</strong></p>
-<p>zip : 启用压缩 (bzip , tar , zcat , zip , cvs)</p>
-<hr>
-]]></content>
-      <categories>
-        <category>Linux</category>
-      </categories>
-      <tags>
-        <tag>Linux</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>分支预测</title>
-    <url>/%E5%88%86%E6%94%AF%E9%A2%84%E6%B5%8B/</url>
-    <content><![CDATA[<p>分支预测解决流水线冲突中的控制冒险。在指令集中，分支指令包括条件指令和非条件指令。对无条件指令来说，无需进行条件判断，就可以获得跳转后的地址；但是对条件跳转指令，无论是条件直接跳转还是条件间接跳转指令（RISC-V 无此类指令），都需要在执行阶段才可以确定是否跳转，这样会影响取值阶段的效率。</p>
-<p><strong>举个简陋的例子说明分支预测的可行性：</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">if (data[c] &gt;= 128)</span><br><span class="line">    sum += data[c];</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">T = branch taken</span><br><span class="line">N = branch not taken</span><br><span class="line"></span><br><span class="line">data[] = 0, 1, 2, 3, 4, ... 126, 127, 128, 129, 130, ... 250, 251, 252, ...</span><br><span class="line">branch = N  N  N  N  N  ...   N    N    T    T    T  ...   T    T    T  ...</span><br><span class="line">       = NNNNNNNNNNNN ... NNNNNNNTTTTTTTTT ... TTTTTTTTTT  (easy to predict)</span><br></pre></td></tr></table></figure>
-
-<p>可以发现，由于分支指令之间的相关性，根据分支历史可以预测出当前分支指令的方向与地址。</p>
-<p>不过要注意一点，即使分支预测成功率达到 90% 也是非常糟糕的。因为现代处理器流水线深度太深了，出错一次就要 flush 整个流水线，造成了性能的损失。</p>
-<h2 id="一、基本部件"><a href="#一、基本部件" class="headerlink" title="一、基本部件"></a>一、基本部件</h2><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210807143814880.png" alt="image-20210807143814880" style="zoom:50%;" />
-
-<ul>
-<li><p><strong>BTB</strong>（Branch Target Buffer, 分支目标缓冲器）</p>
-<p>用于<strong>预测目标地址</strong>。缓存保存了最近执行过的分支指令的 PC 值，以及它们的跳转目标地址。</p>
-</li>
-<li><p><strong>两比特饱和计数器</strong></p>
-<p><img src="https://hitsz-cslab.gitee.io/arch/lab2/assets/3-2.png" alt="img"></p>
-<p>四个状态：</p>
-<ul>
-<li>强跳转</li>
-<li>弱跳转</li>
-<li>强不跳转</li>
-<li>弱不跳转</li>
-</ul>
-<p>当执行一条分支指令时，会根据指令是否跳转来更新两比特饱和计数器。一个 2bit 状态机的核心思路就是：<strong>这次预测错了不要紧，再给你一次机会，还是预测错了的话那再改变预测结果</strong>。</p>
-</li>
-</ul>
-<h2 id="二、预测方向"><a href="#二、预测方向" class="headerlink" title="二、预测方向"></a>二、预测方向</h2><h3 id="2-1-静态预测"><a href="#2-1-静态预测" class="headerlink" title="2.1 静态预测"></a>2.1 静态预测</h3><p>静态预测不依赖任何过去执行过的指令和历史信息。</p>
-<ul>
-<li><p><strong>总预测接下来的指令都（不）跳转</strong>。</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/8f114fa7d5d2558cab31be6030bda790_1440w.jpg" alt="img"></p>
-<p>可以看出，这种预测准确率都在 50%以上，最高的还达到了 99.4%。</p>
-</li>
-<li><p><strong>BTFN 跳转</strong>（Back Taken, Forward Not Taken），如果所跳转的目标地址位于跳转指令的前方（比当前指令晚执行），则不跳转；如果所跳转的目标地址位图跳转指令的后方（比当前指令早执行）则跳转。</p>
-</li>
-<li><p>某些指令一律预测跳转，其他指令一律预测不跳转</p>
-</li>
-</ul>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/421096-20171106023943446-433328795.png" alt="image"></p>
-<h3 id="2-2-动态预测"><a href="#2-2-动态预测" class="headerlink" title="2.2 动态预测"></a>2.2 动态预测</h3><p>动态分支预测使用运行时收集的关于跳转或未跳转的分支信息来预测分支结果。</p>
-<h4 id="2-2-1-一级预测器"><a href="#2-2-1-一级预测器" class="headerlink" title="2.2.1 一级预测器"></a>2.2.1 一级预测器</h4><p>直接将“两比特饱和计数器”组织成一维表格，称为预测器表格，并直接使用 PC 值的一部分进行索引。譬如使用 PC 的后 10 位作为索引，则仅需要维护 1000 个表项的表格。</p>
-<p>“一级”是指其索引仅仅采用指令本身的 PC 值。</p>
-<p>该方法简单，但索引机制过于简单。像低 10 位相同但高位不相同的 PC，就会指向同样的表项。</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/5a0becc8ebd91ccfd43b74383c729075_1440w.jpg" alt="img"></p>
-<h4 id="2-2-2-二级预测器"><a href="#2-2-2-二级预测器" class="headerlink" title="2.2.2 二级预测器"></a>2.2.2 二级预测器</h4><p>也称为<strong>相关预测器</strong>，如其名字所述，分为两级：Branch history 以及 Pattern history table。</p>
-  <img src="D:\Users\图片\Saved Pictures\840px-Two-level_branch_prediction.svg.png" alt="840px-Two-level_branch_prediction.svg" style="zoom: 33%;" />
-
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/74364714907197a556de2895dc62027a_1440w.jpg" alt="img"></p>
-<p>图中每两条虚线之间是 4%。可以看到大部分预测的准确率都已经达到了 <strong>96%</strong> 以上了。</p>
-<h5 id="基于分支历史的分支预测器"><a href="#基于分支历史的分支预测器" class="headerlink" title="基于分支历史的分支预测器"></a>基于分支历史的分支预测器</h5><p>Branch history 可分为局部历史和全局历史。全局历史是指每个分支指令自己的分支跳转历史，全局历史是指所有分支指令的指令跳转历史。</p>
-<ul>
-<li><p><strong>全局分支预测器</strong></p>
-<p>基于全局历史的分支预测方法在 BHT 的基础上增加了<strong>GHR（Global History Register，全局历史寄存器）</strong>来将所有分支指令关联起来，即使用一个 k 比特的 GHR 来记录所有最近 k 条分支指令的历史。</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/3-4.png" alt="img"></p>
-<p>最有代表性的全局分支算法是 Gshare 算法和 Gselect 算法。</p>
-<ul>
-<li><p>Gshare 算法</p>
-<p>将分支指令的地址和 GHR 进行<strong>异或</strong>，将结果作为 PHT 的索引。</p>
-</li>
-<li><p>Gselect 算法</p>
-<p>将分支指令的地址和 GHR 直接<strong>拼接</strong>，将结果作为 PHT 的索引。</p>
-</li>
-</ul>
-</li>
-<li><p><strong>局部分支预测器</strong></p>
-<p>基于全局历史的分支预测方法将所有分支指令都关联到一起。然而事实上，并非所有的分支指令都具有关联性。为此，基于局部历史的分支预测方法使用<strong>LHT（Local History Table，局部历史表）</strong>来代替全局历史预测中的 GHR。</p>
-<p>LHT 一般具有 64 条记录，每条记录均包含 Tag 和局部转移历史 2 个字段。其中，Tag 字段是分支指令地址的一部分，局部转移历史字段则是 k 比特的移位寄存器，其作用等同于 GHR。</p>
-<p><img src="https://hitsz-cslab.gitee.io/arch/lab2/assets/3-5.png" alt="img"></p>
-</li>
-</ul>
-<h5 id="锦标赛分支预测"><a href="#锦标赛分支预测" class="headerlink" title="锦标赛分支预测"></a>锦标赛分支预测</h5><p>锦标赛分支预测（又称混合分支预测或组合分支预测）是一种博采众长的分支预测方法，其基本原理是将两个或以上的分支预测方法进行结合，充分发挥各预测方法的优势，以进一步提高分支预测的准确度。</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/3-6.png" alt="img"></p>
-<h2 id="三、预测地址"><a href="#三、预测地址" class="headerlink" title="三、预测地址"></a>三、预测地址</h2><ul>
-<li><p>BTB</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/BTB-NutShell.jpg" alt="BTB"></p>
-<ul>
-<li>使用容量有限的缓存保存最近执行过的分支指 PC 值，以及它们的跳转目标地址。对于后续要取指的每条 PC 值，将其与 BTB 中存储的各个 PC 值进行比较，如果出现匹配，则预测这是 分支指令，并使用其对应存储的跳转目标地址作为预测的跳转地址。</li>
-<li>是其缺点之一是不能将 BTB 容量做到太大， 否则面积和时序都无法接受。</li>
-<li>另一个缺点是对于间接跳转（indirect Jump/Branch ）指令的预测效果并不理想，这主要是由于间接跳转分支的目标地址是使用寄存器索引的操作数（基地址寄存器）计算所得，而寄存器中的值随着程序执行可能每次都不一样，因此 BTB 中存储的上次跳转的目标地址并不一定等于本次跳转的目标值。不过，RISC-V 指令架构无需担心这点，因为 RISC-V 没有条件间接跳转指令。</li>
-</ul>
-</li>
-<li><p>RAS</p>
-<ul>
-<li>使用容量有限的硬件堆栈来存储函数调用的返回地址。</li>
-<li>间接跳转指令可以用于函数的调用和返回，而函数的调用和返回在程序中往往是成对出现的，因此可以在函数调用（使用分支跳转指令）时将当前 PC 值加 4（或者加 2）， 即其顺序执行的下一条指令的 PC 值压入 RAS 中，等到函数返回（使用分支跳转指令〉时将 RAS 中的值弹出，这样就可以快速地为该函数返回的分支跳转指令预测目标地址。</li>
-</ul>
-</li>
-</ul>
-<p>在 NutShell 处理器中，在做分支预测时会用取指 PC 索引 BTB 表项, 如果 PC 高位与读到的 BTB 表项的标签匹配则认为 BTB 命中, 再根据 BTB 中记录的指令类型判断跳转方向和跳转目标. 如果类型为条件分支指令, 则需要访问模式历史表 (PHT) 来判断是否跳转; 如果类型为返回指令, 则选择返回地址栈 (RAS) 的栈顶内容作为跳转目标; 如果类型为直接或间接跳转指令, 则选择 BTB 中记录的跳转目标.</p>
-<h2 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h2><ul>
-<li><p><a href="https://stackoverflow.com/questions/11227809/why-is-processing-a-sorted-array-faster-than-processing-an-unsorted-array#11227902">StackOverflow 回答 What is Branch Prediction?</a></p>
-</li>
-<li><p><a href="https://www.cnblogs.com/TaigaCon/p/7791303.html">Branch Prediction</a></p>
-</li>
-<li><p><a href="https://hitsz-cslab.gitee.io/arch/lab2/1-theory/">哈工大-分支预测器设计</a></p>
-</li>
-<li><p><a href="https://www.wikiwand.com/en/Branch_predictor">wiki-Branch predictor</a></p>
-</li>
-</ul>
-]]></content>
-      <categories>
-        <category>计算机体系结构</category>
-      </categories>
-  </entry>
-  <entry>
     <title>中断与异常</title>
     <url>/%E4%B8%AD%E6%96%AD%E4%B8%8E%E5%BC%82%E5%B8%B8/</url>
     <content><![CDATA[<h2 id="一、什么是中断-异常"><a href="#一、什么是中断-异常" class="headerlink" title="一、什么是中断/异常"></a>一、什么是中断/异常</h2><p>中断和异常是指系统、处理器在执行指令过程中突然被别的请求打断而终止当前的程序，转而去处理其他程序。待该中断处理程序处理完后回到该程序中断点继续执行之前程序。</p>
@@ -566,6 +460,112 @@
 <blockquote>
 <p>ɑ 是升级模块占比，k 是该部分性能提升比例</p>
 </blockquote>
+]]></content>
+      <categories>
+        <category>计算机体系结构</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>分支预测</title>
+    <url>/%E5%88%86%E6%94%AF%E9%A2%84%E6%B5%8B/</url>
+    <content><![CDATA[<p>分支预测解决流水线冲突中的控制冒险。在指令集中，分支指令包括条件指令和非条件指令。对无条件指令来说，无需进行条件判断，就可以获得跳转后的地址；但是对条件跳转指令，无论是条件直接跳转还是条件间接跳转指令（RISC-V 无此类指令），都需要在执行阶段才可以确定是否跳转，这样会影响取值阶段的效率。</p>
+<p><strong>举个简陋的例子说明分支预测的可行性：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">if (data[c] &gt;= 128)</span><br><span class="line">    sum += data[c];</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">T = branch taken</span><br><span class="line">N = branch not taken</span><br><span class="line"></span><br><span class="line">data[] = 0, 1, 2, 3, 4, ... 126, 127, 128, 129, 130, ... 250, 251, 252, ...</span><br><span class="line">branch = N  N  N  N  N  ...   N    N    T    T    T  ...   T    T    T  ...</span><br><span class="line">       = NNNNNNNNNNNN ... NNNNNNNTTTTTTTTT ... TTTTTTTTTT  (easy to predict)</span><br></pre></td></tr></table></figure>
+
+<p>可以发现，由于分支指令之间的相关性，根据分支历史可以预测出当前分支指令的方向与地址。</p>
+<p>不过要注意一点，即使分支预测成功率达到 90% 也是非常糟糕的。因为现代处理器流水线深度太深了，出错一次就要 flush 整个流水线，造成了性能的损失。</p>
+<h2 id="一、基本部件"><a href="#一、基本部件" class="headerlink" title="一、基本部件"></a>一、基本部件</h2><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210807143814880.png" alt="image-20210807143814880" style="zoom:50%;" />
+
+<ul>
+<li><p><strong>BTB</strong>（Branch Target Buffer, 分支目标缓冲器）</p>
+<p>用于<strong>预测目标地址</strong>。缓存保存了最近执行过的分支指令的 PC 值，以及它们的跳转目标地址。</p>
+</li>
+<li><p><strong>两比特饱和计数器</strong></p>
+<p><img src="https://hitsz-cslab.gitee.io/arch/lab2/assets/3-2.png" alt="img"></p>
+<p>四个状态：</p>
+<ul>
+<li>强跳转</li>
+<li>弱跳转</li>
+<li>强不跳转</li>
+<li>弱不跳转</li>
+</ul>
+<p>当执行一条分支指令时，会根据指令是否跳转来更新两比特饱和计数器。一个 2bit 状态机的核心思路就是：<strong>这次预测错了不要紧，再给你一次机会，还是预测错了的话那再改变预测结果</strong>。</p>
+</li>
+</ul>
+<h2 id="二、预测方向"><a href="#二、预测方向" class="headerlink" title="二、预测方向"></a>二、预测方向</h2><h3 id="2-1-静态预测"><a href="#2-1-静态预测" class="headerlink" title="2.1 静态预测"></a>2.1 静态预测</h3><p>静态预测不依赖任何过去执行过的指令和历史信息。</p>
+<ul>
+<li><p><strong>总预测接下来的指令都（不）跳转</strong>。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/8f114fa7d5d2558cab31be6030bda790_1440w.jpg" alt="img"></p>
+<p>可以看出，这种预测准确率都在 50%以上，最高的还达到了 99.4%。</p>
+</li>
+<li><p><strong>BTFN 跳转</strong>（Back Taken, Forward Not Taken），如果所跳转的目标地址位于跳转指令的前方（比当前指令晚执行），则不跳转；如果所跳转的目标地址位图跳转指令的后方（比当前指令早执行）则跳转。</p>
+</li>
+<li><p>某些指令一律预测跳转，其他指令一律预测不跳转</p>
+</li>
+</ul>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/421096-20171106023943446-433328795.png" alt="image"></p>
+<h3 id="2-2-动态预测"><a href="#2-2-动态预测" class="headerlink" title="2.2 动态预测"></a>2.2 动态预测</h3><p>动态分支预测使用运行时收集的关于跳转或未跳转的分支信息来预测分支结果。</p>
+<h4 id="2-2-1-一级预测器"><a href="#2-2-1-一级预测器" class="headerlink" title="2.2.1 一级预测器"></a>2.2.1 一级预测器</h4><p>直接将“两比特饱和计数器”组织成一维表格，称为预测器表格，并直接使用 PC 值的一部分进行索引。譬如使用 PC 的后 10 位作为索引，则仅需要维护 1000 个表项的表格。</p>
+<p>“一级”是指其索引仅仅采用指令本身的 PC 值。</p>
+<p>该方法简单，但索引机制过于简单。像低 10 位相同但高位不相同的 PC，就会指向同样的表项。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/5a0becc8ebd91ccfd43b74383c729075_1440w.jpg" alt="img"></p>
+<h4 id="2-2-2-二级预测器"><a href="#2-2-2-二级预测器" class="headerlink" title="2.2.2 二级预测器"></a>2.2.2 二级预测器</h4><p>也称为<strong>相关预测器</strong>，如其名字所述，分为两级：Branch history 以及 Pattern history table。</p>
+  <img src="D:\Users\图片\Saved Pictures\840px-Two-level_branch_prediction.svg.png" alt="840px-Two-level_branch_prediction.svg" style="zoom: 33%;" />
+
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/74364714907197a556de2895dc62027a_1440w.jpg" alt="img"></p>
+<p>图中每两条虚线之间是 4%。可以看到大部分预测的准确率都已经达到了 <strong>96%</strong> 以上了。</p>
+<h5 id="基于分支历史的分支预测器"><a href="#基于分支历史的分支预测器" class="headerlink" title="基于分支历史的分支预测器"></a>基于分支历史的分支预测器</h5><p>Branch history 可分为局部历史和全局历史。全局历史是指每个分支指令自己的分支跳转历史，全局历史是指所有分支指令的指令跳转历史。</p>
+<ul>
+<li><p><strong>全局分支预测器</strong></p>
+<p>基于全局历史的分支预测方法在 BHT 的基础上增加了<strong>GHR（Global History Register，全局历史寄存器）</strong>来将所有分支指令关联起来，即使用一个 k 比特的 GHR 来记录所有最近 k 条分支指令的历史。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/3-4.png" alt="img"></p>
+<p>最有代表性的全局分支算法是 Gshare 算法和 Gselect 算法。</p>
+<ul>
+<li><p>Gshare 算法</p>
+<p>将分支指令的地址和 GHR 进行<strong>异或</strong>，将结果作为 PHT 的索引。</p>
+</li>
+<li><p>Gselect 算法</p>
+<p>将分支指令的地址和 GHR 直接<strong>拼接</strong>，将结果作为 PHT 的索引。</p>
+</li>
+</ul>
+</li>
+<li><p><strong>局部分支预测器</strong></p>
+<p>基于全局历史的分支预测方法将所有分支指令都关联到一起。然而事实上，并非所有的分支指令都具有关联性。为此，基于局部历史的分支预测方法使用<strong>LHT（Local History Table，局部历史表）</strong>来代替全局历史预测中的 GHR。</p>
+<p>LHT 一般具有 64 条记录，每条记录均包含 Tag 和局部转移历史 2 个字段。其中，Tag 字段是分支指令地址的一部分，局部转移历史字段则是 k 比特的移位寄存器，其作用等同于 GHR。</p>
+<p><img src="https://hitsz-cslab.gitee.io/arch/lab2/assets/3-5.png" alt="img"></p>
+</li>
+</ul>
+<h5 id="锦标赛分支预测"><a href="#锦标赛分支预测" class="headerlink" title="锦标赛分支预测"></a>锦标赛分支预测</h5><p>锦标赛分支预测（又称混合分支预测或组合分支预测）是一种博采众长的分支预测方法，其基本原理是将两个或以上的分支预测方法进行结合，充分发挥各预测方法的优势，以进一步提高分支预测的准确度。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/3-6.png" alt="img"></p>
+<h2 id="三、预测地址"><a href="#三、预测地址" class="headerlink" title="三、预测地址"></a>三、预测地址</h2><ul>
+<li><p>BTB</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/BTB-NutShell.jpg" alt="BTB"></p>
+<ul>
+<li>使用容量有限的缓存保存最近执行过的分支指 PC 值，以及它们的跳转目标地址。对于后续要取指的每条 PC 值，将其与 BTB 中存储的各个 PC 值进行比较，如果出现匹配，则预测这是 分支指令，并使用其对应存储的跳转目标地址作为预测的跳转地址。</li>
+<li>是其缺点之一是不能将 BTB 容量做到太大， 否则面积和时序都无法接受。</li>
+<li>另一个缺点是对于间接跳转（indirect Jump/Branch ）指令的预测效果并不理想，这主要是由于间接跳转分支的目标地址是使用寄存器索引的操作数（基地址寄存器）计算所得，而寄存器中的值随着程序执行可能每次都不一样，因此 BTB 中存储的上次跳转的目标地址并不一定等于本次跳转的目标值。不过，RISC-V 指令架构无需担心这点，因为 RISC-V 没有条件间接跳转指令。</li>
+</ul>
+</li>
+<li><p>RAS</p>
+<ul>
+<li>使用容量有限的硬件堆栈来存储函数调用的返回地址。</li>
+<li>间接跳转指令可以用于函数的调用和返回，而函数的调用和返回在程序中往往是成对出现的，因此可以在函数调用（使用分支跳转指令）时将当前 PC 值加 4（或者加 2）， 即其顺序执行的下一条指令的 PC 值压入 RAS 中，等到函数返回（使用分支跳转指令〉时将 RAS 中的值弹出，这样就可以快速地为该函数返回的分支跳转指令预测目标地址。</li>
+</ul>
+</li>
+</ul>
+<p>在 NutShell 处理器中，在做分支预测时会用取指 PC 索引 BTB 表项, 如果 PC 高位与读到的 BTB 表项的标签匹配则认为 BTB 命中, 再根据 BTB 中记录的指令类型判断跳转方向和跳转目标. 如果类型为条件分支指令, 则需要访问模式历史表 (PHT) 来判断是否跳转; 如果类型为返回指令, 则选择返回地址栈 (RAS) 的栈顶内容作为跳转目标; 如果类型为直接或间接跳转指令, 则选择 BTB 中记录的跳转目标.</p>
+<h2 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h2><ul>
+<li><p><a href="https://stackoverflow.com/questions/11227809/why-is-processing-a-sorted-array-faster-than-processing-an-unsorted-array#11227902">StackOverflow 回答 What is Branch Prediction?</a></p>
+</li>
+<li><p><a href="https://www.cnblogs.com/TaigaCon/p/7791303.html">Branch Prediction</a></p>
+</li>
+<li><p><a href="https://hitsz-cslab.gitee.io/arch/lab2/1-theory/">哈工大-分支预测器设计</a></p>
+</li>
+<li><p><a href="https://www.wikiwand.com/en/Branch_predictor">wiki-Branch predictor</a></p>
+</li>
+</ul>
 ]]></content>
       <categories>
         <category>计算机体系结构</category>
@@ -976,78 +976,6 @@
       </tags>
   </entry>
   <entry>
-    <title>程序转换处理过程</title>
-    <url>/%E7%A8%8B%E5%BA%8F%E8%BD%AC%E6%8D%A2%E5%A4%84%E7%90%86%E8%BF%87%E7%A8%8B/</url>
-    <content><![CDATA[<p>一个由高级语言编写的程序，必须转换成二进制代码，才能在机器上运行。这种可以在机器上运行是二进制代码被称为<strong>可执行目标文件</strong>。</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/sp20210723_083211_152.png" alt="源程序处理过程"></p>
-<p>上述过程可分为四步：</p>
-<ul>
-<li><strong>预处理</strong></li>
-<li><strong>编译</strong></li>
-<li><strong>汇编</strong></li>
-<li><strong>链接</strong></li>
-</ul>
-<h2 id="一、预处理"><a href="#一、预处理" class="headerlink" title="一、预处理"></a>一、预处理</h2><p>预处理过程主要<strong>处理源文件中以“#”开头的预编译指令</strong>，如：</p>
-<ul>
-<li>删除“#define”并展开所定义的宏。</li>
-<li>处理所有条件预编译指令，如“#if”,“#ifdef”, “#endif”等。</li>
-<li>插入头文件到“#include”处，可以递归方式进行处理。</li>
-<li>删除所有的注释“//”和“/* */”。</li>
-<li> 添加行号和文件名标识，以便编译时编译器产生调试用的行号信息。</li>
-<li>保留所有#pragma编译指令（编译器需要用）</li>
-</ul>
-<p>经过预处理后得到的是 <strong>.i 文件</strong>（预处理文件），该文件是一个可读的文本文件 ，但不包含任何宏定义。</p>
-<h3 id="预处理命令"><a href="#预处理命令" class="headerlink" title="预处理命令"></a>预处理命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc –E hello.c –o hello.i</span><br></pre></td></tr></table></figure>
-
-<p>或者</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cpp hello.c &gt; hello.i</span><br></pre></td></tr></table></figure>
-
-<h2 id="二、编译"><a href="#二、编译" class="headerlink" title="二、编译"></a>二、编译</h2><p>编译过程就是将预处理后得到的预处理文件（如 hello.i）进行一系列分析，<strong>生成汇编代码文件</strong>的过程。用来进行编译处理的程序称为<strong>编译程序（编译器，Compiler）</strong></p>
-<p>编译包括以下过程：</p>
-<ul>
-<li>词法分析</li>
-<li>语法分析</li>
-<li>语义分析</li>
-<li>中间代码生成</li>
-<li>代码优化</li>
-</ul>
-<p>经过编译后，得到**.s文件**（汇编代码文件）还是可读的文本文件，CPU无法理解和执行它。</p>
-<h3 id="编译命令"><a href="#编译命令" class="headerlink" title="编译命令"></a>编译命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc -S hello.i -o hello.s</span><br></pre></td></tr></table></figure>
-
-<p>或</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc -S hello.c -o hello.s</span><br></pre></td></tr></table></figure>
-
-<p>或</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">/user/lib/gcc/i486-linux-gnu/4.1/cc1 hello.c</span><br></pre></td></tr></table></figure>
-
-<h2 id="三、汇编"><a href="#三、汇编" class="headerlink" title="三、汇编"></a>三、汇编</h2><p>汇编是<strong>将汇编语言源程序转换为机器指令序列</strong>，每条汇编语句几乎都对应一条机器指令。汇编过程相比编译较为简单，没有复杂的语法，没有语义，也不需要指令优化，只需根据汇编指令和机器指令的对照表一一翻译即可。</p>
-<p>汇编结果是一个 <strong>.o 文件（可重定位目标文件）</strong>，其中包含的是不可读的二进制代码。</p>
-<h3 id="汇编命令"><a href="#汇编命令" class="headerlink" title="汇编命令"></a>汇编命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc –c hello.s –o hello.o</span><br></pre></td></tr></table></figure>
-
-<p>或</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">gcc –c hello.c –o hello.o</span><br></pre></td></tr></table></figure>
-
-<p>或（as是一个汇编程序）</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">as hello.s –o hello.o</span><br></pre></td></tr></table></figure>
-
-<h2 id="四、链接"><a href="#四、链接" class="headerlink" title="四、链接"></a>四、链接</h2><p>链接过程<strong>将多个可重定位目标文件合并以生成可执行目标文件</strong>。</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/sp20210723_101021_361.png" alt="sp20210723_101021_361"></p>
-<h3 id="链接命令"><a href="#链接命令" class="headerlink" title="链接命令"></a>链接命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc –static –o myproc main.o swap.o</span><br></pre></td></tr></table></figure>
-
-<p>或</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ld –static –o myproc main.o swap.o</span><br></pre></td></tr></table></figure>
-
-<p>其中，static 表示静态链接，如果不指定 -o 选项，则可执行文件名 为“a.out”。</p>
-<p><strong>a.out 就是最终的可执行文件。</strong></p>
-]]></content>
-      <categories>
-        <category>链接、装载与库</category>
-      </categories>
-      <tags>
-        <tag>程序员的自我修养</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>流水线技术</title>
     <url>/%E6%B5%81%E6%B0%B4%E7%BA%BF%E6%8A%80%E6%9C%AF/</url>
     <content><![CDATA[<h2 id="一、流水线技术介绍"><a href="#一、流水线技术介绍" class="headerlink" title="一、流水线技术介绍"></a>一、流水线技术介绍</h2><h3 id="1-1-什么是流水线"><a href="#1-1-什么是流水线" class="headerlink" title="1.1 什么是流水线"></a>1.1 什么是流水线</h3><p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211013131217427.png"></p>
@@ -1253,6 +1181,78 @@
       </tags>
   </entry>
   <entry>
+    <title>程序转换处理过程</title>
+    <url>/%E7%A8%8B%E5%BA%8F%E8%BD%AC%E6%8D%A2%E5%A4%84%E7%90%86%E8%BF%87%E7%A8%8B/</url>
+    <content><![CDATA[<p>一个由高级语言编写的程序，必须转换成二进制代码，才能在机器上运行。这种可以在机器上运行是二进制代码被称为<strong>可执行目标文件</strong>。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/sp20210723_083211_152.png" alt="源程序处理过程"></p>
+<p>上述过程可分为四步：</p>
+<ul>
+<li><strong>预处理</strong></li>
+<li><strong>编译</strong></li>
+<li><strong>汇编</strong></li>
+<li><strong>链接</strong></li>
+</ul>
+<h2 id="一、预处理"><a href="#一、预处理" class="headerlink" title="一、预处理"></a>一、预处理</h2><p>预处理过程主要<strong>处理源文件中以“#”开头的预编译指令</strong>，如：</p>
+<ul>
+<li>删除“#define”并展开所定义的宏。</li>
+<li>处理所有条件预编译指令，如“#if”,“#ifdef”, “#endif”等。</li>
+<li>插入头文件到“#include”处，可以递归方式进行处理。</li>
+<li>删除所有的注释“//”和“/* */”。</li>
+<li> 添加行号和文件名标识，以便编译时编译器产生调试用的行号信息。</li>
+<li>保留所有#pragma编译指令（编译器需要用）</li>
+</ul>
+<p>经过预处理后得到的是 <strong>.i 文件</strong>（预处理文件），该文件是一个可读的文本文件 ，但不包含任何宏定义。</p>
+<h3 id="预处理命令"><a href="#预处理命令" class="headerlink" title="预处理命令"></a>预处理命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc –E hello.c –o hello.i</span><br></pre></td></tr></table></figure>
+
+<p>或者</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cpp hello.c &gt; hello.i</span><br></pre></td></tr></table></figure>
+
+<h2 id="二、编译"><a href="#二、编译" class="headerlink" title="二、编译"></a>二、编译</h2><p>编译过程就是将预处理后得到的预处理文件（如 hello.i）进行一系列分析，<strong>生成汇编代码文件</strong>的过程。用来进行编译处理的程序称为<strong>编译程序（编译器，Compiler）</strong></p>
+<p>编译包括以下过程：</p>
+<ul>
+<li>词法分析</li>
+<li>语法分析</li>
+<li>语义分析</li>
+<li>中间代码生成</li>
+<li>代码优化</li>
+</ul>
+<p>经过编译后，得到**.s文件**（汇编代码文件）还是可读的文本文件，CPU无法理解和执行它。</p>
+<h3 id="编译命令"><a href="#编译命令" class="headerlink" title="编译命令"></a>编译命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc -S hello.i -o hello.s</span><br></pre></td></tr></table></figure>
+
+<p>或</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc -S hello.c -o hello.s</span><br></pre></td></tr></table></figure>
+
+<p>或</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">/user/lib/gcc/i486-linux-gnu/4.1/cc1 hello.c</span><br></pre></td></tr></table></figure>
+
+<h2 id="三、汇编"><a href="#三、汇编" class="headerlink" title="三、汇编"></a>三、汇编</h2><p>汇编是<strong>将汇编语言源程序转换为机器指令序列</strong>，每条汇编语句几乎都对应一条机器指令。汇编过程相比编译较为简单，没有复杂的语法，没有语义，也不需要指令优化，只需根据汇编指令和机器指令的对照表一一翻译即可。</p>
+<p>汇编结果是一个 <strong>.o 文件（可重定位目标文件）</strong>，其中包含的是不可读的二进制代码。</p>
+<h3 id="汇编命令"><a href="#汇编命令" class="headerlink" title="汇编命令"></a>汇编命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc –c hello.s –o hello.o</span><br></pre></td></tr></table></figure>
+
+<p>或</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">gcc –c hello.c –o hello.o</span><br></pre></td></tr></table></figure>
+
+<p>或（as是一个汇编程序）</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">as hello.s –o hello.o</span><br></pre></td></tr></table></figure>
+
+<h2 id="四、链接"><a href="#四、链接" class="headerlink" title="四、链接"></a>四、链接</h2><p>链接过程<strong>将多个可重定位目标文件合并以生成可执行目标文件</strong>。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/sp20210723_101021_361.png" alt="sp20210723_101021_361"></p>
+<h3 id="链接命令"><a href="#链接命令" class="headerlink" title="链接命令"></a>链接命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc –static –o myproc main.o swap.o</span><br></pre></td></tr></table></figure>
+
+<p>或</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ld –static –o myproc main.o swap.o</span><br></pre></td></tr></table></figure>
+
+<p>其中，static 表示静态链接，如果不指定 -o 选项，则可执行文件名 为“a.out”。</p>
+<p><strong>a.out 就是最终的可执行文件。</strong></p>
+]]></content>
+      <categories>
+        <category>链接、装载与库</category>
+      </categories>
+      <tags>
+        <tag>程序员的自我修养</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>符号与符号表</title>
     <url>/%E7%AC%A6%E5%8F%B7%E4%B8%8E%E7%AC%A6%E5%8F%B7%E8%A1%A8/</url>
     <content><![CDATA[<p>我们知道链接操作的第一步：</p>
@@ -1330,6 +1330,205 @@
       </categories>
       <tags>
         <tag>程序员的自我修养</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>[object Object]</title>
+    <url>/RISC-V%E7%89%B9%E6%9D%83%E6%9E%B6%E6%9E%84/</url>
+    <content><![CDATA[<p>RISC-V 的官方标准主要分成两部分：<strong>用户指令集</strong>（User-Level Instruction Set Architecture）与<strong>特权架构</strong>（Privileged Architecture）。其目的是希望不同特权架构的处理器可以在 ABI(Application Binary Interface) 互相兼容。也就是说，支持同一用户指令集的处理器可以根据实际需求而在特权架构的设计上采取不同的策略。</p>
+<p>这节主要讨论 RISC-V 特权架构，包括以下部分：</p>
+<ul>
+<li>特权层级，特别是机器模式（Machine Mode, M-Mode）</li>
+<li>控制状态寄存器</li>
+<li>机器层级指令集</li>
+<li>异常和中断</li>
+</ul>
+<h2 id="特权层级"><a href="#特权层级" class="headerlink" title="特权层级"></a>特权层级</h2><p>RISC-V 定义了 3 种工作模式：机器模式(Machine Mode ，M-mode)、超级用户模式(Supervisor Mode，S-Mode)和普通用户模式(User Mode，U-Mode)。每种模式分别对应一个特权层级(Privilege Levels)。其中机器模式的特权层级最高，普通用户模式的特权层级最低。</p>
+<img src="C:\Users\谭梁\AppData\Roaming\Typora\typora-user-images\image-20210828113747657.png" alt="image-20210828113747657" style="zoom: 25%;" />
+
+<img src="C:\Users\谭梁\AppData\Roaming\Typora\typora-user-images\image-20210828113908821.png" alt="image-20210828113908821" style="zoom:50%;" />
+
+<p>机器级别拥有最高的特权，并且是 RISC-V 硬件平台唯一的强制特权级别。在机器模式(M-mode)中运行的代码通常是受信任的，它具有对机器实现的低级访问权限。M-mode 可以用来管理 RISC-V 上的安全执行环境。U-Mode 和 S-Mode 分别用于常规应用和操作系统使用。下面是支持的特权层级组合：</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210828114810829.png" alt="image-20210828114810829"></p>
+<p>从图中可以看出，M-mode 是强迫要求实现的。对于其他的两个模式，一般来说，小规模的嵌入式系统只需要 M-mode 就可以了，而对信息安全有要求的系统，则可能需要 M-mode + U-mode。运行类 UNIX 这样大型操作系统的处理器，则三种模式都需要实现，</p>
+<h2 id="控制状态寄存器"><a href="#控制状态寄存器" class="headerlink" title="控制状态寄存器"></a>控制状态寄存器</h2><p>RISC-V 单独定义了一个控制状态寄存器的地址空间，并分配了 12 位地址来做索引。其中，最高的两位 [11:10] 被用来指示寄存器的读写权限。如果这两位是 2’b11 的话，则表示该寄存器是只读寄存器；否则，该寄存器既可以被读取，又可以被写入。地址位 [9 :8] 表示能访问该寄存器的最低特权层级。例如，对机器模式 CSR，这两位都是 2’b11。</p>
+<img src="C:\Users\谭梁\AppData\Roaming\Typora\typora-user-images\image-20210828152215628.png" alt="image-20210828152215628" style="zoom: 67%;" />
+
+<h3 id="M-mode-CSR-寄存器"><a href="#M-mode-CSR-寄存器" class="headerlink" title="M-mode CSR 寄存器"></a>M-mode CSR 寄存器</h3><img src="C:\Users\谭梁\AppData\Roaming\Typora\typora-user-images\image-20210828153648619.png" alt="image-20210828153648619" style="zoom: 50%;" />
+
+<img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210828154345445.png" alt="image-20210828154345445" style="zoom:50%;" />
+
+<p>下面对一些主要的寄存器进行说明：</p>
+<h4 id="mvendorid-寄存器"><a href="#mvendorid-寄存器" class="headerlink" title="mvendorid 寄存器"></a>mvendorid 寄存器</h4><p>32 位的只读寄存器，<strong>用来存储厂商标识代码</strong>。</p>
+<p>其取值实际上是衍生于 JEDEC 厂商标识代码。JEDEC 的厂商标识代码分为两部分：第一部分是 Bank 域，设其值为 n；第二部分是只有一字节的 Offset 域，设其值为 m。对于这个 8 位的 Offset 域，其最高位是奇数校验码，其余 7 位对应 Bank 域里面的厂商标识。根据 JEDEC 提供的 n 与 m 数值，RISC-V32 位厂商标识代码可以用如下公式产生：</p>
+<p><code>Vendor ID=((n-1) &lt;&lt; 7) + (m &amp; 0x7F)</code></p>
+<h4 id="marchid（体系架构标识代码）"><a href="#marchid（体系架构标识代码）" class="headerlink" title="marchid（体系架构标识代码）"></a>marchid（体系架构标识代码）</h4><p>32 位的只读寄存器，用来<strong>存放 HART 所对应的体系架构的标识代码</strong>。</p>
+<p>对于开源的架构来说，这个寄存器的值由 RISC-V 基金会负责在全球分配，其最高位必须是 0。对于商业公司所研发的架构来说，其值由具体的商业公司来分配，但是其最高位必须为 1，其余的位不能 全为零。如果将该寄存器和 mvendorid 寄存器一起使用，则可以唯一地标识 HART 的体系架构。 如果处理器设计者选择不支持这个寄存器，则应该返回零值。</p>
+<h4 id="mimpid（实现标识代码）"><a href="#mimpid（实现标识代码）" class="headerlink" title="mimpid（实现标识代码）"></a>mimpid（实现标识代码）</h4><p>32 位的只读寄存器，<strong>标明处理器的版本号</strong>。该寄存器的格式完全由处理器设计者自行决定，如果处理器设计者选择不支持该寄存器，则应该返回零值。</p>
+<h4 id="mhartid（硬件线程标识）"><a href="#mhartid（硬件线程标识）" class="headerlink" title="mhartid（硬件线程标识）"></a>mhartid（硬件线程标识）</h4><p>给这些 HART 编号索引。在多处理器系统中，HART 的编号无须连续，但是必须至少有一个 HART 必须被编号为零。</p>
+<h4 id="misa（指令集寄存器）"><a href="#misa（指令集寄存器）" class="headerlink" title="misa（指令集寄存器）"></a>misa（指令集寄存器）</h4><p>misa 寄存器的目的是为了<strong>向软件告知处理器具体支持的字长和扩展</strong>，以方便软件的可移植性。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210828182542768.png" alt="image-20210828182542768"></p>
+<p>CSR 寄存器中有些指定字段行为的定义和缩写：</p>
+<ul>
+<li>WIRI：Reserved Writes Ignored，Read Ignore Values(保留写入忽略，读取忽略值)</li>
+<li>WPRI：Reserved Writes Preserve Values, Reads Ignore Values(保留写入保留值，读取忽略值)</li>
+<li>WLRL：Write/Read Only Legal Values(读写合法值)</li>
+<li>WARL：Write Any Values, Reads Legal Values(任意写，读合法值)</li>
+</ul>
+<p><strong>MXL 域</strong>：</p>
+<ul>
+<li><strong>编码了内部支持的 ISA 宽度</strong>(XLEN).</li>
+<li>当重置时，总是设置为支持的最宽 ISA。</li>
+</ul>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210828213409020.png" alt="image-20210828213409020"></p>
+<p><strong>extensions 域</strong></p>
+<ul>
+<li><p>编码了现有的标准扩展。0-25 分别为 A-Z，代表了不同的扩展指令集。如果该架构需要某扩展指令集，则该位设为 1。[8] 为 I，该位总是 1。</p>
+</li>
+<li><p>重置时为最大的扩展集合</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210828213952453.png" alt="image-20210828213952453"></p>
+</li>
+</ul>
+<h4 id="mstatus（硬件线程状态寄存器）"><a href="#mstatus（硬件线程状态寄存器）" class="headerlink" title="mstatus（硬件线程状态寄存器）"></a>mstatus（硬件线程状态寄存器）</h4><p><strong>标识和控制 HART 的操作状态</strong>。mstatus 寄存器有 32 和 64(128)两个版本</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210828215518514.png" alt="image-20210828215518514"></p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210828220311590.png" alt="image-20210828220311590"></p>
+<p><strong>位描述：</strong></p>
+<ul>
+<li>XIE：全局中断使能位。X 可以为 M、S、U，代表特权层级。当 HART 运行于 X 模式，对应的中断使能位 XIE 置位 1。低优先级的中断总是关闭，高优先级的中断总是使能。高优先级可以改变特定级别的使能位，用于将控制权交给低权限模式。</li>
+<li>XPIE：用于支持嵌套 trap，保存 XIE 进入中断/异常前的值。</li>
+<li>XPP：用于支持嵌套 trap，保存 trap 发生前的特权级。所以，MPP 位 2 比特，SPP 位 1 比特，UPP 位隐式为 0。当发生中断/异常从 y 特权级进入 x 特权级时，XPIE 设为 xIE，xIE 设为 0，XPP 设为 x。</li>
+<li>XRET：用于从 trap 中返回。当发生中断/异常从 x 特权级返回 y 特权级时，xPIE 设为 1，xIE 设为 xPIE，XPP 设为 y。</li>
+<li>MPRV(Modify PRiVilege)：内存优先级域，修改在所有特权模式下执行 load 和 store 的特权级别。当 MPRV = 0 时，加载和存储行为正常，使用当前特权模式的转换和保护机制。当 MPRV=1 时，加载和存储内存地址被转换和保护，就像当前的特权模式被设置为 MPP 一样。</li>
+<li>MXR (Make eXecutable Readable)：内存优先级域，修改加载访问虚拟内存的权限。当 MXR = 0 时，只有加载标记为可读的页面。当 MXR = 1 时，可以加载标记为可读或可执行的页面。</li>
+<li>SUM (permit Supervisor User Memory access) ：内存优先级域，修改 S-mode 载入和存储访问虚拟内存的权限。当 SUM = 0 时，S-mode 内存访问 U-mode 下可访问的页面将出错。当 SUM=1 时，这些访问是允许的。当基于页面的虚拟内存不生效时，SUM 不起作用。注意，当不在 S-mode 下执行时，SUM 通常被忽略，但当 MPRV=1 和 MPP=S 时，SUM 生效。如果不支持 S-mode 模式，SUM 为 0。</li>
+<li>TVM (Trap Virtual Memory)：虚拟内存管理域，</li>
+<li>TW (Timeout Wait)</li>
+<li>TSR (Trap SRET)</li>
+<li>FS</li>
+<li>XS</li>
+<li>SD：用于反映 FS 或者 XS 的位域是否处于脏（dirty）状态。这个位域是 FS，XS 状态的汇总，方便操作系统上下文切换时快速判断</li>
+<li>SXL、UXL：对于 RV64 系统，分别控制 S-mode 和 U-mode 的 XLEN 值。这些字段的编码与 misa 的 MXL 字段相同。 S-mode 和 U-mode 下的有效 XLEN 分别称为 SXLEN 和 UXLEN。对于 RV32 系统，SXL 和 UXL 字段不存在，并且 SXLEN = 32 和 UXLEN = 32。</li>
+</ul>
+<h4 id="mscratch（草稿寄存器）"><a href="#mscratch（草稿寄存器）" class="headerlink" title="mscratch（草稿寄存器）"></a>mscratch（草稿寄存器）</h4><p>一个 MXLEN 位读/写寄存器，专供机器模式使用。通常，它用于保存指向机器模式 hart-local 上下文空间的指针，并在进入 M-mode 时与用户寄存器交换模式陷阱处理程序。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210829131238711.png" alt="image-20210829131238711"></p>
+<h4 id="与中断和异常有关的-CSR-寄存器"><a href="#与中断和异常有关的-CSR-寄存器" class="headerlink" title="与中断和异常有关的 CSR 寄存器"></a>与中断和异常有关的 CSR 寄存器</h4><p>该部分在异常和中断部分会详细说明。</p>
+<ul>
+<li>mtvec（machine trap vector base-address register，机器模式异常向量基地址寄存器）</li>
+<li>mip（machine interrupt register, pending interrupt，机器模式中断等待寄存器）</li>
+<li>mie（machine interrupt register, interrupt enable，机器模式中断使能寄存器）。</li>
+<li>mcause（machine cause register，机器模式异常原因寄存器）。</li>
+<li>mepc（machine exception program counter，机器模式异常 PC 寄存器）。</li>
+<li>mtval（machine trap value register，机器模式异常值寄存器）。</li>
+</ul>
+<h4 id="计数器相关寄存器"><a href="#计数器相关寄存器" class="headerlink" title="计数器相关寄存器"></a>计数器相关寄存器</h4><ul>
+<li><p>mcycle 与 mcycleh</p>
+<p>RISC-V 中为机器模式定义了一个 64 位的 cycle 寄存器，用来记录机器已经运行的时钟周期数。周期数低 32 位和高 32 位分别存放在 mcycle 和 mcycleh 中</p>
+</li>
+<li><p>minstret 与 minstreth</p>
+<p>RISC-V 还为机器模式定义了一个 64 位的 instret 寄存器，用来记录机器已经完 成的指令数（The Number of Instructions Retired）。该寄存器的低 32 位和高 32 位 被分别存放在 minstret 与 minstreth 中</p>
+</li>
+</ul>
+<h3 id="定时器"><a href="#定时器" class="headerlink" title="定时器"></a>定时器</h3><p>RISC-V 在设计时也对 RTC（Real Time Clock，实时时钟）的实现做了考虑。 实际上，要在真正意义上实现一个实时时钟，需要以下几部分的硬件支持：</p>
+<ul>
+<li>需要一个时钟定时器（Timer），运行在固定的频率。</li>
+<li>需要有办法获取当前精确的日期与时间。在桌面系统中，这个时间基准可以通过网络从专门的时间服务器获取。在许多嵌入式系统里，这个时间基准可以通过 GPS 获取。</li>
+<li>需要有办法能保持时钟定时器的不间断运行。这意味着 RTC 需要有自己的电源域，这样即使处理器的其他部分进入深度休眠状态，RTC 可以依然保持运行。而且 RTC 的电源域一般还需要有替代电源，如电池等。</li>
+</ul>
+<p>因此，RISC-V 在其特权架构部分为机器模式定义了两个 64 位的寄存器： mtime 与 mtimecmp。同时，为了方便 RTC 的独立运行，减小实现 RTC 的硬件开销，让多个 HART 能共享 RTC，RISC-V 中将这两个寄存器定义为内存映射寄存器，以映射到内存空间中（而不是像 mcycle 这样定义为 CSR）。而这两个 64 位寄存器在内存空间中的地址，则由具体的实现决定，RISC-V 标准中并没有对它们的地址做硬性规定。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210829143423163.png" alt="image-20210829143423163"></p>
+<h4 id="mtime-寄存器"><a href="#mtime-寄存器" class="headerlink" title="mtime 寄存器"></a>mtime 寄存器</h4><p>mtime 是时钟定时器，在所有 RV32 和 RV64 系统上都具有 64 位精度。它一般以比较精确的石英晶体振荡器为时钟源，并以固定的频率（没有明确规定）做计数。许多系统将该频率设置为 32.768 kHz，因为 32.768 kHz 的晶振容易获得，且 32.768 kHz 频率较低，适合做休眠时钟。而且，32 768 是 2 的整数次幂，容易由 32.768 kHz 产生周期为 1s 的时钟。</p>
+<h4 id="mtimecmp-寄存器"><a href="#mtimecmp-寄存器" class="headerlink" title="mtimecmp 寄存器"></a>mtimecmp 寄存器</h4><p>mtimecmp 的主要作用便是将其与 mtime 的值做比较。当 mtime 的值大于或等 于 mtimecmp 时，便可触发产生时钟中断。中断一直保持到通过写入 mtimecmp 寄存器将其清除。</p>
+<h2 id="异常和中断"><a href="#异常和中断" class="headerlink" title="异常和中断"></a>异常和中断</h2><h3 id="中断与异常的比较"><a href="#中断与异常的比较" class="headerlink" title="中断与异常的比较"></a>中断与异常的比较</h3><ul>
+<li>这种由处理器内部事件或程序执行中的事件引起的通常被称作异常</li>
+<li>这种是由独立于软件运行的外部事件引发的意外事件引起的称为中断。</li>
+</ul>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210803103711166.png" alt="image-20210803103711166"></p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210803103941671.png" alt="image-20210803103941671"></p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210803104254396.png" alt="image-20210803104254396"></p>
+<h3 id="RISC-V-中断和异常的触发"><a href="#RISC-V-中断和异常的触发" class="headerlink" title="RISC-V 中断和异常的触发"></a>RISC-V 中断和异常的触发</h3><p>对于单个 HART 的机器模式，当异常/中断情况发生时，硬件一般要经历以下的处理步骤：</p>
+<ol>
+<li>确定中断是否被屏蔽。</li>
+<li>确定异常情况发生的原因。</li>
+<li>确定异常情况发生的地址。</li>
+<li>确定与异常情况相关的参数。</li>
+<li>改变 PC 值，调用中断/异常处理程序，并设置相应的中断比特状态位。</li>
+</ol>
+<h4 id="确定中断是否被屏蔽"><a href="#确定中断是否被屏蔽" class="headerlink" title="确定中断是否被屏蔽"></a>确定中断是否被屏蔽</h4><p>对于单个 HART 的机器模式，下面两个 CSR 寄存器会影响中断的屏蔽：</p>
+<ul>
+<li>mstatus 寄存器中的 mie 位，这是全局的中断使能位。但是该位不会屏蔽异常处理。</li>
+<li>mie 寄存器中的相关位。</li>
+</ul>
+<h5 id="mie-寄存器"><a href="#mie-寄存器" class="headerlink" title="mie 寄存器"></a>mie 寄存器</h5><p>mie 寄存器是<strong>包含中断使能位</strong>的 XLEN 位读/写寄存器。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210829223938051.png" alt="image-20210829223938051"></p>
+<p><strong>位描述：</strong></p>
+<ul>
+<li>USIE、SSIE、HSIE 是对应特权级的<strong>软中断使能位</strong></li>
+<li>MTIE、STIE、UTIE 是对应特权级的<strong>时钟中断使能位</strong></li>
+<li>MEIE、SEIE、UEIE 是对应特权级的<strong>外部中断使能位</strong></li>
+</ul>
+<h5 id="mip-寄存器"><a href="#mip-寄存器" class="headerlink" title="mip 寄存器"></a>mip 寄存器</h5><p>为对应中断的情况，硬件还需要将 mip 寄存器中的相应位设置为等待(pending)。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210830011355846.png" alt="image-20210830011355846"></p>
+<h4 id="确定异常情况发生的原因。"><a href="#确定异常情况发生的原因。" class="headerlink" title="确定异常情况发生的原因。"></a>确定异常情况发生的原因。</h4><p>当中断或异常发生时，处理器需要正确填写 CSR 寄存器 mcause 中的相关内容。</p>
+<h5 id="mcause-寄存器"><a href="#mcause-寄存器" class="headerlink" title="mcause 寄存器"></a>mcause 寄存器</h5><p>mcause 寄存器是一个 XLEN-bit 可读可写寄存器（这意味着软件也可以修改其内容），用于记录异常/中断发生原因。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/machine_25.png" alt="img"></p>
+<p><strong>位描述：</strong></p>
+<ul>
+<li><p>Interrupt 位(第 31 位)：用来标识这个异常情况是中断还是异常。如果是中断，则该位应该被置 为 1；如果是异常，则该位应被置为 0。</p>
+</li>
+<li><p>Exception Code： 用来作为异常编码。 虽然在标准中称其为异常编码，但其也包括中断的情况（在中断情况下，异常编码实际上是中断源编号）。</p>
+<img src="C:\Users\谭梁\AppData\Roaming\Typora\typora-user-images\image-20210829235334345.png" alt="image-20210829235334345" style="zoom:50%;" /></li>
+</ul>
+<h4 id="确定异常情况发生的地址。"><a href="#确定异常情况发生的地址。" class="headerlink" title="确定异常情况发生的地址。"></a>确定异常情况发生的地址。</h4><p>对于机器模式，RISC-V 在其特权架构标准中定义了 mepc 寄存器，用来存放异常情况发生时的程序计数器的值。</p>
+<h5 id="mepc-寄存器"><a href="#mepc-寄存器" class="headerlink" title="mepc 寄存器"></a>mepc 寄存器</h5><p>XLEN-bit 可读可写寄存器。用来存放异常情况发生时的 PC 的值。对于异常来说，当前触发异常的指令的 PC 值是一个重要参数，所以 mepc = PC。而对中断来说，mepc 值则会被中断处理程序末尾的 MRET（M-Return）指令用来作为中断返回地址。所以，mepc 需要存放下一条指令的地址。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/machine_24.png" alt="img"></p>
+<h4 id="确定与异常情况相关的参数。"><a href="#确定与异常情况相关的参数。" class="headerlink" title="确定与异常情况相关的参数。"></a>确定与异常情况相关的参数。</h4><p>为了帮助异常情况的处理，RISC-V 还在其特权架构标准的机器模式中定义了 mtval 寄存器，以<strong>提供与异常情况相关的参数。</strong></p>
+<h5 id="mtval-寄存器"><a href="#mtval-寄存器" class="headerlink" title="mtval 寄存器"></a>mtval 寄存器</h5><p>XLEN-bit 可读写寄存器。当内存访问出现异常时，对应的内存读写地址应该被保存在这个寄存器里。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/machine_26.png" alt="img"></p>
+<p>mtval 的内容有以下几种写入方式:</p>
+<ul>
+<li><p>写入错误的（虚拟）地址：</p>
+<ul>
+<li>当 breakpoint 被触发</li>
+<li>指令获取、加载或存储地址未对齐</li>
+<li>访问页面错误异常发生时</li>
+</ul>
+</li>
+<li><p>写入第一个故障指令</p>
+<ul>
+<li>在非法指令发生时:</li>
+</ul>
+</li>
+<li><p>设置为零</p>
+<ul>
+<li>对于其他异常，但未来的标准可能会重新定义其他陷阱的 mtval 设置</li>
+</ul>
+</li>
+</ul>
+<h4 id="改变-PC-值，调用中断-异常处理程序，并设置相应的中断比特状态位。"><a href="#改变-PC-值，调用中断-异常处理程序，并设置相应的中断比特状态位。" class="headerlink" title="改变 PC 值，调用中断/异常处理程序，并设置相应的中断比特状态位。"></a>改变 PC 值，调用中断/异常处理程序，并设置相应的中断比特状态位。</h4><p>RISC-V 在其特权架构标准中定义了 mtvec 寄存器，用来<strong>确定异常情况处理程序的地址</strong>。</p>
+<h5 id="mtvec-寄存器"><a href="#mtvec-寄存器" class="headerlink" title="mtvec 寄存器"></a>mtvec 寄存器</h5><p>XLEN-bit 可读可写寄存器。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/machine_09.png" alt="img"></p>
+<p>其中的低两位用来确定中断模式，其余高 30 位被用来作为基地址（BASE）。</p>
+<img src="C:\Users\谭梁\AppData\Roaming\Typora\typora-user-images\image-20210830011016192.png" alt="image-20210830011016192" style="zoom:50%;" />
+
+<h3 id="RISC-V-中断和异常的返回"><a href="#RISC-V-中断和异常的返回" class="headerlink" title="RISC-V 中断和异常的返回"></a>RISC-V 中断和异常的返回</h3><p>在机器模式下，当异常情况处理程序完成所有操作后，需要调用 MRET(M-Return，机器返回指令)指令返回。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210830084407189.png" alt="image-20210830084407189"></p>
+<p>当处理器遇到 MRET 指令时，应将 PC 值置为 mepc 寄存器中的值，这样指令从之前被 异常情况打断的地方继续执行</p>
+<h3 id="异常和中断-软件要做的事"><a href="#异常和中断-软件要做的事" class="headerlink" title="异常和中断(软件要做的事)"></a>异常和中断(软件要做的事)</h3><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210830235250178.png" alt="image-20210830235250178" style="zoom:50%;" />
+
+<h3 id="中断等待指令-WFI，Wait-for-Interrupt"><a href="#中断等待指令-WFI，Wait-for-Interrupt" class="headerlink" title="中断等待指令(WFI，Wait for Interrupt)"></a>中断等待指令(WFI，Wait for Interrupt)</h3><p>为了给操作系统多提供一个调度的方法，RISC-V 在其特权架构标准中还定义了中断等待指令，当处理器遇到该指令时，则进入停顿状态，直到中断的发生。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210830164903429.png" alt="image-20210830164903429"></p>
+<p>当中断发生时，处理器会设置 mepc = PC + 4（即 WFI 之后的那条指令的地址）。 在机器模式下，当中断处理结束，MRET 返回时，则会将 PC 设置为 mepc 的值， 从而使得处理器会执行 WFI 之后的那条指令。</p>
+<h3 id="环境调用与断点"><a href="#环境调用与断点" class="headerlink" title="环境调用与断点"></a>环境调用与断点</h3><p>为了给操作系统和软件调试提供更多调度和中断的方式，RISC-V 标准中还定 义了环境调用指令 ECALL（Environment Call）和断点指令 EBREAK（Environment Breakpoint）。当处理器遇到 ECALL 或 EBREAK 指令时，都会产生异常。其中 ECALL 在机器模式下的异常编码是 11，而 EBREAK 的 异常编码是 3。</p>
+<p>RISC-V 的特权架构标准中特别强调，当遇到 ECALL 和 EBREAK 指令时，应该将 mepc 寄存器（此处仅讨论机器模式）的值设置为当前指令的地址，而不是下一条指令的地址。但如果是这样，当异常处理结束时调用 MRET 指令时，似乎又回到了原来的 ECALL/EBREAK 指令，陷入重复执行的死循环。</p>
+<p>用 GDB 中的软件断点的操作来具体解释。 当我们需要在 GDB 中设置软件断点时，是在 GDB 命令行中键入“break 断点地址”。当处理器执行到该断点地址时，软件中断被触发后，我们可以检查寄存器的值或读取内存中的内容，然后用 continue（继续执行）命令来继续程序的执行。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210830231635457.png" alt="image-20210830231635457"></p>
+<p>当处理器运行到对应的断点地址时，会触发 EBREAK 断点异常，进入调试器事先准备好的断点异常处理程序中。在这里，用户可以查看寄存器和内存中的内容。当用户完成寄存器和内存内容查看后，可以在 GDB 命令行中键入“continue” 以继续运行程序。但是在继续运行之前，GDB 会将内存中的 EBREAK 再替换回原先的指令，以避免调试器可能带来的副作用。</p>
+]]></content>
+      <categories>
+        <category>计算机体系结构</category>
+      </categories>
+      <tags>
+        <tag>RISC-V</tag>
       </tags>
   </entry>
 </search>
