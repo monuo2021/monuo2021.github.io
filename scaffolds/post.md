@@ -1,8 +1,9 @@
 ---
-title: { { title } }
-date: { { date } }
+title: {{ title }}
+date: {{ date }}
 tags:
 categories:
 mathjax: true
 description:
 ---
+

@@ -1,2 +1,2 @@
 hexo clean
-hexo g
+hexo g -d
