@@ -178,7 +178,16 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2022-01-23 21:57:57 / 修改时间：21:58:43" itemprop="dateCreated datePublished" datetime="2022-01-23T21:57:57+08:00">2022-01-23</time>
+              <time title="创建时间：2022-01-23 21:57:57 / 修改时间：22:01:38" itemprop="dateCreated datePublished" datetime="2022-01-23T21:57:57+08:00">2022-01-23</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/DataBase/" itemprop="url" rel="index"><span itemprop="name">DataBase</span></a>
+                </span>
             </span>
 
           
@@ -192,246 +201,15 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="一、数据模型介绍"><a href="#一、数据模型介绍" class="headerlink" title="一、数据模型介绍"></a>一、数据模型介绍</h2><h3 id="1-1-数据模型概念"><a href="#1-1-数据模型概念" class="headerlink" title="1.1 数据模型概念"></a>1.1 数据模型概念</h3><p><strong>数据模型</strong>是一种抽象模型，它组织并标准化数据元素之间的关系，以及数据元素与现实世界实体的属性的关系。例如，数据模型可以指定表示汽车的数据元素由许多其他元素组成，这些其他元素又表示汽车的颜色、大小和所有者。</p>
-<p>术语<strong>数据模型</strong>可以指代两个不同但密切相关的概念。一是指在<strong>特定应用领域中发现的对象和关系的抽象形式化</strong>：例如在制造组织中发现的客户、产品和订单。二是指用于<strong>定义此类形式化的一组概念</strong>：例如实体、属性、关系或表等概念。</p>
-<p>数据模型明确地定义了数据的结构。数据模型通常由数据专家、数据图书馆员或数字人文学者以数据建模符号指定。这些符号通常以图形形式表示。</p>
-<p>数据模型基于数据、数据关系、数据语义和数据约束。 数据模型提供要存储的信息的详细信息，并且在最终产品是为应用程序生成计算机软件代码或准备功能规范以帮助计算机软件制造或购买决策时，它具有主要用途。 下图是进程和数据模型之间交互的示例。</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/720px-Data_modeling_context.svg.png" alt="720px-Data_modeling_context.svg"></p>
-<h3 id="1-2-三种类型"><a href="#1-2-三种类型" class="headerlink" title="1.2 三种类型"></a>1.2 三种类型</h3><p>根据 1975 年的 ANSI，数据模型<em>实例</em>可能是以下三种类型之一：</p>
-<ol>
-<li><strong>概念数据模型</strong>：描述域的语义，是模型的范围。例如，它可能是一个组织或行业的兴趣领域的模型。这包括实体类，代表领域中各种重要的事物，以及关于实体类对之间关联的关系断言。概念模式指定可以使用模型表达的事实或命题的种类。从这个意义上说，它用一种受模型范围限制的人工“语言”定义了允许的表达式。</li>
-<li><strong>逻辑数据模型</strong>：描述语义，由特定的数据操作技术表示。这包括对表和列、面向对象的类和 XML 标记等的描述。</li>
-<li><strong>物理数据模型</strong>：描述存储数据的物理方式。这与分区、CPU、表空间等有关。</li>
-</ol>
-<p>根据 ANSI 的说法，这种方法的意义在于它允许三个视角彼此相对独立。许多软件开发项目的早期阶段都强调概念数据模型的设计。这样的设计可以细化成逻辑数据模型. 在后期，这个模型可能会被转化为物理数据模型。但是，也可以直接实现概念模型。</p>
-<p>下图是 ANSI/SPARC 三级架构。这表明数据模型可以是外部模型（或视图）、概念模型或物理模型。这不是查看数据模型的唯一方法，但它是一种有用的方法。</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/640px-4-2_ANSI-SPARC_three_level_architecture.svg.png"></p>
-<p>更详细的了解，可参考<a target="_blank" rel="noopener" href="https://www.tuicool.com/articles/byqeqa">概念数据模型、逻辑数据模型、物理数据模型详解</a></p>
-<h2 id="二、数据模型类型"><a href="#二、数据模型类型" class="headerlink" title="二、数据模型类型"></a>二、数据模型类型</h2><p>在论文<a target="_blank" rel="noopener" href="https://scholar.google.com/scholar?cluster=7366182905777149494">What Goes Around Comes Around</a>中总结并介绍了九个历史阶段：</p>
-<ul>
-<li>Hierarchical (IMS): late 1960’s and 1970’s</li>
-<li>Network (CODASYL): 1970’s</li>
-<li>Relational: 1970’s and early 1980’s</li>
-<li>Entity-Relationship: 1970’s</li>
-<li>Extended Relational: 1980’s</li>
-<li>Semantic: late 1970’s and 1980’s</li>
-<li>Object-oriented: late 1980’s and early 1990’s</li>
-<li>Object-relational: late 1980’s and early 1990’s</li>
-<li>Semi-structured (XML): late 1990’s to the present</li>
-</ul>
-<p>为了说明数据库理论和创新中的这些历史模式，作者使用 CODD 的供应商和部件的典型示例：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Supplier (sno, sname, scity, sstate)</span><br><span class="line">Part     (pno, pname, psize, pcolor)</span><br><span class="line">Supply   (sno, pno ,  qty,   price )</span><br></pre></td></tr></table></figure>
-
-<p>这是一个关系模式。每行都是关系（或表），括号中的属性。因此，在这种情况下，我们有一些 Supplier、一组 Part，还有一个“supply”关系，表明一个特定的 Part 是由一个特定的 Supplier 提供，具有给定的数量和价格。</p>
-<h3 id="2-1-Hierarchical-IMS-late-1960’s-and-1970’s"><a href="#2-1-Hierarchical-IMS-late-1960’s-and-1970’s" class="headerlink" title="2.1 Hierarchical (IMS): late 1960’s and 1970’s"></a>2.1 Hierarchical (IMS): late 1960’s and 1970’s</h3><p>IMS（信息管理系统）于 1968 年发布。类似于上面的关系表，它将数据结构化为具有字段的记录（record type），并以<strong>树</strong>的形式组织起来。每个记录（root 记录除外）有一个父记录。因为它形成了记录的层次结构，所以称为分层模型。</p>
-<p>使用 IMS 数据模型来描述供货商应用的话，有下图如下两种方式：</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20220119175615718.png" alt="image-20220119175615718"></p>
-<p>而这两种方式暴露了两个<strong>缺点</strong>：</p>
-<ul>
-<li><p><strong>信息重复（Information is repeated）</strong></p>
-<p>上图中，第一个模型，Part 会重复存在多个 Supplier 节点下（该 Part 由多个 Supplier 供应）；第二个模型中，Supplier 会重复存在多个 Part 下。这种冗余状态不仅会导致存储空间利用率低，还会导致非一致性问题。比如，如果某一记录被修改过了，那么其他重复的记录也要被修改，不然就会导致一致性问题。</p>
-</li>
-<li><p><strong>记录存在依赖父节点（Existence depends on parents）</strong></p>
-<p>如果没有父节点，子节点就无法表示。例如，如果第一个模型中没有 Supplier，那么就不可能由 Part；第二个模型中，如果没有 Part，Supplier 就无法存在。</p>
-</li>
-</ul>
-<p>IMS 使用的是 DL/1 操作语言。每条 record 都有一个 hierarchical sequence key(HSK)，HSK 是将从树的根节点到当前节点的 key 的拼装。在这种树型级联结构下，所有的 record 被定义了一个大小顺序（按照深度优先并从左到右遍历产生的顺序）。DL/1 中有 get next, get next within parent 等操作接口。例如，按照上文上侧图的模型，如果要获取 sn = 16 的 Supplier 的所有红色 Part，查询语句如下：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">get unique Supplier (sno = 16)</span><br><span class="line">until failure do</span><br><span class="line">    get next within parent (color = red)</span><br><span class="line">    enddo</span><br></pre></td></tr></table></figure>
-
-<p>IMS 为分层数据支持了四种<strong>存储方式</strong>，如是是 root 节点，可使用以下三种方式：</p>
-<ul>
-<li><p>Stored sequentially</p>
-</li>
-<li><p>B-tree</p>
-</li>
-<li><p>Hashed</p>
-</li>
-</ul>
-<p>如果不是 root 节点使用这种方式：</p>
-<ul>
-<li>Physical sequentially(if not root record)</li>
-</ul>
-<p>然而，这些存储方法实际上会影响 DL/1 的一些功能。例如，当 Stored sequentially 时，无法插入单个记录（只适用于批处理系统）。如果使用 hash，那么无法使用“get next”语句。IMS 设计成这样，是为了避免一些导致低性能的操作。但是这种方式会使该数据模型<strong>缺乏物理数据独立性（physical data independence）</strong>——也就是我们无法只改变物理级别数据而不改变逻辑级别数据。这与长期维护的数据库变得非常重要：业务需求发生变化，数据存储的改变并增加。在某些时候，可能需要不同的物理数据表示来提高性能。</p>
-<p>IMS 也为<strong>逻辑数据独立性</strong>提供了一点支持 ，这意味着我们可以扩展逻辑级别数据而不会影响其内置的应用程序。这意味着可以添加新的记录，而不会改变数据的视图。</p>
-<blockquote>
-<p>数据独立性</p>
-<ul>
-<li><p>物理独立性</p>
-<p>用户的应用程序与存储在磁盘上的数据库中数据是相互独立的。</p>
-</li>
-<li><p>逻辑独立性</p>
-<p>用户的应用程序与数据库的逻辑结构是相互独立的。</p>
-</li>
-</ul>
-<p>数据独立性和数据库三级模式二层映像密切相关，请自行了解。</p>
-</blockquote>
-<p>从这个数据模型中，我们可以学到以下四点：</p>
-<ul>
-<li>数据独立性是非常重要的</li>
-<li>树状结构是很受限制的</li>
-<li>树形数据模型下，很难提供一个复杂的结构组织。</li>
-<li>IMS 是一次一记录(record-at-a-time)的方式，这种方式要求程序员手动优化，但这往往都比较困难。</li>
-</ul>
-<h3 id="2-2-Network-CODASYL-1970’s"><a href="#2-2-Network-CODASYL-1970’s" class="headerlink" title="2.2 Network (CODASYL): 1970’s"></a>2.2 Network (CODASYL): 1970’s</h3><p>1969 年，数据系统语言委员会（CODASYL: Committee on Data Systems Languages）发布了他们的第一篇报告[Coda69]，然后在 1971 年[Coda71]和 1973 [Coda73]又发布了几篇报告，描述了一个更灵活的模型——网络模型（network）。</p>
-<p>这个模型使用<strong>网状结构</strong>来组织记录（recoed），因此一个记录可以有多个父节点，这点与 IMS 模型不同。</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20220120155744846.png" alt="A CODASYL Network"></p>
-<p>在上图的示例中，有两个箭头：Supplies 和 Supplied_by，这些称为 set types。箭头从拥有者记录指向子记录。一个拥有者类型的实例对应一组子类型的实例。因此在上图的示例中，一个 Supplier 通过 set type Supplies 对应 多个 Supply。</p>
-<p>CODASYL 只能有二元关系。如果一个应用需要三元关系，就要拆解成多个二元关系，例如一个婚礼包括新娘、新郎和神父三个参与者，这个三元关系就得拆解成婚礼-新娘，婚礼-新郎，婚礼-神父三个二元关系。如下图所示：</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20220120220505763.png" alt="image-20220120220505763"></p>
-<p>CODASYL 也是 record-at-a-time 的数据操作语言。CODASYL 查询实例如下：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Find Supplier(sno=16)</span><br><span class="line">Until no-more &#123;</span><br><span class="line">  Find next Supply record in Supplies</span><br><span class="line">  Find owner Part record in Supplied_by</span><br><span class="line">  Get current record</span><br><span class="line">  Check for red color</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>CODASYL 的实现比 IMS 复杂。每个入口点中的记录使用哈希存储，set type 则使用父节点和子节点之间指针的组合来实现。</p>
-<p>比较遗憾的是，CODASYL <strong>不满足数据独立性</strong>——当改变 Supplier 的 sno（或其他 key）时，程序会出错；当改变逻辑层数据时，应用程序会出错。</p>
-<p>跟 IMS 相比，CODASYL 在迭代时，要记录最后一次访问的 record、record type、set type，因此加载/恢复数据需要花费很长时间。相比 IMS，CODASYL 更复杂，但能支持 non-hierarchical 的数据。CODASYL 中数据的局部性比 IMS 差，因此在物理存储上效率可能更低。</p>
-<p>CODASYL 上学到的经验：</p>
-<ul>
-<li>network 比 hierarchical 更灵活，但更复杂。</li>
-<li>在加载和恢复数据上，network 比 hirrarchical 更复杂。</li>
-</ul>
-<h3 id="2-3-Relational-1970’s-and-early-1980’s"><a href="#2-3-Relational-1970’s-and-early-1980’s" class="headerlink" title="2.3 Relational: 1970’s and early 1980’s"></a>2.3 Relational: 1970’s and early 1980’s</h3><p>1970 年 Ted Codd 提出了关系模型，原因是当时 IMS 的程序员花了大量时间在进行数据相关性操作。因此 Codd 尝试设计一个数据独立性更好的模型。select σ and join ⋈。</p>
-<p>该数据模型有三个特点：</p>
-<ul>
-<li><p>数据存放在表中。</p>
-</li>
-<li><p>使用高级 DML 语言，每次取出一组记录（<strong>set-at-a-time</strong>）。</p>
-</li>
-<li><p>对物理存储方式不做假设。</p>
-</li>
-</ul>
-<p>简单的数据结构更容易实现更好的逻辑数据独立性，而使用高级语言更容易提供更好的物理数据独立性。关系模型非常灵活，IMS 中遇到的 existence dependency 问题（一定要有 parent）在关系模型里面很容易处理，CODASYL 中遇到的三元关系问题也很容易解决：Ceremony (bride-id, groom-id, minister-id, other-data)。</p>
-<p>Codd 之后提出了多个更复杂的关系模型，由于 Codd 是数学家，他最初的模型使用的是严谨的关系运算和关系代数。Codd 的关系模型引起了“the great debate”。一边是 Codd 为代表的学术派，另一边是 Charlie Bachman 为代表的实践派。</p>
-<p>Codd 认为：</p>
-<ul>
-<li><p>像 CODASYL 这么复杂的模型，不是个好模型。</p>
-</li>
-<li><p>CODASYL 没有提供可接受的数据独立性。</p>
-</li>
-<li><p>Record-at-a-time 编程不好优化。</p>
-</li>
-<li><p>CODASYL 和 IMS 即使是在常见表达的场景下（例如之前婚礼实例的三元关系）也不够灵活。</p>
-</li>
-</ul>
-<p>Bachman 认为：</p>
-<ul>
-<li><p>COBOL 程序员不太容易理解这种新式的关系语言。</p>
-</li>
-<li><p>无法有效地实现关系模型。</p>
-</li>
-<li><p>CODASYL 也能实现关系模型中的表（table），没有必要使用关系模型。</p>
-</li>
-</ul>
-<p>过了几年，两个阵营完善了自己的立场。</p>
-<p>关系模型一方认为：</p>
-<ul>
-<li><p>Codd 是个数学家，他提的关系代数/运算语言不太适合（过于数学），但 SQL 和 QUEL 就很容易让程序员接受。</p>
-</li>
-<li><p>System R 和 INGRES 都高效地实现了 Codd 的关系模型，并且查询优化器甚至能够跟最好的程序员手工查询方案相媲美。</p>
-</li>
-<li><p>这些实现证实关系模型的物理数据独立性是可以实现的，而且关系模型的逻辑数据独立性也比 CODASYL 强。</p>
-</li>
-<li><p>和 record-at-a-time，set-at-a-time 使程序员更有生产力。</p>
-</li>
-</ul>
-<p>CODASYL 一方认为：</p>
-<ul>
-<li>网络模型也有 set-at-a-time 的语言，如 LSL，它可以提供完整的物理数据独立性和可能更好的逻辑数据独立性。</li>
-<li>网络模型可以简化，也不会那么复杂。</li>
-</ul>
-<p>在商业领域，后来微机时代来临，VAX 小型机市场暴涨，上面使用的是 Oracle 和 INGRES 为代表的关系型数据模型，另一边 CODASYL 被 IBM 用汇编重写了一遍之后可移植性太差，最后关系型模型与 VAX 小型机携手共赢。但在大型机市场（当时大型机是数据库市场的主流），关系型数据模型不太友好，IBM 在 VM370 和 VSE 上的 Sysmte R 卖的不好，因此只能继续卖 IMS。1984 年 IBM 推出了 DB2，最终 DB2 凭借新技术和易用性赢得了市场，给这场论战画了句号：关系模型最终胜出，同时也宣布 SQL 语言是标准关系型语言。</p>
-<p>总结起来，对这次大论战结局影响最大的三件因素有：</p>
-<ol>
-<li>VAX 小型机在市场上的胜利</li>
-<li>CODASYL 的移植性问题</li>
-<li>IMS 逻辑数据模型的复杂性。</li>
-</ol>
-<p>关系模型给我们带来了以下经验：</p>
-<ul>
-<li>set-at-a-time 式的语言很好，它提供了更好的物理数据独立性。</li>
-<li>简单的数据模型的逻辑数据独立性更容易实现。</li>
-<li>技术论战往往被<strong>市场</strong>定论，通常跟技术优劣关系不大。</li>
-<li>查询优化器能够和最好的 record-at-a-time 的程序员相媲美。</li>
-</ul>
-<h3 id="2-4-Entity-Relationship-1970’s"><a href="#2-4-Entity-Relationship-1970’s" class="headerlink" title="2.4 Entity-Relationship: 1970’s"></a>2.4 Entity-Relationship: 1970’s</h3><p>70 年代中期，Peter Chen 提出了 entity-relationship(E-R) 模型作为上面三种数据模型的替代品。Peter 提到数据库被视为一组<strong>实体</strong>的集合（了解一点数据库理论的应该知道实体的概念）。实体有<strong>属性（attribute）</strong>，用于描述实体；实体间存在<strong>关系（relationship）</strong>。E-R 模型通常可以用方块和箭头示意图描述。</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20220122095003988.png" alt="image-20220122095003988"></p>
-<p>但是 E-R 模型在 70 年代并没有作为底层数据模型由 DBMS 实现，原因大概有以下几点：</p>
-<ul>
-<li>没有适配的查询语言。</li>
-<li>当时大家的关注点都在关系模型上。</li>
-<li>E-R 模型看上去太像 CODASYL 的简化版</li>
-</ul>
-<p>但是 E-R 模型在数据库 schema 设计上大放异彩。设计数据库 schema 通常先构造一些实体，然后正规化。正规化包括第二范式、第三范式、BC 范式、第四范式，Project-Join 范式。但正规化存在两个问题，一是无法回答“how do I get an initial set of tables?”的问题；二是正规化是基于函数依赖，而函数依赖对很多 DBA 来说并不好理解。因此 E-R 模型就是“dead in the water”。</p>
-<p>但是 E-R 模型作为数据库设计的工具开始逐渐流行（在数据库设计中，E-R 图是一个很重要的工具）。</p>
-<p>E-R 模型给我们带来了以下经验：</p>
-<ul>
-<li>函数依赖对普通开发者来讲并不友好。保持简单直白还是很难的。</li>
-</ul>
-<h3 id="2-5-Extended-Relational-1980’s"><a href="#2-5-Extended-Relational-1980’s" class="headerlink" title="2.5 Extended Relational: 1980’s"></a>2.5 Extended Relational: 1980’s</h3><p>在 80 年代早期，似乎发表的论文都可以用以下模板来套用：</p>
-<ul>
-<li>Consider an application, call it X</li>
-<li>Try to implement X on a relational DBMS</li>
-<li>Show why the queries are difficult or why poor performance is observed</li>
-<li>Add a new “feature” to the relational model to correct the problem</li>
-</ul>
-<p>这一类的论文可以称为“the R++ era”，因为它们都是在关系模型上打补丁。而其中最好的就是 Zaniolo，它提出在关系模型（Gem）上再加几个要素来扩展：</p>
-<ol>
-<li><p> set-valued attributes：属性是一个特定集合，可以定义新的数据类型，加到关系模型里面。</p>
-</li>
-<li><p> aggregation (tuple-reference as a data type)：在 Suppply 中，有两个外键（foreign key）：sno、pno，如果用元组表示会更好。Supply (PT, SR, qty, price)；其中 PT 是 “tuple in the Part table” ， SR 是 “tuple in the Supplier table”.</p>
-</li>
-<li><p> generalization：假设我们举例中有两种 Part：Electrical 和 Plumbing。对于 Electrical，我们记录功耗和电压。对于 Plumbing，我们记录了用于制造的直径和材料部分。如下图所示，在那里我们看到一个根 Part 和两个细化 Part。每个细化的 Part 都在其祖先中继承了所有属性。</p>
-</li>
-</ol>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20220122180006929.png" alt="image-20220122180006929"></p>
-<p>该模型的查询语句如下：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Select E.pname</span><br><span class="line">From Electrical E</span><br><span class="line">Where E.pcolor = “red”</span><br></pre></td></tr></table></figure>
-
-<p>此类的问题是它们允许比传统的关系模型更简单的查询，但是它并没有提升太多性能。例如，主键 - 外键的关系在关系模型容易模拟元组作为数据类型。此外，由于外键基本上是逻辑指针，因此该构造的性能与来自其他可用的指针方案相似。因此，该模型的实施不会比关系模型的实施更快</p>
-<p>在 20 世纪 80 年代初，关系供应商都重点关注改善其系统的交易性能和可扩展性，以便它们可用于大规模业务数据处理应用程序。这是一个非常大的市场，有重大的收入潜力。相比之下，R++ 的想法只产生一点点影响。因此，R++ 技术很少进入商业世界，这项研究重点具有很小的长期影响。</p>
-<p>从该模型我们可以学到：</p>
-<ul>
-<li>除非有巨大的功能优势，否则新的构建会无处可去。</li>
-</ul>
-<h3 id="2-6-Semantic-late-1970’s-and-1980’s"><a href="#2-6-Semantic-late-1970’s-and-1980’s" class="headerlink" title="2.6 Semantic: late 1970’s and 1980’s"></a>2.6 Semantic: late 1970’s and 1980’s</h3><p>在同一时间，还有另一个以类似的想法思考，但是另一种不同的营销策略。他们认为关系数据模型是“语义贫困（semantically impoverished）”，即它无法轻易表达感兴趣的一类数据。因此，需要一个“后关系型（post relational）”数据模型。后关系数据模型通常称为<strong>语义数据模型（semantic data models）</strong>。有许多人都研究过这以模型，其中 Hammer 和 McLeod 的 SDM 可以说是最精细的语义数据模型。</p>
-<p>SDM 专注于类的概念，这些概念是遵循相同模式的记录集合。像 Gem（2.5 提到的模型）一样，SDM 利用并包括聚合（aggregation）、泛化（generalization ）和集合（set）的概念，通过允许类具有在其他类中的记录的属性来支持聚合。但是，SDM 通过允许一个类中的属性在某些类中成为一组记录的集合来概括了 GEM 中的聚合构造。例如，有两个类： Ships 和 Countries。Countries 有一个名为 Ships_registered_here 的属性，表示一系列船只的集合；反向的性质 Country_of_Registration 也可以在 SDM 中定义。</p>
-<p>此外，类可以 generalize 其他类。与 Gem 不同，generalize 扩展为图而不是树。例如，下图显示了 generalization 图，其中 American_oil_tankers 从 oil_tankers 和 American_ships 继承的属性。此构造通常被称为多重继承。类也可以是其他类之间的 union, intersection 或者 difference。它们也可以是另一个类的子类，由谓词指定以确定资格。例如，Heals_Ships 可能是重量大于 500 吨的船舶的子类。最后，一个类也可以是一系列记录。例如 Atlantic_Convoy 可能是一系列船舶，这些船舶在大西洋上一起航行。</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20220122234525291.png" alt="image-20220122234525291"></p>
-<p>最后，类可以具有类变量，例如 Ship 类可以具有一个是类成员的类变量。</p>
-<p>大多数语义数据模型非常复杂，并且通常是纸质建议。在 SDM 定义后几年，Univac 探讨了锤子和 McLeod 的想法的实施。然而，他们很快发现 SQL 是一个间歇性标准，并且他们不兼容的系统在市场上并不是很成功。</p>
-<p>在我们看来，SDMS 面临的两个问题面临 R ++倡导者。像 R ++的提议一样，他们是很多机器，易于模拟关系系统。因此，在提出的构建体中很少杠杆率。SDM 营也面临着 R ++提案的第二个问题，即建立的供应商分散了交易处理绩效。因此，语义数据模型的影响很小。</p>
-<h3 id="2-7-Object-oriented-late-1980’s-and-early-1990’s"><a href="#2-7-Object-oriented-late-1980’s-and-early-1990’s" class="headerlink" title="2.7 Object-oriented: late 1980’s and early 1990’s"></a>2.7 Object-oriented: late 1980’s and early 1990’s</h3><p>1980 年代中期，兴起了一波面向对象数据库（OODB）的热潮，社区指出了关系模型和像 C++ 这种 OO 编程语言之间存在“<strong>impedance mismatch</strong>”——数据库和编程语言有自己的数据类型，因此应用程序要在编程语言和数据库之间来回转换数据类型。</p>
-<p>考虑如果有一种持久化语言（persistent programming language），这种语言中的变量可以直接代表数据库磁盘或者内存中的数据，并且数据库查找方法也是使用这个语言的一些结构来完成。例如 Rigel 语言：</p>
-<p>解决方法是将 DBMS 功能集成到编程语言中。具体而言，人们想要一种<strong>持久的编程语言（persistent programming language）</strong>，即语言中变量可以代表基于磁盘的数据以及主存储器数据以及数据库搜索条件中语言构造的变量。20 世纪 70 年代后期开发了几种原型持续语言，包括 Pascal-R，Rigel 以及 PL/1 的语言嵌入。例如，Rigel 允许以上述查询表示为：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">For P in Part where P.pno = 16&#123;</span><br><span class="line">  Code_to_manipulate_part</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>持久的编程语言显然比 SQL 嵌入方式明显更清洁，但是编译器要感知 DBMS 的功能。由于没有统一的编程语言，因此每个编译器都要完成此扩展。此外，每个扩展都是唯一的，因为 C ++ 与 APL 完全不同。此外编程语言领域的专家一直就拒绝专注通用 I/O 和 DBMS 功能，更不用说语言本身去关注具体的数据库系统了。因此，我们所知的所有编程语言在该领域都没有内置功能。这不仅使得嵌入数据子语言繁琐，而且结果通常难以编程和易于出错。最后，专业语言知识没有应用于重要目的的面向数据的语言，例如 report writers 和所谓的 fourth generation languages。最终这些 70 年代的学术研究最终也没有走入商业市场，而丑陋的嵌入式方式开始流行。</p>
-<p>在 1980 年代中期，由于 C ++ 的普及，持久的编程语言再次复苏。这个数据库模型被称为<strong>面向对象的数据库（OODB）</strong>。这些系统尝试在 C++ 基础上，将 C++ 数据结构都视为可以持久化的对象，并将关系扩展进 C++ 语言。OODB 社区将工程领域数据库作为目标市场，如工程 CAD 应用。为了定位到工程市场，持久性 C ++ 的实现具有以下要求：</p>
-<ol>
-<li>无需声明查询语言。所有需要的都是引用 C++ 中的大型磁盘的工程对象。</li>
-<li>无需花式交易管理。该市场主要是一个 one-user-at-a-time 处理大型工程对象。相反，某种版本控制系统会很好。</li>
-<li>在对象上运行时，运行时系统必须与传统的 C++ 具有竞争力。在这个市场中，使用持久性 C++ 的算法的性能必须与自定义负载程序和传统的 C++ 提供的竞争力</li>
-</ol>
-<p>因此 OODB 对事务和查询的支持比较弱,相反，供应商专注于操纵持久性 C++ 结构的良好性能。不幸的是，工程领域数据库市场本来就不大，当时兴起的数据库厂商又很多，最终所有 OODB 供应商都失败了，或者已经重新定位了他们的公司以提供以外的东西和 OODB。例如，Object Design 已重命名为 Excelon，并销售 XML 服务</p>
-<p>究其失败原因，有如下几条：</p>
-<ul>
-<li>没有发挥作用。OODB 厂商提供的系统避免了用户写 load/unload 程序，但客户并不买账。</li>
-<li>缺乏标准，不兼容。</li>
-<li>因为和数据库绑的太紧，细小的改动都要重新 link 整个应用。</li>
-<li>没有统一的编程语言，如果你的系统有一部分不是 C++，那就无法使用持久化语言。</li>
-</ul>
-<p>另外，持久化编程语言因为将对磁盘数据的操作的逻辑都放在业务应用进程，因此几乎没有对数据的保护，这相比 CODASYL 是一个倒退。</p>
-<p>从该模型我们可以学到：</p>
-<ul>
-<li>不解决痛点的产品难以被市场接受。</li>
-<li>没有语言专家支持，持久化语言毫无出路。</li>
-</ul>
-<h3 id="2-8-Object-relational-late-1980’s-and-early-1990’s"><a href="#2-8-Object-relational-late-1980’s-and-early-1990’s" class="headerlink" title="2.8 Object-relational: late 1980’s and early 1990’s"></a>2.8 Object-relational: late 1980’s and early 1990’s</h3><h3 id="2-9-Semi-structured-XML-late-1990’s-to-the-present"><a href="#2-9-Semi-structured-XML-late-1990’s-to-the-present" class="headerlink" title="2.9 Semi-structured (XML): late 1990’s to the present"></a>2.9 Semi-structured (XML): late 1990’s to the present</h3><h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://www.wikiwand.com/en/Data_model">维基百科：数据模型</a></li>
-<li><a target="_blank" rel="noopener" href="https://scholar.google.com/scholar?cluster=7366182905777149494">Joseph Hellerstein、Michael Stonebraker: What Goes Around Comes Around</a></li>
-<li><a target="_blank" rel="noopener" href="https://medium.com/vaticle/what-goes-around-comes-around-52d38ee1ea9e">“What Goes Around Comes Around”: A Brief History of Databases</a></li>
-<li><a target="_blank" rel="noopener" href="http://blog.itpub.net/31556436/viewspace-2286396/">ITPUB 博客：以史为鉴！数据模型变迁史</a></li>
-</ul>
-
+          <p>论文《What Goes Around Comes Around》总结</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B%E4%BB%8B%E7%BB%8D%E5%8F%8A%E5%85%B6%E5%8F%98%E8%BF%81/">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -1266,13 +1044,13 @@
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-count">6</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-count">6</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
