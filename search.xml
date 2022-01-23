@@ -83,69 +83,6 @@
       </tags>
   </entry>
   <entry>
-    <title>以太网帧</title>
-    <url>/%E4%BB%A5%E5%A4%AA%E7%BD%91%E5%B8%A7/</url>
-    <content><![CDATA[<p><strong>以太网帧</strong>是数据链路层协议数据单元，使用底层以太网物理层传输机制。换句话说，以太网链路上的数据单元将以太网帧作为其有效载荷(payload)进行传输。</p>
-<h2 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h2><p>以太网帧前面有<strong>前同步码(preamble)<strong>和</strong>帧开始定界符 (SFD)<strong>，它们都是物理层以太网数据包的一部分。每个以太网帧都以</strong>以太网报头</strong>开始，其中包含目标和源 MAC 地址作为其前两个字段。帧的中间部分是**有效载荷数据(payload)<strong>，包括帧中携带的其他协议（例如 Internet 协议）的首部。帧以</strong>帧校验序列(FCS)**结束，FCS 是一种 32 位循环冗余校验(CRC)，用于检测任何传输中的数据损坏。</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211002095359578.png" alt="IEEE 802.3以太网数据包和帧结构"></p>
-<table>
-<thead>
-<tr>
-<th>字段</th>
-<th>含义</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>前同步码</td>
-<td>用来使接收端的适配器在接收 MAC 帧时能够迅速调整时钟频率，使它和发送端的频率相同。前同步码为 7 个字节，1 和 0 交替。</td>
-</tr>
-<tr>
-<td>帧开始定界符（SFD）</td>
-<td>帧的起始符，为 1 个字节。前 6 位 1 和 0 交替，最后的两个连续的 1 表示告诉接收端适配器：“帧信息要来了，准备接收”。</td>
-</tr>
-<tr>
-<td>目的地址</td>
-<td>接收端的物理地址（MAC 地址），为 6 个字节（48 比特）。</td>
-</tr>
-<tr>
-<td>源地址</td>
-<td>发送端的物理地址（MAC 地址），为 6 个字节（48 比特）。</td>
-</tr>
-<tr>
-<td>类型</td>
-<td>上层协议的类型。由于上层协议众多，所以在处理数据的时候必须设置该字段，标识数据交付哪个协议处理。例如，字段为 0x0800 时，表示将数据交付给 IP 协议。</td>
-</tr>
-<tr>
-<td>数据</td>
-<td>也称为效载荷，表示交付给上层的数据。以太网帧数据长度最小为 46 字节，最大为 1500 字节。如果不足 46 字节时，会填充到最小长度。最大值也叫最大传输单元（MTU）。</td>
-</tr>
-<tr>
-<td>帧检验序列 FCS</td>
-<td>检测该帧是否出现差错，占 4 个字节（32 比特）。发送端计算帧的循环冗余码校验（CRC）值，把这个值写到帧里。接收端重新计算 CRC，与 FCS 字段的值进行比较。如果两个值不相同，则表示传输过程中发生了数据丢失或改变。这时，就需要重新传输这一帧。</td>
-</tr>
-<tr>
-<td>包间间隙(Interpacket gap)</td>
-<td>包间间隙(IPG) 是包之间的空闲时间。发送一个数据包后，发送器需要在发送下一个数据包之前传输最少 96 位（12 个八位字节）的空闲线路状态。</td>
-</tr>
-</tbody></table>
-<h2 id="类型"><a href="#类型" class="headerlink" title="类型"></a>类型</h2><ul>
-<li>Ethernet II</li>
-<li>Novell raw IEEE 802.3</li>
-<li>IEEE 802.2 Logical Link Control (LLC)</li>
-<li>IEEE 802.2 Subnetwork Access Protocol (SNAP)</li>
-</ul>
-<p>不同的帧类型具有不同的格式和 MTU 值，但可以共存于同一物理介质上。根据下表可以区分帧类型。</p>
-<p>此外，所有四种以太网帧类型都可以选择包含一个 IEEE 802.1Q 标记，以标识它属于哪个 VLAN 及其优先级（服务质量）。这种封装在 IEEE 802.3ac 规范中定义，并将最大帧增加 4 个八位字节。</p>
-<img src="C:\Users\谭梁\AppData\Roaming\Typora\typora-user-images\image-20211002104229791.png" alt="image-20211002104229791" style="zoom: 80%;" />
-
-<p><strong>Ethernet II 帧格式</strong>和<strong>IEEE 802.3 格式</strong>，这两种格式的主要区别在于，Ethernet II 格式中包含一个<strong>Type 字段</strong>，标识以太帧处理完成之后将被发送到哪个上层协议进行处理。IEEE802.3 格式中，同样的位置是<strong>长度字段(Length)<strong>。不同的</strong>Type 字段值/Length 字段</strong>可以用来区别这两种帧的类型，当该字段小于等于 1500（或者十六进制的 0x05DC）时，帧使用的是 IEEE 802.3 格式。当该字段值大于等于 1536 （或者十六进制的 0x0600）时，帧使用的是 Ethernet II 格式。以太网中大多数的数据帧使用的是 Ethernet II 格式。</p>
-<p><img src="https://pic2.zhimg.com/80/v2-37b23e8384fa64f77503b9d548da5311_1440w.jpg" alt="img"></p>
-]]></content>
-      <categories>
-        <category>计算机网络</category>
-      </categories>
-  </entry>
-  <entry>
     <title>中断与异常</title>
     <url>/%E4%B8%AD%E6%96%AD%E4%B8%8E%E5%BC%82%E5%B8%B8/</url>
     <content><![CDATA[<h2 id="一、什么是中断-异常"><a href="#一、什么是中断-异常" class="headerlink" title="一、什么是中断/异常"></a>一、什么是中断/异常</h2><p>中断和异常是指系统、处理器在执行指令过程中突然被别的请求打断而终止当前的程序，转而去处理其他程序。待该中断处理程序处理完后回到该程序中断点继续执行之前程序。</p>
@@ -220,6 +157,175 @@
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">_divide_error:</span><br><span class="line">	pushl $_do_divide_error</span><br><span class="line">no_error_code:</span><br><span class="line">	xchgl %eax,(%esp)</span><br><span class="line">	pushl %ebx</span><br><span class="line">	pushl %ecx</span><br><span class="line">	pushl %edx</span><br><span class="line">	pushl %edi</span><br><span class="line">	pushl %esi</span><br><span class="line">	pushl %ebp</span><br><span class="line">	push %ds</span><br><span class="line">	push %es</span><br><span class="line">	push %fs</span><br><span class="line">	pushl $0		# &quot;error code&quot;</span><br><span class="line">	lea 44(%esp),%edx</span><br><span class="line">	pushl %edx</span><br><span class="line">	movl $0x10,%edx</span><br><span class="line">	mov %dx,%ds</span><br><span class="line">	mov %dx,%es</span><br><span class="line">	mov %dx,%fs</span><br><span class="line">	call *%eax</span><br><span class="line">	addl $8,%esp</span><br><span class="line">	pop %fs</span><br><span class="line">	pop %es</span><br><span class="line">	pop %ds</span><br><span class="line">	popl %ebp</span><br><span class="line">	popl %esi</span><br><span class="line">	popl %edi</span><br><span class="line">	popl %edx</span><br><span class="line">	popl %ecx</span><br><span class="line">	popl %ebx</span><br><span class="line">	popl %eax</span><br><span class="line">	iret</span><br></pre></td></tr></table></figure>
 
 <p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211104142921657.png" alt="image-20211104142921657"></p>
+]]></content>
+      <categories>
+        <category>计算机体系结构</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>以太网帧</title>
+    <url>/%E4%BB%A5%E5%A4%AA%E7%BD%91%E5%B8%A7/</url>
+    <content><![CDATA[<p><strong>以太网帧</strong>是数据链路层协议数据单元，使用底层以太网物理层传输机制。换句话说，以太网链路上的数据单元将以太网帧作为其有效载荷(payload)进行传输。</p>
+<h2 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h2><p>以太网帧前面有<strong>前同步码(preamble)<strong>和</strong>帧开始定界符 (SFD)<strong>，它们都是物理层以太网数据包的一部分。每个以太网帧都以</strong>以太网报头</strong>开始，其中包含目标和源 MAC 地址作为其前两个字段。帧的中间部分是**有效载荷数据(payload)<strong>，包括帧中携带的其他协议（例如 Internet 协议）的首部。帧以</strong>帧校验序列(FCS)**结束，FCS 是一种 32 位循环冗余校验(CRC)，用于检测任何传输中的数据损坏。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211002095359578.png" alt="IEEE 802.3以太网数据包和帧结构"></p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>前同步码</td>
+<td>用来使接收端的适配器在接收 MAC 帧时能够迅速调整时钟频率，使它和发送端的频率相同。前同步码为 7 个字节，1 和 0 交替。</td>
+</tr>
+<tr>
+<td>帧开始定界符（SFD）</td>
+<td>帧的起始符，为 1 个字节。前 6 位 1 和 0 交替，最后的两个连续的 1 表示告诉接收端适配器：“帧信息要来了，准备接收”。</td>
+</tr>
+<tr>
+<td>目的地址</td>
+<td>接收端的物理地址（MAC 地址），为 6 个字节（48 比特）。</td>
+</tr>
+<tr>
+<td>源地址</td>
+<td>发送端的物理地址（MAC 地址），为 6 个字节（48 比特）。</td>
+</tr>
+<tr>
+<td>类型</td>
+<td>上层协议的类型。由于上层协议众多，所以在处理数据的时候必须设置该字段，标识数据交付哪个协议处理。例如，字段为 0x0800 时，表示将数据交付给 IP 协议。</td>
+</tr>
+<tr>
+<td>数据</td>
+<td>也称为效载荷，表示交付给上层的数据。以太网帧数据长度最小为 46 字节，最大为 1500 字节。如果不足 46 字节时，会填充到最小长度。最大值也叫最大传输单元（MTU）。</td>
+</tr>
+<tr>
+<td>帧检验序列 FCS</td>
+<td>检测该帧是否出现差错，占 4 个字节（32 比特）。发送端计算帧的循环冗余码校验（CRC）值，把这个值写到帧里。接收端重新计算 CRC，与 FCS 字段的值进行比较。如果两个值不相同，则表示传输过程中发生了数据丢失或改变。这时，就需要重新传输这一帧。</td>
+</tr>
+<tr>
+<td>包间间隙(Interpacket gap)</td>
+<td>包间间隙(IPG) 是包之间的空闲时间。发送一个数据包后，发送器需要在发送下一个数据包之前传输最少 96 位（12 个八位字节）的空闲线路状态。</td>
+</tr>
+</tbody></table>
+<h2 id="类型"><a href="#类型" class="headerlink" title="类型"></a>类型</h2><ul>
+<li>Ethernet II</li>
+<li>Novell raw IEEE 802.3</li>
+<li>IEEE 802.2 Logical Link Control (LLC)</li>
+<li>IEEE 802.2 Subnetwork Access Protocol (SNAP)</li>
+</ul>
+<p>不同的帧类型具有不同的格式和 MTU 值，但可以共存于同一物理介质上。根据下表可以区分帧类型。</p>
+<p>此外，所有四种以太网帧类型都可以选择包含一个 IEEE 802.1Q 标记，以标识它属于哪个 VLAN 及其优先级（服务质量）。这种封装在 IEEE 802.3ac 规范中定义，并将最大帧增加 4 个八位字节。</p>
+<img src="C:\Users\谭梁\AppData\Roaming\Typora\typora-user-images\image-20211002104229791.png" alt="image-20211002104229791" style="zoom: 80%;" />
+
+<p><strong>Ethernet II 帧格式</strong>和<strong>IEEE 802.3 格式</strong>，这两种格式的主要区别在于，Ethernet II 格式中包含一个<strong>Type 字段</strong>，标识以太帧处理完成之后将被发送到哪个上层协议进行处理。IEEE802.3 格式中，同样的位置是<strong>长度字段(Length)<strong>。不同的</strong>Type 字段值/Length 字段</strong>可以用来区别这两种帧的类型，当该字段小于等于 1500（或者十六进制的 0x05DC）时，帧使用的是 IEEE 802.3 格式。当该字段值大于等于 1536 （或者十六进制的 0x0600）时，帧使用的是 Ethernet II 格式。以太网中大多数的数据帧使用的是 Ethernet II 格式。</p>
+<p><img src="https://pic2.zhimg.com/80/v2-37b23e8384fa64f77503b9d548da5311_1440w.jpg" alt="img"></p>
+]]></content>
+      <categories>
+        <category>计算机网络</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>分支预测</title>
+    <url>/%E5%88%86%E6%94%AF%E9%A2%84%E6%B5%8B/</url>
+    <content><![CDATA[<p>分支预测解决流水线冲突中的控制冒险。在指令集中，分支指令包括条件指令和非条件指令。对无条件指令来说，无需进行条件判断，就可以获得跳转后的地址；但是对条件跳转指令，无论是条件直接跳转还是条件间接跳转指令（RISC-V 无此类指令），都需要在执行阶段才可以确定是否跳转，这样会影响取值阶段的效率。</p>
+<p><strong>举个简陋的例子说明分支预测的可行性：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">if (data[c] &gt;= 128)</span><br><span class="line">    sum += data[c];</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">T = branch taken</span><br><span class="line">N = branch not taken</span><br><span class="line"></span><br><span class="line">data[] = 0, 1, 2, 3, 4, ... 126, 127, 128, 129, 130, ... 250, 251, 252, ...</span><br><span class="line">branch = N  N  N  N  N  ...   N    N    T    T    T  ...   T    T    T  ...</span><br><span class="line">       = NNNNNNNNNNNN ... NNNNNNNTTTTTTTTT ... TTTTTTTTTT  (easy to predict)</span><br></pre></td></tr></table></figure>
+
+<p>可以发现，由于分支指令之间的相关性，根据分支历史可以预测出当前分支指令的方向与地址。</p>
+<p>不过要注意一点，即使分支预测成功率达到 90% 也是非常糟糕的。因为现代处理器流水线深度太深了，出错一次就要 flush 整个流水线，造成了性能的损失。</p>
+<h2 id="一、基本部件"><a href="#一、基本部件" class="headerlink" title="一、基本部件"></a>一、基本部件</h2><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210807143814880.png" alt="image-20210807143814880" style="zoom:50%;" />
+
+<ul>
+<li><p><strong>BTB</strong>（Branch Target Buffer, 分支目标缓冲器）</p>
+<p>用于<strong>预测目标地址</strong>。缓存保存了最近执行过的分支指令的 PC 值，以及它们的跳转目标地址。</p>
+</li>
+<li><p><strong>两比特饱和计数器</strong></p>
+<p><img src="https://hitsz-cslab.gitee.io/arch/lab2/assets/3-2.png" alt="img"></p>
+<p>四个状态：</p>
+<ul>
+<li>强跳转</li>
+<li>弱跳转</li>
+<li>强不跳转</li>
+<li>弱不跳转</li>
+</ul>
+<p>当执行一条分支指令时，会根据指令是否跳转来更新两比特饱和计数器。一个 2bit 状态机的核心思路就是：<strong>这次预测错了不要紧，再给你一次机会，还是预测错了的话那再改变预测结果</strong>。</p>
+</li>
+</ul>
+<h2 id="二、预测方向"><a href="#二、预测方向" class="headerlink" title="二、预测方向"></a>二、预测方向</h2><h3 id="2-1-静态预测"><a href="#2-1-静态预测" class="headerlink" title="2.1 静态预测"></a>2.1 静态预测</h3><p>静态预测不依赖任何过去执行过的指令和历史信息。</p>
+<ul>
+<li><p><strong>总预测接下来的指令都（不）跳转</strong>。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/8f114fa7d5d2558cab31be6030bda790_1440w.jpg" alt="img"></p>
+<p>可以看出，这种预测准确率都在 50%以上，最高的还达到了 99.4%。</p>
+</li>
+<li><p><strong>BTFN 跳转</strong>（Back Taken, Forward Not Taken），如果所跳转的目标地址位于跳转指令的前方（比当前指令晚执行），则不跳转；如果所跳转的目标地址位图跳转指令的后方（比当前指令早执行）则跳转。</p>
+</li>
+<li><p>某些指令一律预测跳转，其他指令一律预测不跳转</p>
+</li>
+</ul>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/421096-20171106023943446-433328795.png" alt="image"></p>
+<h3 id="2-2-动态预测"><a href="#2-2-动态预测" class="headerlink" title="2.2 动态预测"></a>2.2 动态预测</h3><p>动态分支预测使用运行时收集的关于跳转或未跳转的分支信息来预测分支结果。</p>
+<h4 id="2-2-1-一级预测器"><a href="#2-2-1-一级预测器" class="headerlink" title="2.2.1 一级预测器"></a>2.2.1 一级预测器</h4><p>直接将“两比特饱和计数器”组织成一维表格，称为预测器表格，并直接使用 PC 值的一部分进行索引。譬如使用 PC 的后 10 位作为索引，则仅需要维护 1000 个表项的表格。</p>
+<p>“一级”是指其索引仅仅采用指令本身的 PC 值。</p>
+<p>该方法简单，但索引机制过于简单。像低 10 位相同但高位不相同的 PC，就会指向同样的表项。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/5a0becc8ebd91ccfd43b74383c729075_1440w.jpg" alt="img"></p>
+<h4 id="2-2-2-二级预测器"><a href="#2-2-2-二级预测器" class="headerlink" title="2.2.2 二级预测器"></a>2.2.2 二级预测器</h4><p>也称为<strong>相关预测器</strong>，如其名字所述，分为两级：Branch history 以及 Pattern history table。</p>
+  <img src="D:\Users\图片\Saved Pictures\840px-Two-level_branch_prediction.svg.png" alt="840px-Two-level_branch_prediction.svg" style="zoom: 33%;" />
+
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/74364714907197a556de2895dc62027a_1440w.jpg" alt="img"></p>
+<p>图中每两条虚线之间是 4%。可以看到大部分预测的准确率都已经达到了 <strong>96%</strong> 以上了。</p>
+<h5 id="基于分支历史的分支预测器"><a href="#基于分支历史的分支预测器" class="headerlink" title="基于分支历史的分支预测器"></a>基于分支历史的分支预测器</h5><p>Branch history 可分为局部历史和全局历史。全局历史是指每个分支指令自己的分支跳转历史，全局历史是指所有分支指令的指令跳转历史。</p>
+<ul>
+<li><p><strong>全局分支预测器</strong></p>
+<p>基于全局历史的分支预测方法在 BHT 的基础上增加了<strong>GHR（Global History Register，全局历史寄存器）</strong>来将所有分支指令关联起来，即使用一个 k 比特的 GHR 来记录所有最近 k 条分支指令的历史。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/3-4.png" alt="img"></p>
+<p>最有代表性的全局分支算法是 Gshare 算法和 Gselect 算法。</p>
+<ul>
+<li><p>Gshare 算法</p>
+<p>将分支指令的地址和 GHR 进行<strong>异或</strong>，将结果作为 PHT 的索引。</p>
+</li>
+<li><p>Gselect 算法</p>
+<p>将分支指令的地址和 GHR 直接<strong>拼接</strong>，将结果作为 PHT 的索引。</p>
+</li>
+</ul>
+</li>
+<li><p><strong>局部分支预测器</strong></p>
+<p>基于全局历史的分支预测方法将所有分支指令都关联到一起。然而事实上，并非所有的分支指令都具有关联性。为此，基于局部历史的分支预测方法使用<strong>LHT（Local History Table，局部历史表）</strong>来代替全局历史预测中的 GHR。</p>
+<p>LHT 一般具有 64 条记录，每条记录均包含 Tag 和局部转移历史 2 个字段。其中，Tag 字段是分支指令地址的一部分，局部转移历史字段则是 k 比特的移位寄存器，其作用等同于 GHR。</p>
+<p><img src="https://hitsz-cslab.gitee.io/arch/lab2/assets/3-5.png" alt="img"></p>
+</li>
+</ul>
+<h5 id="锦标赛分支预测"><a href="#锦标赛分支预测" class="headerlink" title="锦标赛分支预测"></a>锦标赛分支预测</h5><p>锦标赛分支预测（又称混合分支预测或组合分支预测）是一种博采众长的分支预测方法，其基本原理是将两个或以上的分支预测方法进行结合，充分发挥各预测方法的优势，以进一步提高分支预测的准确度。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/3-6.png" alt="img"></p>
+<h2 id="三、预测地址"><a href="#三、预测地址" class="headerlink" title="三、预测地址"></a>三、预测地址</h2><ul>
+<li><p>BTB</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/BTB-NutShell.jpg" alt="BTB"></p>
+<ul>
+<li>使用容量有限的缓存保存最近执行过的分支指 PC 值，以及它们的跳转目标地址。对于后续要取指的每条 PC 值，将其与 BTB 中存储的各个 PC 值进行比较，如果出现匹配，则预测这是 分支指令，并使用其对应存储的跳转目标地址作为预测的跳转地址。</li>
+<li>是其缺点之一是不能将 BTB 容量做到太大， 否则面积和时序都无法接受。</li>
+<li>另一个缺点是对于间接跳转（indirect Jump/Branch ）指令的预测效果并不理想，这主要是由于间接跳转分支的目标地址是使用寄存器索引的操作数（基地址寄存器）计算所得，而寄存器中的值随着程序执行可能每次都不一样，因此 BTB 中存储的上次跳转的目标地址并不一定等于本次跳转的目标值。不过，RISC-V 指令架构无需担心这点，因为 RISC-V 没有条件间接跳转指令。</li>
+</ul>
+</li>
+<li><p>RAS</p>
+<ul>
+<li>使用容量有限的硬件堆栈来存储函数调用的返回地址。</li>
+<li>间接跳转指令可以用于函数的调用和返回，而函数的调用和返回在程序中往往是成对出现的，因此可以在函数调用（使用分支跳转指令）时将当前 PC 值加 4（或者加 2）， 即其顺序执行的下一条指令的 PC 值压入 RAS 中，等到函数返回（使用分支跳转指令〉时将 RAS 中的值弹出，这样就可以快速地为该函数返回的分支跳转指令预测目标地址。</li>
+</ul>
+</li>
+</ul>
+<p>在 NutShell 处理器中，在做分支预测时会用取指 PC 索引 BTB 表项, 如果 PC 高位与读到的 BTB 表项的标签匹配则认为 BTB 命中, 再根据 BTB 中记录的指令类型判断跳转方向和跳转目标. 如果类型为条件分支指令, 则需要访问模式历史表 (PHT) 来判断是否跳转; 如果类型为返回指令, 则选择返回地址栈 (RAS) 的栈顶内容作为跳转目标; 如果类型为直接或间接跳转指令, 则选择 BTB 中记录的跳转目标.</p>
+<h2 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h2><ul>
+<li><p><a href="https://stackoverflow.com/questions/11227809/why-is-processing-a-sorted-array-faster-than-processing-an-unsorted-array#11227902">StackOverflow 回答 What is Branch Prediction?</a></p>
+</li>
+<li><p><a href="https://www.cnblogs.com/TaigaCon/p/7791303.html">Branch Prediction</a></p>
+</li>
+<li><p><a href="https://hitsz-cslab.gitee.io/arch/lab2/1-theory/">哈工大-分支预测器设计</a></p>
+</li>
+<li><p><a href="https://www.wikiwand.com/en/Branch_predictor">wiki-Branch predictor</a></p>
+</li>
+</ul>
 ]]></content>
       <categories>
         <category>计算机体系结构</category>
@@ -384,112 +490,6 @@
 ]]></content>
       <categories>
         <category>操作系统</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>分支预测</title>
-    <url>/%E5%88%86%E6%94%AF%E9%A2%84%E6%B5%8B/</url>
-    <content><![CDATA[<p>分支预测解决流水线冲突中的控制冒险。在指令集中，分支指令包括条件指令和非条件指令。对无条件指令来说，无需进行条件判断，就可以获得跳转后的地址；但是对条件跳转指令，无论是条件直接跳转还是条件间接跳转指令（RISC-V 无此类指令），都需要在执行阶段才可以确定是否跳转，这样会影响取值阶段的效率。</p>
-<p><strong>举个简陋的例子说明分支预测的可行性：</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">if (data[c] &gt;= 128)</span><br><span class="line">    sum += data[c];</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">T = branch taken</span><br><span class="line">N = branch not taken</span><br><span class="line"></span><br><span class="line">data[] = 0, 1, 2, 3, 4, ... 126, 127, 128, 129, 130, ... 250, 251, 252, ...</span><br><span class="line">branch = N  N  N  N  N  ...   N    N    T    T    T  ...   T    T    T  ...</span><br><span class="line">       = NNNNNNNNNNNN ... NNNNNNNTTTTTTTTT ... TTTTTTTTTT  (easy to predict)</span><br></pre></td></tr></table></figure>
-
-<p>可以发现，由于分支指令之间的相关性，根据分支历史可以预测出当前分支指令的方向与地址。</p>
-<p>不过要注意一点，即使分支预测成功率达到 90% 也是非常糟糕的。因为现代处理器流水线深度太深了，出错一次就要 flush 整个流水线，造成了性能的损失。</p>
-<h2 id="一、基本部件"><a href="#一、基本部件" class="headerlink" title="一、基本部件"></a>一、基本部件</h2><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210807143814880.png" alt="image-20210807143814880" style="zoom:50%;" />
-
-<ul>
-<li><p><strong>BTB</strong>（Branch Target Buffer, 分支目标缓冲器）</p>
-<p>用于<strong>预测目标地址</strong>。缓存保存了最近执行过的分支指令的 PC 值，以及它们的跳转目标地址。</p>
-</li>
-<li><p><strong>两比特饱和计数器</strong></p>
-<p><img src="https://hitsz-cslab.gitee.io/arch/lab2/assets/3-2.png" alt="img"></p>
-<p>四个状态：</p>
-<ul>
-<li>强跳转</li>
-<li>弱跳转</li>
-<li>强不跳转</li>
-<li>弱不跳转</li>
-</ul>
-<p>当执行一条分支指令时，会根据指令是否跳转来更新两比特饱和计数器。一个 2bit 状态机的核心思路就是：<strong>这次预测错了不要紧，再给你一次机会，还是预测错了的话那再改变预测结果</strong>。</p>
-</li>
-</ul>
-<h2 id="二、预测方向"><a href="#二、预测方向" class="headerlink" title="二、预测方向"></a>二、预测方向</h2><h3 id="2-1-静态预测"><a href="#2-1-静态预测" class="headerlink" title="2.1 静态预测"></a>2.1 静态预测</h3><p>静态预测不依赖任何过去执行过的指令和历史信息。</p>
-<ul>
-<li><p><strong>总预测接下来的指令都（不）跳转</strong>。</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/8f114fa7d5d2558cab31be6030bda790_1440w.jpg" alt="img"></p>
-<p>可以看出，这种预测准确率都在 50%以上，最高的还达到了 99.4%。</p>
-</li>
-<li><p><strong>BTFN 跳转</strong>（Back Taken, Forward Not Taken），如果所跳转的目标地址位于跳转指令的前方（比当前指令晚执行），则不跳转；如果所跳转的目标地址位图跳转指令的后方（比当前指令早执行）则跳转。</p>
-</li>
-<li><p>某些指令一律预测跳转，其他指令一律预测不跳转</p>
-</li>
-</ul>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/421096-20171106023943446-433328795.png" alt="image"></p>
-<h3 id="2-2-动态预测"><a href="#2-2-动态预测" class="headerlink" title="2.2 动态预测"></a>2.2 动态预测</h3><p>动态分支预测使用运行时收集的关于跳转或未跳转的分支信息来预测分支结果。</p>
-<h4 id="2-2-1-一级预测器"><a href="#2-2-1-一级预测器" class="headerlink" title="2.2.1 一级预测器"></a>2.2.1 一级预测器</h4><p>直接将“两比特饱和计数器”组织成一维表格，称为预测器表格，并直接使用 PC 值的一部分进行索引。譬如使用 PC 的后 10 位作为索引，则仅需要维护 1000 个表项的表格。</p>
-<p>“一级”是指其索引仅仅采用指令本身的 PC 值。</p>
-<p>该方法简单，但索引机制过于简单。像低 10 位相同但高位不相同的 PC，就会指向同样的表项。</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/5a0becc8ebd91ccfd43b74383c729075_1440w.jpg" alt="img"></p>
-<h4 id="2-2-2-二级预测器"><a href="#2-2-2-二级预测器" class="headerlink" title="2.2.2 二级预测器"></a>2.2.2 二级预测器</h4><p>也称为<strong>相关预测器</strong>，如其名字所述，分为两级：Branch history 以及 Pattern history table。</p>
-  <img src="D:\Users\图片\Saved Pictures\840px-Two-level_branch_prediction.svg.png" alt="840px-Two-level_branch_prediction.svg" style="zoom: 33%;" />
-
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/74364714907197a556de2895dc62027a_1440w.jpg" alt="img"></p>
-<p>图中每两条虚线之间是 4%。可以看到大部分预测的准确率都已经达到了 <strong>96%</strong> 以上了。</p>
-<h5 id="基于分支历史的分支预测器"><a href="#基于分支历史的分支预测器" class="headerlink" title="基于分支历史的分支预测器"></a>基于分支历史的分支预测器</h5><p>Branch history 可分为局部历史和全局历史。全局历史是指每个分支指令自己的分支跳转历史，全局历史是指所有分支指令的指令跳转历史。</p>
-<ul>
-<li><p><strong>全局分支预测器</strong></p>
-<p>基于全局历史的分支预测方法在 BHT 的基础上增加了<strong>GHR（Global History Register，全局历史寄存器）</strong>来将所有分支指令关联起来，即使用一个 k 比特的 GHR 来记录所有最近 k 条分支指令的历史。</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/3-4.png" alt="img"></p>
-<p>最有代表性的全局分支算法是 Gshare 算法和 Gselect 算法。</p>
-<ul>
-<li><p>Gshare 算法</p>
-<p>将分支指令的地址和 GHR 进行<strong>异或</strong>，将结果作为 PHT 的索引。</p>
-</li>
-<li><p>Gselect 算法</p>
-<p>将分支指令的地址和 GHR 直接<strong>拼接</strong>，将结果作为 PHT 的索引。</p>
-</li>
-</ul>
-</li>
-<li><p><strong>局部分支预测器</strong></p>
-<p>基于全局历史的分支预测方法将所有分支指令都关联到一起。然而事实上，并非所有的分支指令都具有关联性。为此，基于局部历史的分支预测方法使用<strong>LHT（Local History Table，局部历史表）</strong>来代替全局历史预测中的 GHR。</p>
-<p>LHT 一般具有 64 条记录，每条记录均包含 Tag 和局部转移历史 2 个字段。其中，Tag 字段是分支指令地址的一部分，局部转移历史字段则是 k 比特的移位寄存器，其作用等同于 GHR。</p>
-<p><img src="https://hitsz-cslab.gitee.io/arch/lab2/assets/3-5.png" alt="img"></p>
-</li>
-</ul>
-<h5 id="锦标赛分支预测"><a href="#锦标赛分支预测" class="headerlink" title="锦标赛分支预测"></a>锦标赛分支预测</h5><p>锦标赛分支预测（又称混合分支预测或组合分支预测）是一种博采众长的分支预测方法，其基本原理是将两个或以上的分支预测方法进行结合，充分发挥各预测方法的优势，以进一步提高分支预测的准确度。</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/3-6.png" alt="img"></p>
-<h2 id="三、预测地址"><a href="#三、预测地址" class="headerlink" title="三、预测地址"></a>三、预测地址</h2><ul>
-<li><p>BTB</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/BTB-NutShell.jpg" alt="BTB"></p>
-<ul>
-<li>使用容量有限的缓存保存最近执行过的分支指 PC 值，以及它们的跳转目标地址。对于后续要取指的每条 PC 值，将其与 BTB 中存储的各个 PC 值进行比较，如果出现匹配，则预测这是 分支指令，并使用其对应存储的跳转目标地址作为预测的跳转地址。</li>
-<li>是其缺点之一是不能将 BTB 容量做到太大， 否则面积和时序都无法接受。</li>
-<li>另一个缺点是对于间接跳转（indirect Jump/Branch ）指令的预测效果并不理想，这主要是由于间接跳转分支的目标地址是使用寄存器索引的操作数（基地址寄存器）计算所得，而寄存器中的值随着程序执行可能每次都不一样，因此 BTB 中存储的上次跳转的目标地址并不一定等于本次跳转的目标值。不过，RISC-V 指令架构无需担心这点，因为 RISC-V 没有条件间接跳转指令。</li>
-</ul>
-</li>
-<li><p>RAS</p>
-<ul>
-<li>使用容量有限的硬件堆栈来存储函数调用的返回地址。</li>
-<li>间接跳转指令可以用于函数的调用和返回，而函数的调用和返回在程序中往往是成对出现的，因此可以在函数调用（使用分支跳转指令）时将当前 PC 值加 4（或者加 2）， 即其顺序执行的下一条指令的 PC 值压入 RAS 中，等到函数返回（使用分支跳转指令〉时将 RAS 中的值弹出，这样就可以快速地为该函数返回的分支跳转指令预测目标地址。</li>
-</ul>
-</li>
-</ul>
-<p>在 NutShell 处理器中，在做分支预测时会用取指 PC 索引 BTB 表项, 如果 PC 高位与读到的 BTB 表项的标签匹配则认为 BTB 命中, 再根据 BTB 中记录的指令类型判断跳转方向和跳转目标. 如果类型为条件分支指令, 则需要访问模式历史表 (PHT) 来判断是否跳转; 如果类型为返回指令, 则选择返回地址栈 (RAS) 的栈顶内容作为跳转目标; 如果类型为直接或间接跳转指令, 则选择 BTB 中记录的跳转目标.</p>
-<h2 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h2><ul>
-<li><p><a href="https://stackoverflow.com/questions/11227809/why-is-processing-a-sorted-array-faster-than-processing-an-unsorted-array#11227902">StackOverflow 回答 What is Branch Prediction?</a></p>
-</li>
-<li><p><a href="https://www.cnblogs.com/TaigaCon/p/7791303.html">Branch Prediction</a></p>
-</li>
-<li><p><a href="https://hitsz-cslab.gitee.io/arch/lab2/1-theory/">哈工大-分支预测器设计</a></p>
-</li>
-<li><p><a href="https://www.wikiwand.com/en/Branch_predictor">wiki-Branch predictor</a></p>
-</li>
-</ul>
-]]></content>
-      <categories>
-        <category>计算机体系结构</category>
       </categories>
   </entry>
   <entry>
@@ -937,6 +937,181 @@
       </tags>
   </entry>
   <entry>
+    <title>流水线技术</title>
+    <url>/%E6%B5%81%E6%B0%B4%E7%BA%BF%E6%8A%80%E6%9C%AF/</url>
+    <content><![CDATA[<h2 id="一、流水线技术介绍"><a href="#一、流水线技术介绍" class="headerlink" title="一、流水线技术介绍"></a>一、流水线技术介绍</h2><h3 id="1-1-什么是流水线"><a href="#1-1-什么是流水线" class="headerlink" title="1.1 什么是流水线"></a>1.1 什么是流水线</h3><p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211013131217427.png"></p>
+<p>流水线是实现<strong>多条指令重叠执行</strong>的技术，其目的是在硬件尽可能的情况下<strong>增加吞吐量</strong>。一条指令的执行需要多个操作，流水线技术充分利用了这些操作之间的<strong>并行性</strong>。<strong>流水线是加快 CPU 速度的关键实现技术</strong>。</p>
+<p>拿洗衣服来举例子，假设洗衣服有四个步骤（每个步骤用时相同）：</p>
+<ul>
+<li>洗衣机洗衣</li>
+<li>烘干机烘干</li>
+<li>叠好衣服</li>
+<li>放进衣柜</li>
+</ul>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211013131302027.png"></p>
+<p>如上图一所示，每个人洗完自己的衣服，下一个人才可以开始洗自己的衣服，总共需要花费 16 个步骤时间；上图二所示，每个人并行洗衣。当一个人洗衣机用完时，进入烘干机阶段，另一人立刻进入洗衣机阶段。此时总共只要花费 7 个步骤时间。</p>
+<h3 id="1-2-经典的五级流水线"><a href="#1-2-经典的五级流水线" class="headerlink" title="1.2 经典的五级流水线"></a>1.2 经典的五级流水线</h3><p>流水线是指将计算机指令过程分为多个步骤，并通过多个硬件处理单元并行执行来加快指令执行速度。其中有两个关键点：</p>
+<ul>
+<li>拆分过程</li>
+<li>并行</li>
+</ul>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211013083408358.png" alt="image-20211013083408358"></p>
+<ul>
+<li><p><strong>取指令（fetch）</strong></p>
+<p>根据 PC 将指令从存储器中读取出来的过程。</p>
+</li>
+<li><p><strong>译码（decode）</strong></p>
+<p>对指令进行译码，从通用寄存器堆（Regfile）中将操作数读出。</p>
+</li>
+<li><p><strong>执行（execute）</strong></p>
+<p>对指令进行真正运算的过程。</p>
+</li>
+<li><p><strong>访存（memory access）</strong></p>
+<p>指存储器访问指令将数据从存储器中读出，或者写入存储器的过程</p>
+</li>
+<li><p><strong>写回（write back）</strong></p>
+<p>指将指令执行的结果写回通用寄存器组的过程。如果是普通运算指令，该结果值来自于“执行”阶段计算的结果：如果是存储器读指令，该结果来自于“访存”阶段从存储器中读取出来的数据。</p>
+</li>
+</ul>
+<h3 id="1-3-流水线划分"><a href="#1-3-流水线划分" class="headerlink" title="1.3 流水线划分"></a>1.3 流水线划分</h3><p>流水线划分条件：</p>
+<ul>
+<li>流水线中每个阶段所需的时间近乎相等。</li>
+<li>流水线中每个阶段的操作都会被重复执行。</li>
+<li>流水线中每个阶段的操作都与其他流水段相互独立。</li>
+</ul>
+<p>不同的指令集，流水线实现的难易也是不同的。对于复杂的 CISC 指令集，如 x86，指令长度不同，并且执行时间 也不同，所以直接实现流水线是比较复杂的；对 RISC 来说，如 MIPS 和 ARM，由于指令的长度相等，并且每条指令所完成的任务比较规整，所以较容易用流水线实现。</p>
+<h3 id="1-4-流水线的深度"><a href="#1-4-流水线的深度" class="headerlink" title="1.4 流水线的深度"></a>1.4 流水线的深度</h3><ul>
+<li>在两级寄存器（每一级流水线由寄存器组成〉之间的硬件逻辑越少，就意味能够运行到更高的主频。因此， 现代的处理器流水线极深主要是由于处理器追求高频的指标所驱使。主频越高也意味着流水线的吞吐率越高，从而性能越高。</li>
+<li>由于每一级流水线都由寄存器组成，更多的流水线级数要消耗更多的寄存器，以及更多的面积开销。</li>
+<li>较深的处理器流水线还有一个问题，那就是由于在流水线的取指令阶段无法得知条件跳转的结果是到底跳还是不跳，因此只能进行预测，而到了流水线的末端才能够通过实际的运算得知该分支是真的该跳还是不该跳。如果发现真实的结果与之前预测的结果不相符，则意味着预测失败，需要将所有预取的错误指令流全部丢弃掉。重新取正确的指令流，这个过程叫作“流水线冲刷（ Pipeline Flush ）” 。那么，流水线的深度越深，意味着己经预取了更多的错误指令流，需要将其全部抛弃然后重启，不仅白白浪费了功耗，还造成了性能的损失。</li>
+</ul>
+<h2 id="二、流水线冲突"><a href="#二、流水线冲突" class="headerlink" title="二、流水线冲突"></a>二、流水线冲突</h2><h3 id="2-1-结构冒险"><a href="#2-1-结构冒险" class="headerlink" title="2.1 结构冒险"></a>2.1 结构冒险</h3><p><strong>同一个部件同时被不同指令所使用。</strong>比如说，当处理器是冯诺依曼结构时，只有一个存储器。在访存阶段，一条需要读出一条数据，而另一条指令需要写入一条数据，这时就会产生结构冒险。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/structural-dependency-scenario.png" alt="Structural dependency scenario"></p>
+<h3 id="2-2-数据冒险"><a href="#2-2-数据冒险" class="headerlink" title="2.2 数据冒险"></a>2.2 数据冒险</h3><ul>
+<li><p><strong>WAR（Write After Read）</strong></p>
+<p>假设指令 j 是在指令 i 后面执行的指令，WAR 表示指令 i 读出数据后，指令 j 才能写这个寄存器。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ADD R2, R1, R0</span><br><span class="line">SUB R0, R3, R4</span><br></pre></td></tr></table></figure></li>
+<li><p><strong>WAW（Write After Write）</strong></p>
+<p>假设指令 j 是在指令 i 后面执行的指令，WAW 表示指令 i 将数据写入寄存器后，指令 j 才能将数据写入这个寄存器。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ADD R0, R1, R2</span><br><span class="line">SUB R0, R4, R5</span><br></pre></td></tr></table></figure></li>
+<li><p><strong>RAW（Read After Write）</strong></p>
+<p>假设指令 j 是在指令 i 后面执行的指令，RAW 表示指令 i 将数据写入寄存器后，指令 j 才能从这个寄存器读取数据。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ADD r1,r2,r3</span><br><span class="line">SUB r4,r5,r1</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="2-3-控制冒险"><a href="#2-3-控制冒险" class="headerlink" title="2.3 控制冒险"></a>2.3 控制冒险</h3><p>转移或异常改变执行流程，顺序执行指令在目标地址产生前已被取出。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/control-hazard-scenario.png" alt="Control Hazard scenario"></p>
+<h2 id="三、流水线冲突解决方法"><a href="#三、流水线冲突解决方法" class="headerlink" title="三、流水线冲突解决方法"></a>三、流水线冲突解决方法</h2><h3 id="3-1-结构冒险"><a href="#3-1-结构冒险" class="headerlink" title="3.1 结构冒险"></a>3.1 结构冒险</h3><ul>
+<li>采用哈弗结构，指令存储器和数据存储器分离。</li>
+<li>多级缓存</li>
+</ul>
+<h3 id="3-2-数据冒险"><a href="#3-2-数据冒险" class="headerlink" title="3.2 数据冒险"></a>3.2 数据冒险</h3><ul>
+<li><p>流水线阻塞(stall)</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211013155921245.png" alt="image-20211013155921245"></p>
+</li>
+<li><p>软件插入“NOP”指令</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211013160016394.png" alt="image-20211013160016394"></p>
+</li>
+<li><p>寄存器重命名</p>
+</li>
+<li><p>编译优化：调整指令顺序</p>
+</li>
+<li><p>旁路(Bypassing)技术</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/20190401202913338.png" alt="img"></p>
+<p>但是，Bypassing 并不能解决所以的数据冒险问题，它不能解决 Load-use data hazard。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211013161449294.png" alt="image-20211013161449294"></p>
+</li>
+</ul>
+<h3 id="3-3-控制冒险"><a href="#3-3-控制冒险" class="headerlink" title="3.3 控制冒险"></a>3.3 控制冒险</h3><ul>
+<li><strong>动态分支预测</strong></li>
+<li>硬件阻塞(stall)</li>
+<li>插入三条“NOP”指令</li>
+</ul>
+]]></content>
+      <categories>
+        <category>计算机体系结构</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>符号与符号表</title>
+    <url>/%E7%AC%A6%E5%8F%B7%E4%B8%8E%E7%AC%A6%E5%8F%B7%E8%A1%A8/</url>
+    <content><![CDATA[<p>我们知道链接操作的第一步：</p>
+<p><strong>符号解析</strong></p>
+<ul>
+<li>程序中有定义和引用的符号</li>
+<li>编译器将定义的符号存放在一个符号表（symbol table）中</li>
+<li>编译器将符号引用存放在重定位节（.rel.text和.rel.data）中</li>
+<li>链接器将每个符号引用都与一个确定的符号定义建立关联</li>
+</ul>
+<h2 id="符号"><a href="#符号" class="headerlink" title="符号"></a>符号</h2><p><strong>符号就是其实程序中的变量名、函数名。</strong></p>
+<h3 id="符号定义与符号引用"><a href="#符号定义与符号引用" class="headerlink" title="符号定义与符号引用"></a>符号定义与符号引用</h3><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210724091642042.png" alt="image-20210724091642042" style="zoom: 33%;" />
+
+<h4 id="符号定义的本质"><a href="#符号定义的本质" class="headerlink" title="符号定义的本质"></a>符号定义的本质</h4><blockquote>
+<p>指被分配了存储空间。如果是函数名则指代码所在区；如果是变量名则指其所在的静态数据区。</p>
+</blockquote>
+<h3 id="链接符号的类型"><a href="#链接符号的类型" class="headerlink" title="链接符号的类型"></a>链接符号的类型</h3><p>每个可重定位目标模块都有一个符号表，它包含了定义和引用的符号。有三种链接器符号：</p>
+<ul>
+<li><p>Global symbols（<strong>全局符号</strong>）</p>
+<blockquote>
+<p>定义在本目标文件的全局符号，可以被其他目标文件引用。</p>
+</blockquote>
+</li>
+<li><p>External symbols（<strong>外部符号</strong>）</p>
+<blockquote>
+<p>在本目标文件中引用的全局变量，却没有定义在本目标文件。</p>
+</blockquote>
+</li>
+<li><p>Local symbols（<strong>局部符号</strong>）</p>
+<blockquote>
+<p>只在编译单元内部。</p>
+</blockquote>
+</li>
+</ul>
+<img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210724095744156.png" alt="image-20210724095744156" style="zoom:33%;" />
+
+<h2 id="目标文件中的符号表"><a href="#目标文件中的符号表" class="headerlink" title="目标文件中的符号表"></a>目标文件中的符号表</h2><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">   Elf32_Word st_name;	<span class="comment">/*符号对应宇符串在 strtab节中的偏移量*/</span></span><br><span class="line">	Elf32_Addr st_value; 	<span class="comment">/*在对应节中的偏移量,或虚拟地址*/</span></span><br><span class="line">	Elf32_Word st_size;		<span class="comment">/*符号对应目标字节数，函数大小或变量长度*/</span></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">char</span> st_info;<span class="comment">/*指出符号的类型(Type)和绑定属性(Bind)*/</span></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">char</span> st_other;</span><br><span class="line">	Elf32_Half st_shndx;	<span class="comment">/*符号对应目标所在的节,或其他倩况*/</span></span><br><span class="line">&#125; Elf32_Sym;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210723165921745.png" alt="image-20210723165921745"></p>
+<h2 id="符号解析"><a href="#符号解析" class="headerlink" title="符号解析"></a>符号解析</h2><blockquote>
+<p>将每个模块中引用的符号与某个目标模块中的定义符号建立关联。</p>
+</blockquote>
+<p>每个定义符号在代码段或数据段中都被分配了存储空间，将引用符号与定义符号建立关联后，就可在重定位时将引用符号的地址重定位为相关联的定义符号的地址。</p>
+<p>本地符号在本模块内定义并引用，因此其解析较简单，只要与本模块內唯一的定义符号关联即可。</p>
+<p>全局符号(外部定义的、内部定义的)的解析涉及多个模块，故较复杂。</p>
+<h2 id="全局符号的强、弱"><a href="#全局符号的强、弱" class="headerlink" title="全局符号的强、弱"></a>全局符号的强、弱</h2><p>全局符号有强、弱的特性。</p>
+<ul>
+<li>强符号：函数名和已初始化的全局变量名。</li>
+<li>弱符号：未初始化的全局变量名。</li>
+</ul>
+<img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210724104209132.png" alt="image-20210724104209132" style="zoom:33%;" />
+
+<h2 id="链接器对符号的解析规则"><a href="#链接器对符号的解析规则" class="headerlink" title="链接器对符号的解析规则"></a>链接器对符号的解析规则</h2><p>符号解析时，只能有一个确定的定义（即每个符号仅占一处存储空间）。如果碰到符号存在多重定义时，就得有相应的处理规则：</p>
+<ul>
+<li><p>Rule 1：强符号不能多次定义</p>
+<img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210724105327383.png" alt="image-20210724105327383" style="zoom: 33%;" /></li>
+<li><p>Rule 2：若一个符号被定义为一次强符号和多次弱符号，则按强符号定义为准。</p>
+<img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210724105451041.png" alt="image-20210724105451041" style="zoom: 25%;" /></li>
+<li><p>Rule 3：若有多个弱符号定义，则任选其中一个。</p>
+</li>
+</ul>
+<p>关于全局符号的多重定义的问题：</p>
+<ul>
+<li>尽量避免使用全局变量</li>
+<li>一定要使用的话，就按以下规则使用<ul>
+<li>尽量使用本地变量（static）</li>
+<li>全局变量要赋初值</li>
+<li>外部全局变量要使用extern</li>
+</ul>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>链接、装载与库</category>
+      </categories>
+      <tags>
+        <tag>程序员的自我修养</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>物理内存管理：连续内存分配</title>
     <url>/%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%EF%BC%9A%E8%BF%9E%E7%BB%AD%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D/</url>
     <content><![CDATA[<h2 id="固定分区分配"><a href="#固定分区分配" class="headerlink" title="固定分区分配"></a>固定分区分配</h2><p>固定分区分配时最简单的一种可运行多道程序的储存管理方式。用户空间被划分为若干个固定的大小区域，每个分区只装入一道作业，这样一来，可以几道作业并发运行。当一有空闲时，可以从外存的后备作业队列中选择一个适当大小的作业装入该分区，由此往复运行作业。</p>
@@ -1047,101 +1222,6 @@
       </tags>
   </entry>
   <entry>
-    <title>流水线技术</title>
-    <url>/%E6%B5%81%E6%B0%B4%E7%BA%BF%E6%8A%80%E6%9C%AF/</url>
-    <content><![CDATA[<h2 id="一、流水线技术介绍"><a href="#一、流水线技术介绍" class="headerlink" title="一、流水线技术介绍"></a>一、流水线技术介绍</h2><h3 id="1-1-什么是流水线"><a href="#1-1-什么是流水线" class="headerlink" title="1.1 什么是流水线"></a>1.1 什么是流水线</h3><p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211013131217427.png"></p>
-<p>流水线是实现<strong>多条指令重叠执行</strong>的技术，其目的是在硬件尽可能的情况下<strong>增加吞吐量</strong>。一条指令的执行需要多个操作，流水线技术充分利用了这些操作之间的<strong>并行性</strong>。<strong>流水线是加快 CPU 速度的关键实现技术</strong>。</p>
-<p>拿洗衣服来举例子，假设洗衣服有四个步骤（每个步骤用时相同）：</p>
-<ul>
-<li>洗衣机洗衣</li>
-<li>烘干机烘干</li>
-<li>叠好衣服</li>
-<li>放进衣柜</li>
-</ul>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211013131302027.png"></p>
-<p>如上图一所示，每个人洗完自己的衣服，下一个人才可以开始洗自己的衣服，总共需要花费 16 个步骤时间；上图二所示，每个人并行洗衣。当一个人洗衣机用完时，进入烘干机阶段，另一人立刻进入洗衣机阶段。此时总共只要花费 7 个步骤时间。</p>
-<h3 id="1-2-经典的五级流水线"><a href="#1-2-经典的五级流水线" class="headerlink" title="1.2 经典的五级流水线"></a>1.2 经典的五级流水线</h3><p>流水线是指将计算机指令过程分为多个步骤，并通过多个硬件处理单元并行执行来加快指令执行速度。其中有两个关键点：</p>
-<ul>
-<li>拆分过程</li>
-<li>并行</li>
-</ul>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211013083408358.png" alt="image-20211013083408358"></p>
-<ul>
-<li><p><strong>取指令（fetch）</strong></p>
-<p>根据 PC 将指令从存储器中读取出来的过程。</p>
-</li>
-<li><p><strong>译码（decode）</strong></p>
-<p>对指令进行译码，从通用寄存器堆（Regfile）中将操作数读出。</p>
-</li>
-<li><p><strong>执行（execute）</strong></p>
-<p>对指令进行真正运算的过程。</p>
-</li>
-<li><p><strong>访存（memory access）</strong></p>
-<p>指存储器访问指令将数据从存储器中读出，或者写入存储器的过程</p>
-</li>
-<li><p><strong>写回（write back）</strong></p>
-<p>指将指令执行的结果写回通用寄存器组的过程。如果是普通运算指令，该结果值来自于“执行”阶段计算的结果：如果是存储器读指令，该结果来自于“访存”阶段从存储器中读取出来的数据。</p>
-</li>
-</ul>
-<h3 id="1-3-流水线划分"><a href="#1-3-流水线划分" class="headerlink" title="1.3 流水线划分"></a>1.3 流水线划分</h3><p>流水线划分条件：</p>
-<ul>
-<li>流水线中每个阶段所需的时间近乎相等。</li>
-<li>流水线中每个阶段的操作都会被重复执行。</li>
-<li>流水线中每个阶段的操作都与其他流水段相互独立。</li>
-</ul>
-<p>不同的指令集，流水线实现的难易也是不同的。对于复杂的 CISC 指令集，如 x86，指令长度不同，并且执行时间 也不同，所以直接实现流水线是比较复杂的；对 RISC 来说，如 MIPS 和 ARM，由于指令的长度相等，并且每条指令所完成的任务比较规整，所以较容易用流水线实现。</p>
-<h3 id="1-4-流水线的深度"><a href="#1-4-流水线的深度" class="headerlink" title="1.4 流水线的深度"></a>1.4 流水线的深度</h3><ul>
-<li>在两级寄存器（每一级流水线由寄存器组成〉之间的硬件逻辑越少，就意味能够运行到更高的主频。因此， 现代的处理器流水线极深主要是由于处理器追求高频的指标所驱使。主频越高也意味着流水线的吞吐率越高，从而性能越高。</li>
-<li>由于每一级流水线都由寄存器组成，更多的流水线级数要消耗更多的寄存器，以及更多的面积开销。</li>
-<li>较深的处理器流水线还有一个问题，那就是由于在流水线的取指令阶段无法得知条件跳转的结果是到底跳还是不跳，因此只能进行预测，而到了流水线的末端才能够通过实际的运算得知该分支是真的该跳还是不该跳。如果发现真实的结果与之前预测的结果不相符，则意味着预测失败，需要将所有预取的错误指令流全部丢弃掉。重新取正确的指令流，这个过程叫作“流水线冲刷（ Pipeline Flush ）” 。那么，流水线的深度越深，意味着己经预取了更多的错误指令流，需要将其全部抛弃然后重启，不仅白白浪费了功耗，还造成了性能的损失。</li>
-</ul>
-<h2 id="二、流水线冲突"><a href="#二、流水线冲突" class="headerlink" title="二、流水线冲突"></a>二、流水线冲突</h2><h3 id="2-1-结构冒险"><a href="#2-1-结构冒险" class="headerlink" title="2.1 结构冒险"></a>2.1 结构冒险</h3><p><strong>同一个部件同时被不同指令所使用。</strong>比如说，当处理器是冯诺依曼结构时，只有一个存储器。在访存阶段，一条需要读出一条数据，而另一条指令需要写入一条数据，这时就会产生结构冒险。</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/structural-dependency-scenario.png" alt="Structural dependency scenario"></p>
-<h3 id="2-2-数据冒险"><a href="#2-2-数据冒险" class="headerlink" title="2.2 数据冒险"></a>2.2 数据冒险</h3><ul>
-<li><p><strong>WAR（Write After Read）</strong></p>
-<p>假设指令 j 是在指令 i 后面执行的指令，WAR 表示指令 i 读出数据后，指令 j 才能写这个寄存器。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ADD R2, R1, R0</span><br><span class="line">SUB R0, R3, R4</span><br></pre></td></tr></table></figure></li>
-<li><p><strong>WAW（Write After Write）</strong></p>
-<p>假设指令 j 是在指令 i 后面执行的指令，WAW 表示指令 i 将数据写入寄存器后，指令 j 才能将数据写入这个寄存器。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ADD R0, R1, R2</span><br><span class="line">SUB R0, R4, R5</span><br></pre></td></tr></table></figure></li>
-<li><p><strong>RAW（Read After Write）</strong></p>
-<p>假设指令 j 是在指令 i 后面执行的指令，RAW 表示指令 i 将数据写入寄存器后，指令 j 才能从这个寄存器读取数据。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ADD r1,r2,r3</span><br><span class="line">SUB r4,r5,r1</span><br></pre></td></tr></table></figure></li>
-</ul>
-<h3 id="2-3-控制冒险"><a href="#2-3-控制冒险" class="headerlink" title="2.3 控制冒险"></a>2.3 控制冒险</h3><p>转移或异常改变执行流程，顺序执行指令在目标地址产生前已被取出。</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/control-hazard-scenario.png" alt="Control Hazard scenario"></p>
-<h2 id="三、流水线冲突解决方法"><a href="#三、流水线冲突解决方法" class="headerlink" title="三、流水线冲突解决方法"></a>三、流水线冲突解决方法</h2><h3 id="3-1-结构冒险"><a href="#3-1-结构冒险" class="headerlink" title="3.1 结构冒险"></a>3.1 结构冒险</h3><ul>
-<li>采用哈弗结构，指令存储器和数据存储器分离。</li>
-<li>多级缓存</li>
-</ul>
-<h3 id="3-2-数据冒险"><a href="#3-2-数据冒险" class="headerlink" title="3.2 数据冒险"></a>3.2 数据冒险</h3><ul>
-<li><p>流水线阻塞(stall)</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211013155921245.png" alt="image-20211013155921245"></p>
-</li>
-<li><p>软件插入“NOP”指令</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211013160016394.png" alt="image-20211013160016394"></p>
-</li>
-<li><p>寄存器重命名</p>
-</li>
-<li><p>编译优化：调整指令顺序</p>
-</li>
-<li><p>旁路(Bypassing)技术</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/20190401202913338.png" alt="img"></p>
-<p>但是，Bypassing 并不能解决所以的数据冒险问题，它不能解决 Load-use data hazard。</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211013161449294.png" alt="image-20211013161449294"></p>
-</li>
-</ul>
-<h3 id="3-3-控制冒险"><a href="#3-3-控制冒险" class="headerlink" title="3.3 控制冒险"></a>3.3 控制冒险</h3><ul>
-<li><strong>动态分支预测</strong></li>
-<li>硬件阻塞(stall)</li>
-<li>插入三条“NOP”指令</li>
-</ul>
-]]></content>
-      <categories>
-        <category>计算机体系结构</category>
-      </categories>
-  </entry>
-  <entry>
     <title>程序转换处理过程</title>
     <url>/%E7%A8%8B%E5%BA%8F%E8%BD%AC%E6%8D%A2%E5%A4%84%E7%90%86%E8%BF%87%E7%A8%8B/</url>
     <content><![CDATA[<p>一个由高级语言编写的程序，必须转换成二进制代码，才能在机器上运行。这种可以在机器上运行是二进制代码被称为<strong>可执行目标文件</strong>。</p>
@@ -1205,86 +1285,6 @@
 
 <p>其中，static 表示静态链接，如果不指定 -o 选项，则可执行文件名 为“a.out”。</p>
 <p><strong>a.out 就是最终的可执行文件。</strong></p>
-]]></content>
-      <categories>
-        <category>链接、装载与库</category>
-      </categories>
-      <tags>
-        <tag>程序员的自我修养</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>符号与符号表</title>
-    <url>/%E7%AC%A6%E5%8F%B7%E4%B8%8E%E7%AC%A6%E5%8F%B7%E8%A1%A8/</url>
-    <content><![CDATA[<p>我们知道链接操作的第一步：</p>
-<p><strong>符号解析</strong></p>
-<ul>
-<li>程序中有定义和引用的符号</li>
-<li>编译器将定义的符号存放在一个符号表（symbol table）中</li>
-<li>编译器将符号引用存放在重定位节（.rel.text和.rel.data）中</li>
-<li>链接器将每个符号引用都与一个确定的符号定义建立关联</li>
-</ul>
-<h2 id="符号"><a href="#符号" class="headerlink" title="符号"></a>符号</h2><p><strong>符号就是其实程序中的变量名、函数名。</strong></p>
-<h3 id="符号定义与符号引用"><a href="#符号定义与符号引用" class="headerlink" title="符号定义与符号引用"></a>符号定义与符号引用</h3><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210724091642042.png" alt="image-20210724091642042" style="zoom: 33%;" />
-
-<h4 id="符号定义的本质"><a href="#符号定义的本质" class="headerlink" title="符号定义的本质"></a>符号定义的本质</h4><blockquote>
-<p>指被分配了存储空间。如果是函数名则指代码所在区；如果是变量名则指其所在的静态数据区。</p>
-</blockquote>
-<h3 id="链接符号的类型"><a href="#链接符号的类型" class="headerlink" title="链接符号的类型"></a>链接符号的类型</h3><p>每个可重定位目标模块都有一个符号表，它包含了定义和引用的符号。有三种链接器符号：</p>
-<ul>
-<li><p>Global symbols（<strong>全局符号</strong>）</p>
-<blockquote>
-<p>定义在本目标文件的全局符号，可以被其他目标文件引用。</p>
-</blockquote>
-</li>
-<li><p>External symbols（<strong>外部符号</strong>）</p>
-<blockquote>
-<p>在本目标文件中引用的全局变量，却没有定义在本目标文件。</p>
-</blockquote>
-</li>
-<li><p>Local symbols（<strong>局部符号</strong>）</p>
-<blockquote>
-<p>只在编译单元内部。</p>
-</blockquote>
-</li>
-</ul>
-<img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210724095744156.png" alt="image-20210724095744156" style="zoom:33%;" />
-
-<h2 id="目标文件中的符号表"><a href="#目标文件中的符号表" class="headerlink" title="目标文件中的符号表"></a>目标文件中的符号表</h2><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">   Elf32_Word st_name;	<span class="comment">/*符号对应宇符串在 strtab节中的偏移量*/</span></span><br><span class="line">	Elf32_Addr st_value; 	<span class="comment">/*在对应节中的偏移量,或虚拟地址*/</span></span><br><span class="line">	Elf32_Word st_size;		<span class="comment">/*符号对应目标字节数，函数大小或变量长度*/</span></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">char</span> st_info;<span class="comment">/*指出符号的类型(Type)和绑定属性(Bind)*/</span></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">char</span> st_other;</span><br><span class="line">	Elf32_Half st_shndx;	<span class="comment">/*符号对应目标所在的节,或其他倩况*/</span></span><br><span class="line">&#125; Elf32_Sym;</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210723165921745.png" alt="image-20210723165921745"></p>
-<h2 id="符号解析"><a href="#符号解析" class="headerlink" title="符号解析"></a>符号解析</h2><blockquote>
-<p>将每个模块中引用的符号与某个目标模块中的定义符号建立关联。</p>
-</blockquote>
-<p>每个定义符号在代码段或数据段中都被分配了存储空间，将引用符号与定义符号建立关联后，就可在重定位时将引用符号的地址重定位为相关联的定义符号的地址。</p>
-<p>本地符号在本模块内定义并引用，因此其解析较简单，只要与本模块內唯一的定义符号关联即可。</p>
-<p>全局符号(外部定义的、内部定义的)的解析涉及多个模块，故较复杂。</p>
-<h2 id="全局符号的强、弱"><a href="#全局符号的强、弱" class="headerlink" title="全局符号的强、弱"></a>全局符号的强、弱</h2><p>全局符号有强、弱的特性。</p>
-<ul>
-<li>强符号：函数名和已初始化的全局变量名。</li>
-<li>弱符号：未初始化的全局变量名。</li>
-</ul>
-<img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210724104209132.png" alt="image-20210724104209132" style="zoom:33%;" />
-
-<h2 id="链接器对符号的解析规则"><a href="#链接器对符号的解析规则" class="headerlink" title="链接器对符号的解析规则"></a>链接器对符号的解析规则</h2><p>符号解析时，只能有一个确定的定义（即每个符号仅占一处存储空间）。如果碰到符号存在多重定义时，就得有相应的处理规则：</p>
-<ul>
-<li><p>Rule 1：强符号不能多次定义</p>
-<img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210724105327383.png" alt="image-20210724105327383" style="zoom: 33%;" /></li>
-<li><p>Rule 2：若一个符号被定义为一次强符号和多次弱符号，则按强符号定义为准。</p>
-<img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210724105451041.png" alt="image-20210724105451041" style="zoom: 25%;" /></li>
-<li><p>Rule 3：若有多个弱符号定义，则任选其中一个。</p>
-</li>
-</ul>
-<p>关于全局符号的多重定义的问题：</p>
-<ul>
-<li>尽量避免使用全局变量</li>
-<li>一定要使用的话，就按以下规则使用<ul>
-<li>尽量使用本地变量（static）</li>
-<li>全局变量要赋初值</li>
-<li>外部全局变量要使用extern</li>
-</ul>
-</li>
-</ul>
 ]]></content>
       <categories>
         <category>链接、装载与库</category>
@@ -1491,5 +1491,249 @@
       <tags>
         <tag>RISC-V</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>数据模型介绍及其变迁</title>
+    <url>/%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B%E4%BB%8B%E7%BB%8D%E5%8F%8A%E5%85%B6%E5%8F%98%E8%BF%81/</url>
+    <content><![CDATA[<h2 id="一、数据模型介绍"><a href="#一、数据模型介绍" class="headerlink" title="一、数据模型介绍"></a>一、数据模型介绍</h2><h3 id="1-1-数据模型概念"><a href="#1-1-数据模型概念" class="headerlink" title="1.1 数据模型概念"></a>1.1 数据模型概念</h3><p><strong>数据模型</strong>是一种抽象模型，它组织并标准化数据元素之间的关系，以及数据元素与现实世界实体的属性的关系。例如，数据模型可以指定表示汽车的数据元素由许多其他元素组成，这些其他元素又表示汽车的颜色、大小和所有者。</p>
+<p>术语<strong>数据模型</strong>可以指代两个不同但密切相关的概念。一是指在<strong>特定应用领域中发现的对象和关系的抽象形式化</strong>：例如在制造组织中发现的客户、产品和订单。二是指用于<strong>定义此类形式化的一组概念</strong>：例如实体、属性、关系或表等概念。</p>
+<p>数据模型明确地定义了数据的结构。数据模型通常由数据专家、数据图书馆员或数字人文学者以数据建模符号指定。这些符号通常以图形形式表示。</p>
+<p>数据模型基于数据、数据关系、数据语义和数据约束。 数据模型提供要存储的信息的详细信息，并且在最终产品是为应用程序生成计算机软件代码或准备功能规范以帮助计算机软件制造或购买决策时，它具有主要用途。 下图是进程和数据模型之间交互的示例。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/720px-Data_modeling_context.svg.png" alt="720px-Data_modeling_context.svg"></p>
+<h3 id="1-2-三种类型"><a href="#1-2-三种类型" class="headerlink" title="1.2 三种类型"></a>1.2 三种类型</h3><p>根据 1975 年的 ANSI，数据模型<em>实例</em>可能是以下三种类型之一：</p>
+<ol>
+<li><strong>概念数据模型</strong>：描述域的语义，是模型的范围。例如，它可能是一个组织或行业的兴趣领域的模型。这包括实体类，代表领域中各种重要的事物，以及关于实体类对之间关联的关系断言。概念模式指定可以使用模型表达的事实或命题的种类。从这个意义上说，它用一种受模型范围限制的人工“语言”定义了允许的表达式。</li>
+<li><strong>逻辑数据模型</strong>：描述语义，由特定的数据操作技术表示。这包括对表和列、面向对象的类和 XML 标记等的描述。</li>
+<li><strong>物理数据模型</strong>：描述存储数据的物理方式。这与分区、CPU、表空间等有关。</li>
+</ol>
+<p>根据 ANSI 的说法，这种方法的意义在于它允许三个视角彼此相对独立。许多软件开发项目的早期阶段都强调概念数据模型的设计。这样的设计可以细化成逻辑数据模型. 在后期，这个模型可能会被转化为物理数据模型。但是，也可以直接实现概念模型。</p>
+<p>下图是 ANSI/SPARC 三级架构。这表明数据模型可以是外部模型（或视图）、概念模型或物理模型。这不是查看数据模型的唯一方法，但它是一种有用的方法。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/640px-4-2_ANSI-SPARC_three_level_architecture.svg.png"></p>
+<p>更详细的了解，可参考<a href="https://www.tuicool.com/articles/byqeqa">概念数据模型、逻辑数据模型、物理数据模型详解</a></p>
+<h2 id="二、数据模型类型"><a href="#二、数据模型类型" class="headerlink" title="二、数据模型类型"></a>二、数据模型类型</h2><p>在论文<a href="https://scholar.google.com/scholar?cluster=7366182905777149494">What Goes Around Comes Around</a>中总结并介绍了九个历史阶段：</p>
+<ul>
+<li>Hierarchical (IMS): late 1960’s and 1970’s</li>
+<li>Network (CODASYL): 1970’s</li>
+<li>Relational: 1970’s and early 1980’s</li>
+<li>Entity-Relationship: 1970’s</li>
+<li>Extended Relational: 1980’s</li>
+<li>Semantic: late 1970’s and 1980’s</li>
+<li>Object-oriented: late 1980’s and early 1990’s</li>
+<li>Object-relational: late 1980’s and early 1990’s</li>
+<li>Semi-structured (XML): late 1990’s to the present</li>
+</ul>
+<p>为了说明数据库理论和创新中的这些历史模式，作者使用 CODD 的供应商和部件的典型示例：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">Supplier (sno, sname, scity, sstate)</span><br><span class="line">Part     (pno, pname, psize, pcolor)</span><br><span class="line">Supply   (sno, pno ,  qty,   price )</span><br></pre></td></tr></table></figure>
+
+<p>这是一个关系模式。每行都是关系（或表），括号中的属性。因此，在这种情况下，我们有一些 Supplier、一组 Part，还有一个“supply”关系，表明一个特定的 Part 是由一个特定的 Supplier 提供，具有给定的数量和价格。</p>
+<h3 id="2-1-Hierarchical-IMS-late-1960’s-and-1970’s"><a href="#2-1-Hierarchical-IMS-late-1960’s-and-1970’s" class="headerlink" title="2.1 Hierarchical (IMS): late 1960’s and 1970’s"></a>2.1 Hierarchical (IMS): late 1960’s and 1970’s</h3><p>IMS（信息管理系统）于 1968 年发布。类似于上面的关系表，它将数据结构化为具有字段的记录（record type），并以<strong>树</strong>的形式组织起来。每个记录（root 记录除外）有一个父记录。因为它形成了记录的层次结构，所以称为分层模型。</p>
+<p>使用 IMS 数据模型来描述供货商应用的话，有下图如下两种方式：</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20220119175615718.png" alt="image-20220119175615718"></p>
+<p>而这两种方式暴露了两个<strong>缺点</strong>：</p>
+<ul>
+<li><p><strong>信息重复（Information is repeated）</strong></p>
+<p>上图中，第一个模型，Part 会重复存在多个 Supplier 节点下（该 Part 由多个 Supplier 供应）；第二个模型中，Supplier 会重复存在多个 Part 下。这种冗余状态不仅会导致存储空间利用率低，还会导致非一致性问题。比如，如果某一记录被修改过了，那么其他重复的记录也要被修改，不然就会导致一致性问题。</p>
+</li>
+<li><p><strong>记录存在依赖父节点（Existence depends on parents）</strong></p>
+<p>如果没有父节点，子节点就无法表示。例如，如果第一个模型中没有 Supplier，那么就不可能由 Part；第二个模型中，如果没有 Part，Supplier 就无法存在。</p>
+</li>
+</ul>
+<p>IMS 使用的是 DL/1 操作语言。每条 record 都有一个 hierarchical sequence key(HSK)，HSK 是将从树的根节点到当前节点的 key 的拼装。在这种树型级联结构下，所有的 record 被定义了一个大小顺序（按照深度优先并从左到右遍历产生的顺序）。DL/1 中有 get next, get next within parent 等操作接口。例如，按照上文上侧图的模型，如果要获取 sn = 16 的 Supplier 的所有红色 Part，查询语句如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">get unique Supplier (sno = 16)</span><br><span class="line">until failure do</span><br><span class="line">    get next within parent (color = red)</span><br><span class="line">    enddo</span><br></pre></td></tr></table></figure>
+
+<p>IMS 为分层数据支持了四种<strong>存储方式</strong>，如是是 root 节点，可使用以下三种方式：</p>
+<ul>
+<li><p>Stored sequentially</p>
+</li>
+<li><p>B-tree</p>
+</li>
+<li><p>Hashed</p>
+</li>
+</ul>
+<p>如果不是 root 节点使用这种方式：</p>
+<ul>
+<li>Physical sequentially(if not root record)</li>
+</ul>
+<p>然而，这些存储方法实际上会影响 DL/1 的一些功能。例如，当 Stored sequentially 时，无法插入单个记录（只适用于批处理系统）。如果使用 hash，那么无法使用“get next”语句。IMS 设计成这样，是为了避免一些导致低性能的操作。但是这种方式会使该数据模型<strong>缺乏物理数据独立性（physical data independence）</strong>——也就是我们无法只改变物理级别数据而不改变逻辑级别数据。这与长期维护的数据库变得非常重要：业务需求发生变化，数据存储的改变并增加。在某些时候，可能需要不同的物理数据表示来提高性能。</p>
+<p>IMS 也为<strong>逻辑数据独立性</strong>提供了一点支持 ，这意味着我们可以扩展逻辑级别数据而不会影响其内置的应用程序。这意味着可以添加新的记录，而不会改变数据的视图。</p>
+<blockquote>
+<p>数据独立性</p>
+<ul>
+<li><p>物理独立性</p>
+<p>用户的应用程序与存储在磁盘上的数据库中数据是相互独立的。</p>
+</li>
+<li><p>逻辑独立性</p>
+<p>用户的应用程序与数据库的逻辑结构是相互独立的。</p>
+</li>
+</ul>
+<p>数据独立性和数据库三级模式二层映像密切相关，请自行了解。</p>
+</blockquote>
+<p>从这个数据模型中，我们可以学到以下四点：</p>
+<ul>
+<li>数据独立性是非常重要的</li>
+<li>树状结构是很受限制的</li>
+<li>树形数据模型下，很难提供一个复杂的结构组织。</li>
+<li>IMS 是一次一记录(record-at-a-time)的方式，这种方式要求程序员手动优化，但这往往都比较困难。</li>
+</ul>
+<h3 id="2-2-Network-CODASYL-1970’s"><a href="#2-2-Network-CODASYL-1970’s" class="headerlink" title="2.2 Network (CODASYL): 1970’s"></a>2.2 Network (CODASYL): 1970’s</h3><p>1969 年，数据系统语言委员会（CODASYL: Committee on Data Systems Languages）发布了他们的第一篇报告[Coda69]，然后在 1971 年[Coda71]和 1973 [Coda73]又发布了几篇报告，描述了一个更灵活的模型——网络模型（network）。</p>
+<p>这个模型使用<strong>网状结构</strong>来组织记录（recoed），因此一个记录可以有多个父节点，这点与 IMS 模型不同。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20220120155744846.png" alt="A CODASYL Network"></p>
+<p>在上图的示例中，有两个箭头：Supplies 和 Supplied_by，这些称为 set types。箭头从拥有者记录指向子记录。一个拥有者类型的实例对应一组子类型的实例。因此在上图的示例中，一个 Supplier 通过 set type Supplies 对应 多个 Supply。</p>
+<p>CODASYL 只能有二元关系。如果一个应用需要三元关系，就要拆解成多个二元关系，例如一个婚礼包括新娘、新郎和神父三个参与者，这个三元关系就得拆解成婚礼-新娘，婚礼-新郎，婚礼-神父三个二元关系。如下图所示：</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20220120220505763.png" alt="image-20220120220505763"></p>
+<p>CODASYL 也是 record-at-a-time 的数据操作语言。CODASYL 查询实例如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Find Supplier(sno=16)</span><br><span class="line">Until no-more &#123;</span><br><span class="line">  Find next Supply record in Supplies</span><br><span class="line">  Find owner Part record in Supplied_by</span><br><span class="line">  Get current record</span><br><span class="line">  Check for red color</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>CODASYL 的实现比 IMS 复杂。每个入口点中的记录使用哈希存储，set type 则使用父节点和子节点之间指针的组合来实现。</p>
+<p>比较遗憾的是，CODASYL <strong>不满足数据独立性</strong>——当改变 Supplier 的 sno（或其他 key）时，程序会出错；当改变逻辑层数据时，应用程序会出错。</p>
+<p>跟 IMS 相比，CODASYL 在迭代时，要记录最后一次访问的 record、record type、set type，因此加载/恢复数据需要花费很长时间。相比 IMS，CODASYL 更复杂，但能支持 non-hierarchical 的数据。CODASYL 中数据的局部性比 IMS 差，因此在物理存储上效率可能更低。</p>
+<p>CODASYL 上学到的经验：</p>
+<ul>
+<li>network 比 hierarchical 更灵活，但更复杂。</li>
+<li>在加载和恢复数据上，network 比 hirrarchical 更复杂。</li>
+</ul>
+<h3 id="2-3-Relational-1970’s-and-early-1980’s"><a href="#2-3-Relational-1970’s-and-early-1980’s" class="headerlink" title="2.3 Relational: 1970’s and early 1980’s"></a>2.3 Relational: 1970’s and early 1980’s</h3><p>1970 年 Ted Codd 提出了关系模型，原因是当时 IMS 的程序员花了大量时间在进行数据相关性操作。因此 Codd 尝试设计一个数据独立性更好的模型。select σ and join ⋈。</p>
+<p>该数据模型有三个特点：</p>
+<ul>
+<li><p>数据存放在表中。</p>
+</li>
+<li><p>使用高级 DML 语言，每次取出一组记录（<strong>set-at-a-time</strong>）。</p>
+</li>
+<li><p>对物理存储方式不做假设。</p>
+</li>
+</ul>
+<p>简单的数据结构更容易实现更好的逻辑数据独立性，而使用高级语言更容易提供更好的物理数据独立性。关系模型非常灵活，IMS 中遇到的 existence dependency 问题（一定要有 parent）在关系模型里面很容易处理，CODASYL 中遇到的三元关系问题也很容易解决：Ceremony (bride-id, groom-id, minister-id, other-data)。</p>
+<p>Codd 之后提出了多个更复杂的关系模型，由于 Codd 是数学家，他最初的模型使用的是严谨的关系运算和关系代数。Codd 的关系模型引起了“the great debate”。一边是 Codd 为代表的学术派，另一边是 Charlie Bachman 为代表的实践派。</p>
+<p>Codd 认为：</p>
+<ul>
+<li><p>像 CODASYL 这么复杂的模型，不是个好模型。</p>
+</li>
+<li><p>CODASYL 没有提供可接受的数据独立性。</p>
+</li>
+<li><p>Record-at-a-time 编程不好优化。</p>
+</li>
+<li><p>CODASYL 和 IMS 即使是在常见表达的场景下（例如之前婚礼实例的三元关系）也不够灵活。</p>
+</li>
+</ul>
+<p>Bachman 认为：</p>
+<ul>
+<li><p>COBOL 程序员不太容易理解这种新式的关系语言。</p>
+</li>
+<li><p>无法有效地实现关系模型。</p>
+</li>
+<li><p>CODASYL 也能实现关系模型中的表（table），没有必要使用关系模型。</p>
+</li>
+</ul>
+<p>过了几年，两个阵营完善了自己的立场。</p>
+<p>关系模型一方认为：</p>
+<ul>
+<li><p>Codd 是个数学家，他提的关系代数/运算语言不太适合（过于数学），但 SQL 和 QUEL 就很容易让程序员接受。</p>
+</li>
+<li><p>System R 和 INGRES 都高效地实现了 Codd 的关系模型，并且查询优化器甚至能够跟最好的程序员手工查询方案相媲美。</p>
+</li>
+<li><p>这些实现证实关系模型的物理数据独立性是可以实现的，而且关系模型的逻辑数据独立性也比 CODASYL 强。</p>
+</li>
+<li><p>和 record-at-a-time，set-at-a-time 使程序员更有生产力。</p>
+</li>
+</ul>
+<p>CODASYL 一方认为：</p>
+<ul>
+<li>网络模型也有 set-at-a-time 的语言，如 LSL，它可以提供完整的物理数据独立性和可能更好的逻辑数据独立性。</li>
+<li>网络模型可以简化，也不会那么复杂。</li>
+</ul>
+<p>在商业领域，后来微机时代来临，VAX 小型机市场暴涨，上面使用的是 Oracle 和 INGRES 为代表的关系型数据模型，另一边 CODASYL 被 IBM 用汇编重写了一遍之后可移植性太差，最后关系型模型与 VAX 小型机携手共赢。但在大型机市场（当时大型机是数据库市场的主流），关系型数据模型不太友好，IBM 在 VM370 和 VSE 上的 Sysmte R 卖的不好，因此只能继续卖 IMS。1984 年 IBM 推出了 DB2，最终 DB2 凭借新技术和易用性赢得了市场，给这场论战画了句号：关系模型最终胜出，同时也宣布 SQL 语言是标准关系型语言。</p>
+<p>总结起来，对这次大论战结局影响最大的三件因素有：</p>
+<ol>
+<li>VAX 小型机在市场上的胜利</li>
+<li>CODASYL 的移植性问题</li>
+<li>IMS 逻辑数据模型的复杂性。</li>
+</ol>
+<p>关系模型给我们带来了以下经验：</p>
+<ul>
+<li>set-at-a-time 式的语言很好，它提供了更好的物理数据独立性。</li>
+<li>简单的数据模型的逻辑数据独立性更容易实现。</li>
+<li>技术论战往往被<strong>市场</strong>定论，通常跟技术优劣关系不大。</li>
+<li>查询优化器能够和最好的 record-at-a-time 的程序员相媲美。</li>
+</ul>
+<h3 id="2-4-Entity-Relationship-1970’s"><a href="#2-4-Entity-Relationship-1970’s" class="headerlink" title="2.4 Entity-Relationship: 1970’s"></a>2.4 Entity-Relationship: 1970’s</h3><p>70 年代中期，Peter Chen 提出了 entity-relationship(E-R) 模型作为上面三种数据模型的替代品。Peter 提到数据库被视为一组<strong>实体</strong>的集合（了解一点数据库理论的应该知道实体的概念）。实体有<strong>属性（attribute）</strong>，用于描述实体；实体间存在<strong>关系（relationship）</strong>。E-R 模型通常可以用方块和箭头示意图描述。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20220122095003988.png" alt="image-20220122095003988"></p>
+<p>但是 E-R 模型在 70 年代并没有作为底层数据模型由 DBMS 实现，原因大概有以下几点：</p>
+<ul>
+<li>没有适配的查询语言。</li>
+<li>当时大家的关注点都在关系模型上。</li>
+<li>E-R 模型看上去太像 CODASYL 的简化版</li>
+</ul>
+<p>但是 E-R 模型在数据库 schema 设计上大放异彩。设计数据库 schema 通常先构造一些实体，然后正规化。正规化包括第二范式、第三范式、BC 范式、第四范式，Project-Join 范式。但正规化存在两个问题，一是无法回答“how do I get an initial set of tables?”的问题；二是正规化是基于函数依赖，而函数依赖对很多 DBA 来说并不好理解。因此 E-R 模型就是“dead in the water”。</p>
+<p>但是 E-R 模型作为数据库设计的工具开始逐渐流行（在数据库设计中，E-R 图是一个很重要的工具）。</p>
+<p>E-R 模型给我们带来了以下经验：</p>
+<ul>
+<li>函数依赖对普通开发者来讲并不友好。保持简单直白还是很难的。</li>
+</ul>
+<h3 id="2-5-Extended-Relational-1980’s"><a href="#2-5-Extended-Relational-1980’s" class="headerlink" title="2.5 Extended Relational: 1980’s"></a>2.5 Extended Relational: 1980’s</h3><p>在 80 年代早期，似乎发表的论文都可以用以下模板来套用：</p>
+<ul>
+<li>Consider an application, call it X</li>
+<li>Try to implement X on a relational DBMS</li>
+<li>Show why the queries are difficult or why poor performance is observed</li>
+<li>Add a new “feature” to the relational model to correct the problem</li>
+</ul>
+<p>这一类的论文可以称为“the R++ era”，因为它们都是在关系模型上打补丁。而其中最好的就是 Zaniolo，它提出在关系模型（Gem）上再加几个要素来扩展：</p>
+<ol>
+<li><p> set-valued attributes：属性是一个特定集合，可以定义新的数据类型，加到关系模型里面。</p>
+</li>
+<li><p> aggregation (tuple-reference as a data type)：在 Suppply 中，有两个外键（foreign key）：sno、pno，如果用元组表示会更好。Supply (PT, SR, qty, price)；其中 PT 是 “tuple in the Part table” ， SR 是 “tuple in the Supplier table”.</p>
+</li>
+<li><p> generalization：假设我们举例中有两种 Part：Electrical 和 Plumbing。对于 Electrical，我们记录功耗和电压。对于 Plumbing，我们记录了用于制造的直径和材料部分。如下图所示，在那里我们看到一个根 Part 和两个细化 Part。每个细化的 Part 都在其祖先中继承了所有属性。</p>
+</li>
+</ol>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20220122180006929.png" alt="image-20220122180006929"></p>
+<p>该模型的查询语句如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Select E.pname</span><br><span class="line">From Electrical E</span><br><span class="line">Where E.pcolor = “red”</span><br></pre></td></tr></table></figure>
+
+<p>此类的问题是它们允许比传统的关系模型更简单的查询，但是它并没有提升太多性能。例如，主键 - 外键的关系在关系模型容易模拟元组作为数据类型。此外，由于外键基本上是逻辑指针，因此该构造的性能与来自其他可用的指针方案相似。因此，该模型的实施不会比关系模型的实施更快</p>
+<p>在 20 世纪 80 年代初，关系供应商都重点关注改善其系统的交易性能和可扩展性，以便它们可用于大规模业务数据处理应用程序。这是一个非常大的市场，有重大的收入潜力。相比之下，R++ 的想法只产生一点点影响。因此，R++ 技术很少进入商业世界，这项研究重点具有很小的长期影响。</p>
+<p>从该模型我们可以学到：</p>
+<ul>
+<li>除非有巨大的功能优势，否则新的构建会无处可去。</li>
+</ul>
+<h3 id="2-6-Semantic-late-1970’s-and-1980’s"><a href="#2-6-Semantic-late-1970’s-and-1980’s" class="headerlink" title="2.6 Semantic: late 1970’s and 1980’s"></a>2.6 Semantic: late 1970’s and 1980’s</h3><p>在同一时间，还有另一个以类似的想法思考，但是另一种不同的营销策略。他们认为关系数据模型是“语义贫困（semantically impoverished）”，即它无法轻易表达感兴趣的一类数据。因此，需要一个“后关系型（post relational）”数据模型。后关系数据模型通常称为<strong>语义数据模型（semantic data models）</strong>。有许多人都研究过这以模型，其中 Hammer 和 McLeod 的 SDM 可以说是最精细的语义数据模型。</p>
+<p>SDM 专注于类的概念，这些概念是遵循相同模式的记录集合。像 Gem（2.5 提到的模型）一样，SDM 利用并包括聚合（aggregation）、泛化（generalization ）和集合（set）的概念，通过允许类具有在其他类中的记录的属性来支持聚合。但是，SDM 通过允许一个类中的属性在某些类中成为一组记录的集合来概括了 GEM 中的聚合构造。例如，有两个类： Ships 和 Countries。Countries 有一个名为 Ships_registered_here 的属性，表示一系列船只的集合；反向的性质 Country_of_Registration 也可以在 SDM 中定义。</p>
+<p>此外，类可以 generalize 其他类。与 Gem 不同，generalize 扩展为图而不是树。例如，下图显示了 generalization 图，其中 American_oil_tankers 从 oil_tankers 和 American_ships 继承的属性。此构造通常被称为多重继承。类也可以是其他类之间的 union, intersection 或者 difference。它们也可以是另一个类的子类，由谓词指定以确定资格。例如，Heals_Ships 可能是重量大于 500 吨的船舶的子类。最后，一个类也可以是一系列记录。例如 Atlantic_Convoy 可能是一系列船舶，这些船舶在大西洋上一起航行。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20220122234525291.png" alt="image-20220122234525291"></p>
+<p>最后，类可以具有类变量，例如 Ship 类可以具有一个是类成员的类变量。</p>
+<p>大多数语义数据模型非常复杂，并且通常是纸质建议。在 SDM 定义后几年，Univac 探讨了锤子和 McLeod 的想法的实施。然而，他们很快发现 SQL 是一个间歇性标准，并且他们不兼容的系统在市场上并不是很成功。</p>
+<p>在我们看来，SDMS 面临的两个问题面临 R ++倡导者。像 R ++的提议一样，他们是很多机器，易于模拟关系系统。因此，在提出的构建体中很少杠杆率。SDM 营也面临着 R ++提案的第二个问题，即建立的供应商分散了交易处理绩效。因此，语义数据模型的影响很小。</p>
+<h3 id="2-7-Object-oriented-late-1980’s-and-early-1990’s"><a href="#2-7-Object-oriented-late-1980’s-and-early-1990’s" class="headerlink" title="2.7 Object-oriented: late 1980’s and early 1990’s"></a>2.7 Object-oriented: late 1980’s and early 1990’s</h3><p>1980 年代中期，兴起了一波面向对象数据库（OODB）的热潮，社区指出了关系模型和像 C++ 这种 OO 编程语言之间存在“<strong>impedance mismatch</strong>”——数据库和编程语言有自己的数据类型，因此应用程序要在编程语言和数据库之间来回转换数据类型。</p>
+<p>考虑如果有一种持久化语言（persistent programming language），这种语言中的变量可以直接代表数据库磁盘或者内存中的数据，并且数据库查找方法也是使用这个语言的一些结构来完成。例如 Rigel 语言：</p>
+<p>解决方法是将 DBMS 功能集成到编程语言中。具体而言，人们想要一种<strong>持久的编程语言（persistent programming language）</strong>，即语言中变量可以代表基于磁盘的数据以及主存储器数据以及数据库搜索条件中语言构造的变量。20 世纪 70 年代后期开发了几种原型持续语言，包括 Pascal-R，Rigel 以及 PL/1 的语言嵌入。例如，Rigel 允许以上述查询表示为：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">For P in Part where P.pno = 16&#123;</span><br><span class="line">  Code_to_manipulate_part</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>持久的编程语言显然比 SQL 嵌入方式明显更清洁，但是编译器要感知 DBMS 的功能。由于没有统一的编程语言，因此每个编译器都要完成此扩展。此外，每个扩展都是唯一的，因为 C ++ 与 APL 完全不同。此外编程语言领域的专家一直就拒绝专注通用 I/O 和 DBMS 功能，更不用说语言本身去关注具体的数据库系统了。因此，我们所知的所有编程语言在该领域都没有内置功能。这不仅使得嵌入数据子语言繁琐，而且结果通常难以编程和易于出错。最后，专业语言知识没有应用于重要目的的面向数据的语言，例如 report writers 和所谓的 fourth generation languages。最终这些 70 年代的学术研究最终也没有走入商业市场，而丑陋的嵌入式方式开始流行。</p>
+<p>在 1980 年代中期，由于 C ++ 的普及，持久的编程语言再次复苏。这个数据库模型被称为<strong>面向对象的数据库（OODB）</strong>。这些系统尝试在 C++ 基础上，将 C++ 数据结构都视为可以持久化的对象，并将关系扩展进 C++ 语言。OODB 社区将工程领域数据库作为目标市场，如工程 CAD 应用。为了定位到工程市场，持久性 C ++ 的实现具有以下要求：</p>
+<ol>
+<li>无需声明查询语言。所有需要的都是引用 C++ 中的大型磁盘的工程对象。</li>
+<li>无需花式交易管理。该市场主要是一个 one-user-at-a-time 处理大型工程对象。相反，某种版本控制系统会很好。</li>
+<li>在对象上运行时，运行时系统必须与传统的 C++ 具有竞争力。在这个市场中，使用持久性 C++ 的算法的性能必须与自定义负载程序和传统的 C++ 提供的竞争力</li>
+</ol>
+<p>因此 OODB 对事务和查询的支持比较弱,相反，供应商专注于操纵持久性 C++ 结构的良好性能。不幸的是，工程领域数据库市场本来就不大，当时兴起的数据库厂商又很多，最终所有 OODB 供应商都失败了，或者已经重新定位了他们的公司以提供以外的东西和 OODB。例如，Object Design 已重命名为 Excelon，并销售 XML 服务</p>
+<p>究其失败原因，有如下几条：</p>
+<ul>
+<li>没有发挥作用。OODB 厂商提供的系统避免了用户写 load/unload 程序，但客户并不买账。</li>
+<li>缺乏标准，不兼容。</li>
+<li>因为和数据库绑的太紧，细小的改动都要重新 link 整个应用。</li>
+<li>没有统一的编程语言，如果你的系统有一部分不是 C++，那就无法使用持久化语言。</li>
+</ul>
+<p>另外，持久化编程语言因为将对磁盘数据的操作的逻辑都放在业务应用进程，因此几乎没有对数据的保护，这相比 CODASYL 是一个倒退。</p>
+<p>从该模型我们可以学到：</p>
+<ul>
+<li>不解决痛点的产品难以被市场接受。</li>
+<li>没有语言专家支持，持久化语言毫无出路。</li>
+</ul>
+<h3 id="2-8-Object-relational-late-1980’s-and-early-1990’s"><a href="#2-8-Object-relational-late-1980’s-and-early-1990’s" class="headerlink" title="2.8 Object-relational: late 1980’s and early 1990’s"></a>2.8 Object-relational: late 1980’s and early 1990’s</h3><h3 id="2-9-Semi-structured-XML-late-1990’s-to-the-present"><a href="#2-9-Semi-structured-XML-late-1990’s-to-the-present" class="headerlink" title="2.9 Semi-structured (XML): late 1990’s to the present"></a>2.9 Semi-structured (XML): late 1990’s to the present</h3><h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a href="https://www.wikiwand.com/en/Data_model">维基百科：数据模型</a></li>
+<li><a href="https://scholar.google.com/scholar?cluster=7366182905777149494">Joseph Hellerstein、Michael Stonebraker: What Goes Around Comes Around</a></li>
+<li><a href="https://medium.com/vaticle/what-goes-around-comes-around-52d38ee1ea9e">“What Goes Around Comes Around”: A Brief History of Databases</a></li>
+<li><a href="http://blog.itpub.net/31556436/viewspace-2286396/">ITPUB 博客：以史为鉴！数据模型变迁史</a></li>
+</ul>
+]]></content>
   </entry>
 </search>
