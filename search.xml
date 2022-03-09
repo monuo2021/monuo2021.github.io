@@ -163,6 +163,69 @@
       </categories>
   </entry>
   <entry>
+    <title>以太网帧</title>
+    <url>/%E4%BB%A5%E5%A4%AA%E7%BD%91%E5%B8%A7/</url>
+    <content><![CDATA[<p><strong>以太网帧</strong>是数据链路层协议数据单元，使用底层以太网物理层传输机制。换句话说，以太网链路上的数据单元将以太网帧作为其有效载荷(payload)进行传输。</p>
+<h2 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h2><p>以太网帧前面有<strong>前同步码(preamble)<strong>和</strong>帧开始定界符 (SFD)<strong>，它们都是物理层以太网数据包的一部分。每个以太网帧都以</strong>以太网报头</strong>开始，其中包含目标和源 MAC 地址作为其前两个字段。帧的中间部分是**有效载荷数据(payload)<strong>，包括帧中携带的其他协议（例如 Internet 协议）的首部。帧以</strong>帧校验序列(FCS)**结束，FCS 是一种 32 位循环冗余校验(CRC)，用于检测任何传输中的数据损坏。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211002095359578.png" alt="IEEE 802.3以太网数据包和帧结构"></p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>前同步码</td>
+<td>用来使接收端的适配器在接收 MAC 帧时能够迅速调整时钟频率，使它和发送端的频率相同。前同步码为 7 个字节，1 和 0 交替。</td>
+</tr>
+<tr>
+<td>帧开始定界符（SFD）</td>
+<td>帧的起始符，为 1 个字节。前 6 位 1 和 0 交替，最后的两个连续的 1 表示告诉接收端适配器：“帧信息要来了，准备接收”。</td>
+</tr>
+<tr>
+<td>目的地址</td>
+<td>接收端的物理地址（MAC 地址），为 6 个字节（48 比特）。</td>
+</tr>
+<tr>
+<td>源地址</td>
+<td>发送端的物理地址（MAC 地址），为 6 个字节（48 比特）。</td>
+</tr>
+<tr>
+<td>类型</td>
+<td>上层协议的类型。由于上层协议众多，所以在处理数据的时候必须设置该字段，标识数据交付哪个协议处理。例如，字段为 0x0800 时，表示将数据交付给 IP 协议。</td>
+</tr>
+<tr>
+<td>数据</td>
+<td>也称为效载荷，表示交付给上层的数据。以太网帧数据长度最小为 46 字节，最大为 1500 字节。如果不足 46 字节时，会填充到最小长度。最大值也叫最大传输单元（MTU）。</td>
+</tr>
+<tr>
+<td>帧检验序列 FCS</td>
+<td>检测该帧是否出现差错，占 4 个字节（32 比特）。发送端计算帧的循环冗余码校验（CRC）值，把这个值写到帧里。接收端重新计算 CRC，与 FCS 字段的值进行比较。如果两个值不相同，则表示传输过程中发生了数据丢失或改变。这时，就需要重新传输这一帧。</td>
+</tr>
+<tr>
+<td>包间间隙(Interpacket gap)</td>
+<td>包间间隙(IPG) 是包之间的空闲时间。发送一个数据包后，发送器需要在发送下一个数据包之前传输最少 96 位（12 个八位字节）的空闲线路状态。</td>
+</tr>
+</tbody></table>
+<h2 id="类型"><a href="#类型" class="headerlink" title="类型"></a>类型</h2><ul>
+<li>Ethernet II</li>
+<li>Novell raw IEEE 802.3</li>
+<li>IEEE 802.2 Logical Link Control (LLC)</li>
+<li>IEEE 802.2 Subnetwork Access Protocol (SNAP)</li>
+</ul>
+<p>不同的帧类型具有不同的格式和 MTU 值，但可以共存于同一物理介质上。根据下表可以区分帧类型。</p>
+<p>此外，所有四种以太网帧类型都可以选择包含一个 IEEE 802.1Q 标记，以标识它属于哪个 VLAN 及其优先级（服务质量）。这种封装在 IEEE 802.3ac 规范中定义，并将最大帧增加 4 个八位字节。</p>
+<img src="C:\Users\谭梁\AppData\Roaming\Typora\typora-user-images\image-20211002104229791.png" alt="image-20211002104229791" style="zoom: 80%;" />
+
+<p><strong>Ethernet II 帧格式</strong>和<strong>IEEE 802.3 格式</strong>，这两种格式的主要区别在于，Ethernet II 格式中包含一个<strong>Type 字段</strong>，标识以太帧处理完成之后将被发送到哪个上层协议进行处理。IEEE802.3 格式中，同样的位置是<strong>长度字段(Length)<strong>。不同的</strong>Type 字段值/Length 字段</strong>可以用来区别这两种帧的类型，当该字段小于等于 1500（或者十六进制的 0x05DC）时，帧使用的是 IEEE 802.3 格式。当该字段值大于等于 1536 （或者十六进制的 0x0600）时，帧使用的是 Ethernet II 格式。以太网中大多数的数据帧使用的是 Ethernet II 格式。</p>
+<p><img src="https://pic2.zhimg.com/80/v2-37b23e8384fa64f77503b9d548da5311_1440w.jpg" alt="img"></p>
+]]></content>
+      <categories>
+        <category>计算机网络</category>
+      </categories>
+  </entry>
+  <entry>
     <title>分支预测</title>
     <url>/%E5%88%86%E6%94%AF%E9%A2%84%E6%B5%8B/</url>
     <content><![CDATA[<p>分支预测解决流水线冲突中的控制冒险。在指令集中，分支指令包括条件指令和非条件指令。对无条件指令来说，无需进行条件判断，就可以获得跳转后的地址；但是对条件跳转指令，无论是条件直接跳转还是条件间接跳转指令（RISC-V 无此类指令），都需要在执行阶段才可以确定是否跳转，这样会影响取值阶段的效率。</p>
@@ -263,109 +326,6 @@
 <li><p><a href="https://www.wikiwand.com/en/Branch_predictor">wiki-Branch predictor</a></p>
 </li>
 </ul>
-]]></content>
-      <categories>
-        <category>计算机体系结构</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>以太网帧</title>
-    <url>/%E4%BB%A5%E5%A4%AA%E7%BD%91%E5%B8%A7/</url>
-    <content><![CDATA[<p><strong>以太网帧</strong>是数据链路层协议数据单元，使用底层以太网物理层传输机制。换句话说，以太网链路上的数据单元将以太网帧作为其有效载荷(payload)进行传输。</p>
-<h2 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h2><p>以太网帧前面有<strong>前同步码(preamble)<strong>和</strong>帧开始定界符 (SFD)<strong>，它们都是物理层以太网数据包的一部分。每个以太网帧都以</strong>以太网报头</strong>开始，其中包含目标和源 MAC 地址作为其前两个字段。帧的中间部分是**有效载荷数据(payload)<strong>，包括帧中携带的其他协议（例如 Internet 协议）的首部。帧以</strong>帧校验序列(FCS)**结束，FCS 是一种 32 位循环冗余校验(CRC)，用于检测任何传输中的数据损坏。</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20211002095359578.png" alt="IEEE 802.3以太网数据包和帧结构"></p>
-<table>
-<thead>
-<tr>
-<th>字段</th>
-<th>含义</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>前同步码</td>
-<td>用来使接收端的适配器在接收 MAC 帧时能够迅速调整时钟频率，使它和发送端的频率相同。前同步码为 7 个字节，1 和 0 交替。</td>
-</tr>
-<tr>
-<td>帧开始定界符（SFD）</td>
-<td>帧的起始符，为 1 个字节。前 6 位 1 和 0 交替，最后的两个连续的 1 表示告诉接收端适配器：“帧信息要来了，准备接收”。</td>
-</tr>
-<tr>
-<td>目的地址</td>
-<td>接收端的物理地址（MAC 地址），为 6 个字节（48 比特）。</td>
-</tr>
-<tr>
-<td>源地址</td>
-<td>发送端的物理地址（MAC 地址），为 6 个字节（48 比特）。</td>
-</tr>
-<tr>
-<td>类型</td>
-<td>上层协议的类型。由于上层协议众多，所以在处理数据的时候必须设置该字段，标识数据交付哪个协议处理。例如，字段为 0x0800 时，表示将数据交付给 IP 协议。</td>
-</tr>
-<tr>
-<td>数据</td>
-<td>也称为效载荷，表示交付给上层的数据。以太网帧数据长度最小为 46 字节，最大为 1500 字节。如果不足 46 字节时，会填充到最小长度。最大值也叫最大传输单元（MTU）。</td>
-</tr>
-<tr>
-<td>帧检验序列 FCS</td>
-<td>检测该帧是否出现差错，占 4 个字节（32 比特）。发送端计算帧的循环冗余码校验（CRC）值，把这个值写到帧里。接收端重新计算 CRC，与 FCS 字段的值进行比较。如果两个值不相同，则表示传输过程中发生了数据丢失或改变。这时，就需要重新传输这一帧。</td>
-</tr>
-<tr>
-<td>包间间隙(Interpacket gap)</td>
-<td>包间间隙(IPG) 是包之间的空闲时间。发送一个数据包后，发送器需要在发送下一个数据包之前传输最少 96 位（12 个八位字节）的空闲线路状态。</td>
-</tr>
-</tbody></table>
-<h2 id="类型"><a href="#类型" class="headerlink" title="类型"></a>类型</h2><ul>
-<li>Ethernet II</li>
-<li>Novell raw IEEE 802.3</li>
-<li>IEEE 802.2 Logical Link Control (LLC)</li>
-<li>IEEE 802.2 Subnetwork Access Protocol (SNAP)</li>
-</ul>
-<p>不同的帧类型具有不同的格式和 MTU 值，但可以共存于同一物理介质上。根据下表可以区分帧类型。</p>
-<p>此外，所有四种以太网帧类型都可以选择包含一个 IEEE 802.1Q 标记，以标识它属于哪个 VLAN 及其优先级（服务质量）。这种封装在 IEEE 802.3ac 规范中定义，并将最大帧增加 4 个八位字节。</p>
-<img src="C:\Users\谭梁\AppData\Roaming\Typora\typora-user-images\image-20211002104229791.png" alt="image-20211002104229791" style="zoom: 80%;" />
-
-<p><strong>Ethernet II 帧格式</strong>和<strong>IEEE 802.3 格式</strong>，这两种格式的主要区别在于，Ethernet II 格式中包含一个<strong>Type 字段</strong>，标识以太帧处理完成之后将被发送到哪个上层协议进行处理。IEEE802.3 格式中，同样的位置是<strong>长度字段(Length)<strong>。不同的</strong>Type 字段值/Length 字段</strong>可以用来区别这两种帧的类型，当该字段小于等于 1500（或者十六进制的 0x05DC）时，帧使用的是 IEEE 802.3 格式。当该字段值大于等于 1536 （或者十六进制的 0x0600）时，帧使用的是 Ethernet II 格式。以太网中大多数的数据帧使用的是 Ethernet II 格式。</p>
-<p><img src="https://pic2.zhimg.com/80/v2-37b23e8384fa64f77503b9d548da5311_1440w.jpg" alt="img"></p>
-]]></content>
-      <categories>
-        <category>计算机网络</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>处理器性能公式</title>
-    <url>/%E5%A4%84%E7%90%86%E5%99%A8%E6%80%A7%E8%83%BD%E5%85%AC%E5%BC%8F/</url>
-    <content><![CDATA[<h3 id="CPU-性能及其度量因素"><a href="#CPU-性能及其度量因素" class="headerlink" title="CPU 性能及其度量因素"></a>CPU 性能及其度量因素</h3><p>CPU 性能度量的基本指标是<strong>CPU 执行时间</strong>。而几乎所有发的计算机都有一个以固定频率运行的时钟，称为<strong>时钟周期</strong>，或脉冲周期等。所以，我们可以利用时钟周期来表示 CPU 时间：</p>
-<p>$$<br>程序CPU执行时间 = 程序CPU时钟周期数 × 时钟周期长度<br>$$</p>
-<p>其中，时钟周期长度与时钟频率互为倒数，所以该公式也可表示为：</p>
-<p>$$<br>程序CPU执行时间 =  \frac {程序CPU时钟周期数}{时钟频率}<br>$$</p>
-<h3 id="指令性能"><a href="#指令性能" class="headerlink" title="指令性能"></a>指令性能</h3><p>除了时钟周期外，我们还需注意<strong>指令数</strong>，因为计算机必须通过执行指令来运行程序。</p>
-<p>$$<br>CPU时钟周期 = 程序指令数 × 指令平均时钟周期数<br>$$</p>
-<blockquote>
-<p><strong>指令平均时钟周期数（CPI）</strong>：表示执行某个程序或者程序片段时每条指令所需的时钟周期平均数。</p>
-</blockquote>
-<h3 id="经典的-CPU-性能公式"><a href="#经典的-CPU-性能公式" class="headerlink" title="经典的 CPU 性能公式"></a>经典的 CPU 性能公式</h3><p>结合公式（1）、（2）、（3），我们可以得出<strong>经典的 CPU 性能公式</strong>：</p>
-<p>$$<br>CPU时间 = 指令数 × CPI × 时钟周期长度<br>$$</p>
-<p>或</p>
-<p>$$<br>CPU时间 = \frac{指令数 × CPI}{时钟频率}<br>$$</p>
-<h3 id="影响处理器性能的因素"><a href="#影响处理器性能的因素" class="headerlink" title="影响处理器性能的因素"></a>影响处理器性能的因素</h3><p>从该公式可以看出，<strong>处理器性能取决于三个特性：时钟周期、CPI、指令数</strong>。</p>
-<ul>
-<li>时钟周期：硬件技术与组成</li>
-<li>CPI：组成与指令集体系结构</li>
-<li>指令数：指令集体系结构与编译器技术</li>
-</ul>
-<h4 id="如何测量这些因素"><a href="#如何测量这些因素" class="headerlink" title="如何测量这些因素"></a>如何测量这些因素</h4><p>首先，通过运行程序来测量 CPU 时间，并且计算机说明书上通常介绍了时钟周期长度。</p>
-<p>难以测量的时指令数与 CPI。</p>
-<p>可以使用体系结构仿真器预先执行程序来测量执行的指令数，或者用大多数处理器中的硬件计数器来测量执行的指令数、平均 CPI 和性能损失。</p>
-<p>但是，CPI 与计算机的各种设计细节密切相关（如存储系统、处理器结构、应用程序中不同类型的指令所占的比例），对于不同的应用程序它是不同的。</p>
-<h3 id="Amdal-定律"><a href="#Amdal-定律" class="headerlink" title="Amdal 定律"></a>Amdal 定律</h3><p>Amdal 定律阐述了<strong>对于特定改进的性能提升可能由所使用的改进特征的数量所限制</strong>。也就是说，当提升系统的某部分性能时，对整个系统性能的影响取决于:</p>
-<ol>
-<li>这一部分有多重要(ɑ)</li>
-<li>这一部分性能提升了多少(k)</li>
-</ol>
-<p>$$<br>加速比S = \frac{1}{(1-ɑ)+\frac{ɑ}{k}}<br>$$</p>
-<blockquote>
-<p>ɑ 是升级模块占比，k 是该部分性能提升比例</p>
-</blockquote>
 ]]></content>
       <categories>
         <category>计算机体系结构</category>
@@ -530,6 +490,46 @@
 ]]></content>
       <categories>
         <category>操作系统</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>处理器性能公式</title>
+    <url>/%E5%A4%84%E7%90%86%E5%99%A8%E6%80%A7%E8%83%BD%E5%85%AC%E5%BC%8F/</url>
+    <content><![CDATA[<h3 id="CPU-性能及其度量因素"><a href="#CPU-性能及其度量因素" class="headerlink" title="CPU 性能及其度量因素"></a>CPU 性能及其度量因素</h3><p>CPU 性能度量的基本指标是<strong>CPU 执行时间</strong>。而几乎所有发的计算机都有一个以固定频率运行的时钟，称为<strong>时钟周期</strong>，或脉冲周期等。所以，我们可以利用时钟周期来表示 CPU 时间：</p>
+<p>$$<br>程序CPU执行时间 = 程序CPU时钟周期数 × 时钟周期长度<br>$$</p>
+<p>其中，时钟周期长度与时钟频率互为倒数，所以该公式也可表示为：</p>
+<p>$$<br>程序CPU执行时间 =  \frac {程序CPU时钟周期数}{时钟频率}<br>$$</p>
+<h3 id="指令性能"><a href="#指令性能" class="headerlink" title="指令性能"></a>指令性能</h3><p>除了时钟周期外，我们还需注意<strong>指令数</strong>，因为计算机必须通过执行指令来运行程序。</p>
+<p>$$<br>CPU时钟周期 = 程序指令数 × 指令平均时钟周期数<br>$$</p>
+<blockquote>
+<p><strong>指令平均时钟周期数（CPI）</strong>：表示执行某个程序或者程序片段时每条指令所需的时钟周期平均数。</p>
+</blockquote>
+<h3 id="经典的-CPU-性能公式"><a href="#经典的-CPU-性能公式" class="headerlink" title="经典的 CPU 性能公式"></a>经典的 CPU 性能公式</h3><p>结合公式（1）、（2）、（3），我们可以得出<strong>经典的 CPU 性能公式</strong>：</p>
+<p>$$<br>CPU时间 = 指令数 × CPI × 时钟周期长度<br>$$</p>
+<p>或</p>
+<p>$$<br>CPU时间 = \frac{指令数 × CPI}{时钟频率}<br>$$</p>
+<h3 id="影响处理器性能的因素"><a href="#影响处理器性能的因素" class="headerlink" title="影响处理器性能的因素"></a>影响处理器性能的因素</h3><p>从该公式可以看出，<strong>处理器性能取决于三个特性：时钟周期、CPI、指令数</strong>。</p>
+<ul>
+<li>时钟周期：硬件技术与组成</li>
+<li>CPI：组成与指令集体系结构</li>
+<li>指令数：指令集体系结构与编译器技术</li>
+</ul>
+<h4 id="如何测量这些因素"><a href="#如何测量这些因素" class="headerlink" title="如何测量这些因素"></a>如何测量这些因素</h4><p>首先，通过运行程序来测量 CPU 时间，并且计算机说明书上通常介绍了时钟周期长度。</p>
+<p>难以测量的时指令数与 CPI。</p>
+<p>可以使用体系结构仿真器预先执行程序来测量执行的指令数，或者用大多数处理器中的硬件计数器来测量执行的指令数、平均 CPI 和性能损失。</p>
+<p>但是，CPI 与计算机的各种设计细节密切相关（如存储系统、处理器结构、应用程序中不同类型的指令所占的比例），对于不同的应用程序它是不同的。</p>
+<h3 id="Amdal-定律"><a href="#Amdal-定律" class="headerlink" title="Amdal 定律"></a>Amdal 定律</h3><p>Amdal 定律阐述了<strong>对于特定改进的性能提升可能由所使用的改进特征的数量所限制</strong>。也就是说，当提升系统的某部分性能时，对整个系统性能的影响取决于:</p>
+<ol>
+<li>这一部分有多重要(ɑ)</li>
+<li>这一部分性能提升了多少(k)</li>
+</ol>
+<p>$$<br>加速比S = \frac{1}{(1-ɑ)+\frac{ɑ}{k}}<br>$$</p>
+<blockquote>
+<p>ɑ 是升级模块占比，k 是该部分性能提升比例</p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>计算机体系结构</category>
       </categories>
   </entry>
   <entry>
@@ -1032,78 +1032,6 @@
       </categories>
   </entry>
   <entry>
-    <title>程序转换处理过程</title>
-    <url>/%E7%A8%8B%E5%BA%8F%E8%BD%AC%E6%8D%A2%E5%A4%84%E7%90%86%E8%BF%87%E7%A8%8B/</url>
-    <content><![CDATA[<p>一个由高级语言编写的程序，必须转换成二进制代码，才能在机器上运行。这种可以在机器上运行是二进制代码被称为<strong>可执行目标文件</strong>。</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/sp20210723_083211_152.png" alt="源程序处理过程"></p>
-<p>上述过程可分为四步：</p>
-<ul>
-<li><strong>预处理</strong></li>
-<li><strong>编译</strong></li>
-<li><strong>汇编</strong></li>
-<li><strong>链接</strong></li>
-</ul>
-<h2 id="一、预处理"><a href="#一、预处理" class="headerlink" title="一、预处理"></a>一、预处理</h2><p>预处理过程主要<strong>处理源文件中以“#”开头的预编译指令</strong>，如：</p>
-<ul>
-<li>删除“#define”并展开所定义的宏。</li>
-<li>处理所有条件预编译指令，如“#if”,“#ifdef”, “#endif”等。</li>
-<li>插入头文件到“#include”处，可以递归方式进行处理。</li>
-<li>删除所有的注释“//”和“/* */”。</li>
-<li> 添加行号和文件名标识，以便编译时编译器产生调试用的行号信息。</li>
-<li>保留所有#pragma编译指令（编译器需要用）</li>
-</ul>
-<p>经过预处理后得到的是 <strong>.i 文件</strong>（预处理文件），该文件是一个可读的文本文件 ，但不包含任何宏定义。</p>
-<h3 id="预处理命令"><a href="#预处理命令" class="headerlink" title="预处理命令"></a>预处理命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc –E hello.c –o hello.i</span><br></pre></td></tr></table></figure>
-
-<p>或者</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cpp hello.c &gt; hello.i</span><br></pre></td></tr></table></figure>
-
-<h2 id="二、编译"><a href="#二、编译" class="headerlink" title="二、编译"></a>二、编译</h2><p>编译过程就是将预处理后得到的预处理文件（如 hello.i）进行一系列分析，<strong>生成汇编代码文件</strong>的过程。用来进行编译处理的程序称为<strong>编译程序（编译器，Compiler）</strong></p>
-<p>编译包括以下过程：</p>
-<ul>
-<li>词法分析</li>
-<li>语法分析</li>
-<li>语义分析</li>
-<li>中间代码生成</li>
-<li>代码优化</li>
-</ul>
-<p>经过编译后，得到**.s文件**（汇编代码文件）还是可读的文本文件，CPU无法理解和执行它。</p>
-<h3 id="编译命令"><a href="#编译命令" class="headerlink" title="编译命令"></a>编译命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc -S hello.i -o hello.s</span><br></pre></td></tr></table></figure>
-
-<p>或</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc -S hello.c -o hello.s</span><br></pre></td></tr></table></figure>
-
-<p>或</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">/user/lib/gcc/i486-linux-gnu/4.1/cc1 hello.c</span><br></pre></td></tr></table></figure>
-
-<h2 id="三、汇编"><a href="#三、汇编" class="headerlink" title="三、汇编"></a>三、汇编</h2><p>汇编是<strong>将汇编语言源程序转换为机器指令序列</strong>，每条汇编语句几乎都对应一条机器指令。汇编过程相比编译较为简单，没有复杂的语法，没有语义，也不需要指令优化，只需根据汇编指令和机器指令的对照表一一翻译即可。</p>
-<p>汇编结果是一个 <strong>.o 文件（可重定位目标文件）</strong>，其中包含的是不可读的二进制代码。</p>
-<h3 id="汇编命令"><a href="#汇编命令" class="headerlink" title="汇编命令"></a>汇编命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc –c hello.s –o hello.o</span><br></pre></td></tr></table></figure>
-
-<p>或</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">gcc –c hello.c –o hello.o</span><br></pre></td></tr></table></figure>
-
-<p>或（as是一个汇编程序）</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">as hello.s –o hello.o</span><br></pre></td></tr></table></figure>
-
-<h2 id="四、链接"><a href="#四、链接" class="headerlink" title="四、链接"></a>四、链接</h2><p>链接过程<strong>将多个可重定位目标文件合并以生成可执行目标文件</strong>。</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/sp20210723_101021_361.png" alt="sp20210723_101021_361"></p>
-<h3 id="链接命令"><a href="#链接命令" class="headerlink" title="链接命令"></a>链接命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc –static –o myproc main.o swap.o</span><br></pre></td></tr></table></figure>
-
-<p>或</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ld –static –o myproc main.o swap.o</span><br></pre></td></tr></table></figure>
-
-<p>其中，static 表示静态链接，如果不指定 -o 选项，则可执行文件名 为“a.out”。</p>
-<p><strong>a.out 就是最终的可执行文件。</strong></p>
-]]></content>
-      <categories>
-        <category>链接、装载与库</category>
-      </categories>
-      <tags>
-        <tag>程序员的自我修养</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>物理内存管理：连续内存分配</title>
     <url>/%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%EF%BC%9A%E8%BF%9E%E7%BB%AD%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D/</url>
     <content><![CDATA[<h2 id="固定分区分配"><a href="#固定分区分配" class="headerlink" title="固定分区分配"></a>固定分区分配</h2><p>固定分区分配时最简单的一种可运行多道程序的储存管理方式。用户空间被划分为若干个固定的大小区域，每个分区只装入一道作业，这样一来，可以几道作业并发运行。当一有空闲时，可以从外存的后备作业队列中选择一个适当大小的作业装入该分区，由此往复运行作业。</p>
@@ -1214,6 +1142,78 @@
       </tags>
   </entry>
   <entry>
+    <title>程序转换处理过程</title>
+    <url>/%E7%A8%8B%E5%BA%8F%E8%BD%AC%E6%8D%A2%E5%A4%84%E7%90%86%E8%BF%87%E7%A8%8B/</url>
+    <content><![CDATA[<p>一个由高级语言编写的程序，必须转换成二进制代码，才能在机器上运行。这种可以在机器上运行是二进制代码被称为<strong>可执行目标文件</strong>。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/sp20210723_083211_152.png" alt="源程序处理过程"></p>
+<p>上述过程可分为四步：</p>
+<ul>
+<li><strong>预处理</strong></li>
+<li><strong>编译</strong></li>
+<li><strong>汇编</strong></li>
+<li><strong>链接</strong></li>
+</ul>
+<h2 id="一、预处理"><a href="#一、预处理" class="headerlink" title="一、预处理"></a>一、预处理</h2><p>预处理过程主要<strong>处理源文件中以“#”开头的预编译指令</strong>，如：</p>
+<ul>
+<li>删除“#define”并展开所定义的宏。</li>
+<li>处理所有条件预编译指令，如“#if”,“#ifdef”, “#endif”等。</li>
+<li>插入头文件到“#include”处，可以递归方式进行处理。</li>
+<li>删除所有的注释“//”和“/* */”。</li>
+<li> 添加行号和文件名标识，以便编译时编译器产生调试用的行号信息。</li>
+<li>保留所有#pragma编译指令（编译器需要用）</li>
+</ul>
+<p>经过预处理后得到的是 <strong>.i 文件</strong>（预处理文件），该文件是一个可读的文本文件 ，但不包含任何宏定义。</p>
+<h3 id="预处理命令"><a href="#预处理命令" class="headerlink" title="预处理命令"></a>预处理命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc –E hello.c –o hello.i</span><br></pre></td></tr></table></figure>
+
+<p>或者</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cpp hello.c &gt; hello.i</span><br></pre></td></tr></table></figure>
+
+<h2 id="二、编译"><a href="#二、编译" class="headerlink" title="二、编译"></a>二、编译</h2><p>编译过程就是将预处理后得到的预处理文件（如 hello.i）进行一系列分析，<strong>生成汇编代码文件</strong>的过程。用来进行编译处理的程序称为<strong>编译程序（编译器，Compiler）</strong></p>
+<p>编译包括以下过程：</p>
+<ul>
+<li>词法分析</li>
+<li>语法分析</li>
+<li>语义分析</li>
+<li>中间代码生成</li>
+<li>代码优化</li>
+</ul>
+<p>经过编译后，得到**.s文件**（汇编代码文件）还是可读的文本文件，CPU无法理解和执行它。</p>
+<h3 id="编译命令"><a href="#编译命令" class="headerlink" title="编译命令"></a>编译命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc -S hello.i -o hello.s</span><br></pre></td></tr></table></figure>
+
+<p>或</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc -S hello.c -o hello.s</span><br></pre></td></tr></table></figure>
+
+<p>或</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">/user/lib/gcc/i486-linux-gnu/4.1/cc1 hello.c</span><br></pre></td></tr></table></figure>
+
+<h2 id="三、汇编"><a href="#三、汇编" class="headerlink" title="三、汇编"></a>三、汇编</h2><p>汇编是<strong>将汇编语言源程序转换为机器指令序列</strong>，每条汇编语句几乎都对应一条机器指令。汇编过程相比编译较为简单，没有复杂的语法，没有语义，也不需要指令优化，只需根据汇编指令和机器指令的对照表一一翻译即可。</p>
+<p>汇编结果是一个 <strong>.o 文件（可重定位目标文件）</strong>，其中包含的是不可读的二进制代码。</p>
+<h3 id="汇编命令"><a href="#汇编命令" class="headerlink" title="汇编命令"></a>汇编命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc –c hello.s –o hello.o</span><br></pre></td></tr></table></figure>
+
+<p>或</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">gcc –c hello.c –o hello.o</span><br></pre></td></tr></table></figure>
+
+<p>或（as是一个汇编程序）</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">as hello.s –o hello.o</span><br></pre></td></tr></table></figure>
+
+<h2 id="四、链接"><a href="#四、链接" class="headerlink" title="四、链接"></a>四、链接</h2><p>链接过程<strong>将多个可重定位目标文件合并以生成可执行目标文件</strong>。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/sp20210723_101021_361.png" alt="sp20210723_101021_361"></p>
+<h3 id="链接命令"><a href="#链接命令" class="headerlink" title="链接命令"></a>链接命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc –static –o myproc main.o swap.o</span><br></pre></td></tr></table></figure>
+
+<p>或</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ld –static –o myproc main.o swap.o</span><br></pre></td></tr></table></figure>
+
+<p>其中，static 表示静态链接，如果不指定 -o 选项，则可执行文件名 为“a.out”。</p>
+<p><strong>a.out 就是最终的可执行文件。</strong></p>
+]]></content>
+      <categories>
+        <category>链接、装载与库</category>
+      </categories>
+      <tags>
+        <tag>程序员的自我修养</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>符号与符号表</title>
     <url>/%E7%AC%A6%E5%8F%B7%E4%B8%8E%E7%AC%A6%E5%8F%B7%E8%A1%A8/</url>
     <content><![CDATA[<p>我们知道链接操作的第一步：</p>
@@ -1292,6 +1292,77 @@
       <tags>
         <tag>程序员的自我修养</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>计算机系统概述</title>
+    <url>/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%BF%B0/</url>
+    <content><![CDATA[<h1 id="计算机系统概述"><a href="#计算机系统概述" class="headerlink" title="计算机系统概述"></a>计算机系统概述</h1><h2 id="一、从-hello-c-开始"><a href="#一、从-hello-c-开始" class="headerlink" title="一、从 hello.c 开始"></a>一、从 hello.c 开始</h2><p>对于程序员来说，我们往往会学习一门语言进入计算机世界，如 C/C++、python、Java等。这些语言被称为<strong>高级程序设计语言</strong>，是一类比较接近我们日常书面语言的程序语言。只要学习一定的语法，就可以像阅读书籍一样阅读程序。而日常使用的软件就是我们使用这类高级语言，完成一定的数据结构和算法设计出来的。</p>
+<p>但人类的思维方式和计算机硬件的思维方式是完全不同的。高级语言利于我们编写和阅读，但是，计算机是无法直接理解和执行高级程序语言程序的。因此计算机首先使用<strong>翻译程序</strong>将高级语言翻译成计算机可以理解执行的<strong>机器语言</strong>，再将机器语言“理解”成<strong>控制信号</strong>，程序才能在计算机上执行。</p>
+<p>OK，我们现在从<strong>源代码 –&gt; 可执行文件</strong>的过程出发，开看看计算机系统究竟是什么样子，引出计算机系统的相关概念。下面是每个人都非常熟悉的 hello.c 程序。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;hello, world\n&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>在这里需要插一句。</p>
+<p>hello.c 文件是以 ASCII 码的形式存储的，也就是用一个唯一的单字节大小的整<strong>数值</strong>来表示每个字符。下图是 hello.c 程序的 ASCII 码表示。类似 hello.c 这样只由 ASCII 字符构成的文件称为<strong>文本文件</strong>，而其他文件都称为<strong>二进制文件</strong>。</p>
+<p><img src="https://1087580735-files.gitbook.io/~/files/v0/b/gitbook-28427.appspot.com/o/assets%2F-MHt_spaxGgCbp2POnfq%2Fsync%2Fb21fa77cbcdfba62be01af7b13234cf5eed3c055.png?generation=1624553050781139&alt=media" alt="img"></p>
+</blockquote>
+<p>![img](<a href="https://1087580735-files.gitbook.io/~/files/v0/b/gitbook-28427.appspot.com/o/assets%2F-MHt_spaxGgCbp2POnfq%2F-MHzZfEIY91yIzOD0Rce%2F-MHzZpZI-gs8CNcwHIyv%2F01-03">https://1087580735-files.gitbook.io/~/files/v0/b/gitbook-28427.appspot.com/o/assets%2F-MHt_spaxGgCbp2POnfq%2F-MHzZfEIY91yIzOD0Rce%2F-MHzZpZI-gs8CNcwHIyv%2F01-03</a> compilation systems.png?alt=media&amp;token=91ca688e-1cfc-4ec6-8b99-d52e672bbac7)</p>
+<p>hello.c 经过<strong>预处理</strong>、<strong>编译</strong>、<strong>汇编</strong>和<strong>链接</strong>，生成可执行文件。</p>
+<ul>
+<li><strong>预处理阶段：</strong>预处理阶段主要处理源文件中以“#”开头的预编译指令。例如 hello.c 中，预处理器读取系统头文件 stdio.h 的内容，并把它直接插入#include &lt;stdio.h&gt;的位置中。</li>
+<li><strong>编译阶段：</strong>编译阶段将文本文件 hello.i 翻译成文本文件 hello.s，它包含一个<strong>汇编语言程序</strong>(还是文本)。汇编程序是可阅读的，只是阅读难度比高级程序语言大。</li>
+<li><strong>汇编阶段：</strong>汇编阶段将 hello.s 中的指令逐条翻译成机器语言，生成<strong>可重定位目标程序</strong> hello.o 中。hello.o 文件是一个二进制文件，不可读，所以打开看到的是乱码。</li>
+<li><strong>链接阶段。</strong>链接过程将多个可重定位目标文件合并以生成<strong>可执行目标文件</strong>，该文件可以被加载到内存中由系统执行。hello.c 程序调用了 printf 函数，而 printf 函数存在于一个名为 printf.o 的单独的可重定位目标程序中，链接阶段将 hello.o 和 printf.o 合并生成 hello。</li>
+</ul>
+<p>这里简略地将了源程序 –&gt; 可执行文件的过程，详细点的可以阅读<a href="https://monuo2021.github.io/%E7%A8%8B%E5%BA%8F%E8%BD%AC%E6%8D%A2%E5%A4%84%E7%90%86%E8%BF%87%E7%A8%8B/">程序转换处理过程</a>，更详细地请阅读《程序员的自我修养》。</p>
+<h2 id="二、计算机系统层次结构"><a href="#二、计算机系统层次结构" class="headerlink" title="二、计算机系统层次结构"></a>二、计算机系统层次结构</h2><p>我们已经知道了源程序 –&gt; 可执行文件的大致过程，现在我们从这个过程出发，来看看计算机系统的结构。</p>
+<p>程序在不同的阶段有不同的存在形式，总结起来就是三类：高级语言 –&gt; 汇编语言 –&gt; 机器语言 –&gt; 控制信号。在袁春风老师的《计算机系统基础》中是这样描绘不同层次语言之间的等价转换的：</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/20190809145638721.png" alt="不同层次语言之间的等价转换"></p>
+<p>在我看来，汇编语言和机器语言都是由一条一条的指令构成，为了方便，我称它们为“<strong>指令型语言</strong>”。因此，我们可以将语言转换过程再精炼一下，如下图所示：</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20220307175808283.png" alt="image-20220307175808283"></p>
+<p>按照不同阶段的语言类型，我们将计算机描绘出我们都知道的两层：软件层和硬件层。高级语言是用于编写应用程序的，属于软件层的范围；而控制信号是对硬件逻辑门的控制，属于硬件层的。</p>
+<p>而“指令型语言”就是沟通软件和硬件的关键，是软件层和硬件层的桥梁。这一层我们抽象出来，称为<strong>指令集体系结构(Instruction Set Architecture，简称 ISA)<strong>。ISA 是一种规范（Specification），主要目的是规定了如何使用硬件。它有很多规定，其中和“指令型语言”相关的就有：</strong>指令格式</strong>、<strong>操作种类(加法还是减法)<strong>、</strong>操作数类型(立即数还是寄存器)<strong>、通用寄存器个数。当然这些规定现在听起来有些模糊，之后会详细讲述的。我们目前只要知道，</strong>ISA 是软硬件接口</strong>即可。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20220307172520018.png" alt="image-20220307172520018"></p>
+<p>我们虽然知道计算机分为软件层、硬件层以及沟通它们的桥梁 ISA，但并不知道软件层、硬件层具体包括哪些东西，现在我来看看计算机系统具体包括什么。</p>
+<h3 id="2-1-软件层"><a href="#2-1-软件层" class="headerlink" title="2.1 软件层"></a>2.1 软件层</h3><p>当我们打开电脑时，除了看到品牌的标志外，第一眼看到了是什么？没错，就是 Windows 或 Linux 等操作系统的开机图标。似乎开机运行的第一个程序就是<strong>操作系统</strong>(操作系统也是软件)，而其他应用程序都是在操作系统运行之后才开始运行。这种感觉没有错，其他应用程序都是“运行”在操作系统之上的，所以我们可以在 ISA 上面再抽象出一层——操作系统。</p>
+<img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20220307182457614.png" alt="image-20220307182457614" style="zoom:150%;" />
+
+<p>那么为什么要操作系统呢？难道应用程序要在不能直接运行在计算机上吗？因为应用程序要使用硬件资源，如果直接运行再硬件上，那么编写应用程序要时刻注意硬件资源，并且要非常熟悉硬件知识。同时，针对不同的机器还要编写不同的应用程序。这对程序员来说无疑是巨大的负担。所以就有了操作系统这个系统软件，来帮我们<strong>管理硬件资源</strong>。我们编写程序时，就不需要过多地考虑硬件，只要说明我们需要什么资源，操作系统可以帮我们协调这些资源。也就是说，操作系统是来管理和协调硬件资源的。这样，我们又再一次远离了硬件，在计算机系统上又抽象了一层。</p>
+<p>OK！知道操作系统概念之后，我们便可以将整个计算机软件层抽象层下面的结构。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20220307191453823.png" alt="计算机系统抽象层"></p>
+<p>有人就会问了，既然操作系统在这上面都有了，那怎么没有我们熟悉的数据库和网络呢？因为数据库管理系统(DBMS)和 web 服务器(程序)属于应用程序的范畴。我们可以使用下图理解：</p>
+<img src="C:\Users\谭梁\AppData\Roaming\Typora\typora-user-images\image-20220307193550417.png" alt="image-20220307193550417" style="zoom: 67%;" />
+
+<h3 id="2-2-硬件层"><a href="#2-2-硬件层" class="headerlink" title="2.2 硬件层"></a>2.2 硬件层</h3><p>硬件层无需过多的赘述，这里直接给出计算机硬件层的抽象，想要详细了解的可以阅读《编码：隐匿在计算机软硬件背后的语言》，这是一本入门计算机硬件知识的好书。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20220307194728212.png" alt="image-20220307194728212"></p>
+<h2 id="三、计算机课程之间的关系"><a href="#三、计算机课程之间的关系" class="headerlink" title="三、计算机课程之间的关系"></a>三、计算机课程之间的关系</h2><p>在此之前，我们通过跟踪 hello.c 程序的生命周期，得出了计算机系统的层次结构。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20220307195911745.png" alt="image-20220307195911745"></p>
+<p>但是同学们仍然会有疑问，不知道数据结构、计算机组成原理、操作系统、计算机网络、数据库、Web开发这些课程之间是什么关系，对整个计算机领域还是比较模糊。因此，我打算从另一角度来说明它们之间的关系。</p>
+<h3 id="3-1-计算机领域核心——数据的计算和存储"><a href="#3-1-计算机领域核心——数据的计算和存储" class="headerlink" title="3.1 计算机领域核心——数据的计算和存储"></a>3.1 计算机领域核心——数据的计算和存储</h3><p>每个人对计算机领域有每个人的看法。有人认为操作系统是计算机系统的核心，也有人认为 CPU 是计算机系统发核心。我个人认为计算机领域的核心是数据，具体点说是<strong>数据的计算和存储</strong>。如果将计算机领域的一切都从数据的计算和存储视角来看，你就会觉得计算机领域是有规律可循的。</p>
+<p><strong>图灵机</strong>是计算机理论模型，其他像冯诺依曼结构、哈弗结构都是基于该理论的一种实现。所以，我们先来看看图灵机，了解计算机原理上是否符合我的看法。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/Universal_Turing_machine.svg.png" alt="Universal_Turing_machine"></p>
+<p>图灵机内部的**状态转移图(table of U)<strong>定义了一套运算规则(这套规则蕴含着指令)，进行着数据的计算；T</strong>APE(纸带)**上存放了数据。而冯诺依曼结构中，table of U对应运算单元、Control Unit对应运算单元、读写头对应输入输出设备，并且创造性地将指令和数据放在了存储器里面。从这里可以看出，现代计算机创造之初就是从考虑数据计算和存储开始的。这一点证明了我的观点。</p>
+<p>好！既然计算机领域的核心是数据的计算和存储这一观点暂时没有错误的话，那我们来看看如何按照这条线来理一理计算机的课程。</p>
+<p><strong>数据结构</strong>是对数据的组织，是为了更好地管理数据，也是为了更好地实现算法，从而进行更好的数据计算。</p>
+<p><strong>计算机组成原理</strong>主要是介绍数据计算和存储的工具，因此计算机组成本质上就是清楚并掌握计算机资源，如何高效利用这些资源来更好的完成数据计算和存储。计算机组成很多方案的提出，都是因为资源不够，但又要进行高效的计算和存储，如局部性原理、虚拟内存、多核处理器。</p>
+<p><strong>操作系统</strong>主要是来管理硬件资源的。由于计算机资源有限，且要使每个程序都能够高效正确地进行计算存储，操作系统就产生了进程管理的概念。进程管理很大程度上是操作系统的核心(内存管理是基石)。</p>
+<p>下面的思维导图是一个总结。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20220308161012916.png" alt="image-20220308161012916"></p>
+<p>（这里插一句，数据交互也是计算机的一个核心，但我更愿意将交互纳入“计算”的范畴）</p>
+<p><strong>Web 开发</strong>分为前端和后端。前端主要是更好地将数据展示给我们看(html、css、js也是数据的一种)；后端主要负责与数据库的交互，比如用户名和密码、增删改查一些数据等。<strong>计算机网络</strong>就是实现不同设备间的数据交互。</p>
+<p><strong>数据库</strong>顾名思义，是结构化数据的有组织的集合。</p>
+<p>OK！现在我们按照计算机领域的核心是<strong>数据的计算和存储</strong>，基本上将这些领域串联起来了。其他像分布式、云计算、人工智能其实都可以这样理解的。当然这一点是我学习过程中得出的一个观点，是为了方便理解串联知，不认同也不要紧。随着学习的深入，其他人产生自己对计算机的理解，这是最好不过的了。</p>
+<p>下一节，我们将从<strong>软硬件接口——ISA</strong> 出发，正式进入计算机系统吧！</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><p><a href="https://hansimov.gitbook.io/csapp/">深入理解计算机系统</a></p>
+</li>
+<li><p>计算机系统基础</p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>计算机系统</category>
+      </categories>
   </entry>
   <entry>
     <title>RISC-V特权架构</title>
