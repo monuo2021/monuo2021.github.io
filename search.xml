@@ -1365,6 +1365,222 @@
       </categories>
   </entry>
   <entry>
+    <title>软硬件接口——ISA</title>
+    <url>/%E8%BD%AF%E7%A1%AC%E4%BB%B6%E6%8E%A5%E5%8F%A3%E2%80%94%E2%80%94ISA/</url>
+    <content><![CDATA[<p>上一节我们将汇编语言和机器语言抽象出来，引出了软硬件结构——指令集结构 ISA 的概念。今天我们详细地讲述 ISA 的相关概念，并由此过渡到 ARM 汇编，然后从这里进入计算机的世界。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20220307172520018.png" alt="image-20220307172520018"></p>
+<h2 id="一、图灵机"><a href="#一、图灵机" class="headerlink" title="一、图灵机"></a>一、图灵机</h2><p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/Universal_Turing_machine.svg.png" alt="Universal_Turing_machine"></p>
+<p>首先，我们还是从图灵机开始。图灵机是现代计算机的理论模型，也是冯诺依曼结构的起源。现代计算机的很多基本概念都来源于图灵机。</p>
+<p>图灵机本来是用来解决希尔伯特的可判定性问题(能够找到一种方法，仅仅通过机械化的计算，就能判定某个数学陈述是对是错？)的，只要纸带无限长，图灵机就可以一直计算下去，就可以证明这个结论。</p>
+<p>这个思想无意中启发了计算机领域，高级语言程序转换成一条条机器指令。机器(CPU)不断获取指令、不断执行，而这个工作是由 <strong>CPU(中央处理器)</strong> 来完成。如同下面所示：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">while</span> (<span class="number">1</span>) &#123;</span><br><span class="line">  从PC指示的存储器位置取出指令;</span><br><span class="line">  执行指令;</span><br><span class="line">  更新PC;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>既然计算机是要不断按照这个流程执行，那么就至少要满足以下几点：</p>
+<ul>
+<li>指令格式要规范，不然 CPU 无法认识指令。</li>
+<li>明确操作类型，指令是add 还是 sub，指令是否可以直接访存等。</li>
+<li>操作数类型。计算需要数据，那数据是来自寄存器，还是立即数。</li>
+</ul>
+<p>而这些指令规范的要求就是由 ISA 定义的。下面我们来了解 ISA。</p>
+<h2 id="二、指令集体系结构——ISA"><a href="#二、指令集体系结构——ISA" class="headerlink" title="二、指令集体系结构——ISA"></a>二、指令集体系结构——ISA</h2><h3 id="1-1-什么是-ISA"><a href="#1-1-什么是-ISA" class="headerlink" title="1.1 什么是 ISA"></a>1.1 什么是 ISA</h3><p>指令集架构 (ISA) 是计算机抽象模型的一部分，它定义了<strong>软件如何控制 CPU</strong>，并且规定了<strong>计算机执行什么操作</strong>。ISA 充当硬件和软件之间的接口，提供了用户能够与硬件交互的唯一方式。</p>
+<p>ISA 定义了机器语言级虚拟机的属性和功能特性，主要包括以下信息：</p>
+<ul>
+<li>可执行的指令集合，包括<strong>指令格式</strong>，<strong>操作种类</strong>以及每种操作对应的操作数的相应规定；</li>
+<li>指令可接收的<strong>操作数的类型</strong>；</li>
+<li>操作数或其地址所能存放的寄存器组的结构，包括每个<strong>寄存器的名称</strong>，编号，长度和用途；</li>
+<li>指令获取操作数以及下一条指令的方式，即<strong>寻址方式</strong>；</li>
+<li>操作数所能存放的存储空间的大小和编制方式；</li>
+<li>操作数在存储空间存放时按照大端方式还是小端方式存放；</li>
+<li>指令执行过程的控制方式，包括程序计数器，条件码定义等。</li>
+</ul>
+<p>大多数的人看到上面一大段，都会有些不能理解，下面来具体讲一讲关键部分。我们知道，指令系统由若干条指令及其操作对象组成。而每条指令都是对一个操作的描述，其中最重要的是<strong>操作类型和操作数</strong>，它们共同确定了这条指令的操作。操作类型规定指令功能，例如加减法；操作数指示操作对象，包含数据类型、访存地址、寻址方式等内容的定义。</p>
+<p>我们从一个程序案例来看看这些概念</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">long</span> <span class="title">mult2</span><span class="params">(<span class="keyword">long</span>, <span class="keyword">long</span>)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">multstore</span><span class="params">(<span class="keyword">long</span> x, <span class="keyword">long</span> y, <span class="keyword">long</span> *dest)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">long</span> t = mult2(x, y);</span><br><span class="line">    *dest = t;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在命令行上使用 “-S” 选项(gcc -S mstore.s mstore.c)，就能看到 产生的汇编代码(该指令是 x86)：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">multstore:</span><br><span class="line">  pushq   %rbx</span><br><span class="line">  movq    %rdx, %rbx</span><br><span class="line">  call    mult2</span><br><span class="line">  movq    %rax, (%rbx)</span><br><span class="line">  popq    %rbx</span><br><span class="line">  ret     </span><br></pre></td></tr></table></figure>
+
+<p>从生成的汇编代码中，我们看到了三行(有些是两行)，第一行就是操作类型，第二行是操作数。我们调其中一条来看看。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">movq    %rdx, %rbx</span><br></pre></td></tr></table></figure>
+
+<p>movq 是操作类型，表示传送四字（32位的系统中：1字 =  4 字节=32 bit）；%rdx、%rbx 是寄存器，操作数是寄存器中的数据；该指令的意思是把寄存器 rdx 的数据传送到 rbx 中。这种方式也叫作寄存器寻址。</p>
+<p>我们再来看一条指令:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">movq    %rax, (%rbx)</span><br></pre></td></tr></table></figure>
+
+<p>前两项和上一条指令的意思一样。(%rbx)表示寄存器中的数据是地址，数据在该地址指向的内存处。整条指令的意思是：把寄存器 %rax 的数据写入到内存地址为 %rbx 的内存处。这句也是给指针赋值 *dest = t 的含义，也就是说指针本质上就是地址。从这里可以看出，学习 ISA 对于理解高级语言的概念也是有很大的帮助。</p>
+<p>（初学者可能不知道寄存器和内存是什么，可以暂时认为，寄存器是 CPU 内部的一小块存储单元，内存是 CPU 外部的一大块存储单元。）</p>
+<blockquote>
+<p>AT&amp;T 和 Intel 汇编风格</p>
+<p>我们上面的指令风格被称为 AT&amp;T 风格：第二项是源操作数，第三项是目标操作数。</p>
+<p>下面汇编是 Intel 风格：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">multstore:</span><br><span class="line">push   rbx</span><br><span class="line">mov    rbx, rbdx</span><br><span class="line">call    mult2</span><br><span class="line">mov    QWORD PTR [rbx], rax</span><br><span class="line">pop    rbx</span><br><span class="line">ret </span><br></pre></td></tr></table></figure>
+
+<p>我们可以看到 Intel 和 AT&amp;T 格式在如下方面有所不同：</p>
+<ul>
+<li>Intel 风格省略了操作类型的后缀。我们看到的是 push、mov，而不是 pushq、movq。</li>
+<li>Intel 风格省略了寄存器名字前面的 %。</li>
+<li>Intel 风格用不同的方式描述了内存中的位置，“QWORD PTR [rbx]”而不是“(%rbx)”。</li>
+<li>操作数的顺序相反，Intel 风格第二项是目标操作数，第三项是源操作数。</li>
+</ul>
+</blockquote>
+<p>我们现在知道了 ISA 的基本概念，下面我们详细的来了解以下 ISA 的概念。这一部分请学过一些汇编后再来看，因为它是对指令系统的一个总结。</p>
+<h4 id="1-1-1-指令操作-opcode"><a href="#1-1-1-指令操作-opcode" class="headerlink" title="1.1.1 指令操作(opcode)"></a>1.1.1 指令操作(opcode)</h4><p>在指令系统中，指令的功能是由指令的操作码决定。现在几乎所有指令都可分为四大类：</p>
+<ul>
+<li><strong>运算指令</strong>，包括加减乘除、移位、逻辑运算等；</li>
+<li><strong>访存指令</strong>，负责对存储器的读写；</li>
+<li><strong>转移指令</strong>，用于控制程序的流向；</li>
+<li><strong>特殊指令</strong>，用于操作系统的特定用途。</li>
+</ul>
+<p>转移指令比较特殊，这里着重介绍一下。</p>
+<p>转移指令包括条件转移、无条件转移、过程调用和过程返回等类型。<strong>转移条件</strong>和<strong>转移目标地址</strong>是转移指令的两个要素，两者的组合构成了不同的转移指令：</p>
+<ul>
+<li>条件转移要判断条件再决定是否转移，无条件转移则无须判断条件；</li>
+<li>相对转移是程序计数器（PC）加上一个偏移量作为转移目标地址，绝对转移则直接给出转移目标地址；</li>
+<li>直接转移的转移目标地址可直接由指令得到，间接转移的转移目标地址则需要由寄存器的内容得到。由于取指译码时不知道目标地址，因此硬件结构设计时处理间接跳转比较麻烦。</li>
+</ul>
+<p>条件转移在转移指令中最常用，不同的指令系统有不同的条件判断方法。X86和ARM等指令集采用专用<strong>标志位方式</strong>，这种通过比较指令或其他运算指令将条件判断结果写入专用标志寄存器中，条件转移指令根据标志寄存器中的结果来决定是否跳转；RISC-V指令集则采用<strong>直接比较寄存器方式</strong>，直接对来自寄存器的数值进行比较，然后根据比较结果决定是否进行跳转。</p>
+<h4 id="1-1-2-操作数"><a href="#1-1-2-操作数" class="headerlink" title="1.1.2 操作数"></a>1.1.2 操作数</h4><p>计算机中常见的数据类型包括整数、实数、字符，数据长度包括 1 字节、2 字节、4 字节和 8 字节。X86 指令集中还包括专门的十进制类型 BCD。</p>
+<p>在指令中表达数据类型有两种方法：</p>
+<ul>
+<li>由指令操作码来区分不同类型。例如加法指令包括定点加法指令、单精度浮点加法指令、双精度浮点加法指令。</li>
+<li>将不同类型的标记附在数据上。例如加法使用统一的操作码，用专门的标记来标明加法操作的数据类型。</li>
+</ul>
+<h5 id="1-1-2-1-访存地址"><a href="#1-1-2-1-访存地址" class="headerlink" title="1.1.2.1 访存地址"></a>1.1.2.1 访存地址</h5><p>在执行访存指令时，有两个必须考虑的问题：</p>
+<ul>
+<li>访存地址是否对齐和指令系统是否支持不对齐访问。对齐访问是指对该数据的访问起始地址是其数据长度的整数倍，例如访问一个4字节数，其访存地址的低两位都应为0。若支持不对齐访问，硬件需要完成数据的拆分和拼合；若只支持对齐访问，又会使指令系统丧失一些灵活性。CISC 指令集通常支持不对齐访问，RISC 类指令集在早期只支持对齐访问，近些年也开始支持不对齐访问。</li>
+<li>另一个与访存地址相关的问题是尾端（Endian）问题。机器使用大端方式或小端方式，会带来了严重的数据兼容性问题。高字节放在低地址是大尾端，低字节放在低地址的是小尾端。</li>
+</ul>
+<h5 id="1-1-2-1-寻址方式"><a href="#1-1-2-1-寻址方式" class="headerlink" title="1.1.2.1 寻址方式"></a>1.1.2.1 寻址方式</h5><p>寻址方式是确定本条指令的数据地址以及下一条要执行的指令地址的方法。下表列出了计算机中常用的寻址方式，其中 mem 表示存储器，regs 表示寄存器，mem[regs[Rn]] 表示由寄存器 Rn 的值作为存储器地址所访问的存储器值。</p>
+<table>
+<thead>
+<tr>
+<th><strong>寻址方式</strong></th>
+<th><strong>格式</strong></th>
+<th><strong>含义</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>寄存器寻址（Register）</td>
+<td>ADD R1,R2</td>
+<td>regs[R1]=regs[R1]+regs[R2]</td>
+</tr>
+<tr>
+<td>立即数寻址（Immediate）</td>
+<td>ADD R1,#2</td>
+<td>regs[R1]=regs[R1]+2</td>
+</tr>
+<tr>
+<td>偏移量寻址（Displacement）</td>
+<td>ADD R1,100(R2)</td>
+<td>regs[R1]=regs[R1]+mem[100+regs[R2]]</td>
+</tr>
+<tr>
+<td>寄存器间接寻址（Reg.Indirect）</td>
+<td>ADD R1,(R2)</td>
+<td>regs[R1]=regs[R1]+mem[regs[R2]]</td>
+</tr>
+<tr>
+<td>变址寻址（Indexed）</td>
+<td>ADD R1,(R2+R3)</td>
+<td>regs[R1]=regs[R1]+mem[regs[R2]+regs[R3]]</td>
+</tr>
+<tr>
+<td>绝对寻址（Absolute）</td>
+<td>ADD R1,(100)</td>
+<td>regs[R1]=regs[R1]+mem[100]</td>
+</tr>
+<tr>
+<td>存储器间接寻址（Mem.Indirect）</td>
+<td>ADD R1,@(R2)</td>
+<td>regs[R1]=regs[R1]+mem[mem[regs[R2]]]</td>
+</tr>
+<tr>
+<td>自增量寻址（Autoincrement）</td>
+<td>ADD R1,(R2)+</td>
+<td>regs[R1]=regs[R1]+mem[regs[R2]],regs[R2]=regs[R2]+d</td>
+</tr>
+<tr>
+<td>自减量寻址（Autodecrement）</td>
+<td>ADD R1,-(R2)</td>
+<td>regs[R2]=regs[R2]-d,regs[R1]=regs[R1]+mem[regs[R2]]</td>
+</tr>
+<tr>
+<td>比例变址寻址（Scaled）</td>
+<td>ADD R1,100(R2)(R3)</td>
+<td>regs[R1]=regs[R1]+mem[100+regs[R2]+regs[R3]*d]</td>
+</tr>
+</tbody></table>
+<p>其中，偏移量寻址、立即数寻址和寄存器间接寻址是最常用的寻址方式。因此，一个指令系统至少应支持寄存器寻址、立即数寻址和偏移量寻址。</p>
+<h4 id="1-1-3-指令格式"><a href="#1-1-3-指令格式" class="headerlink" title="1.1.3 指令格式"></a>1.1.3 指令格式</h4><p>指令格式就是操作数和操作码在整个指令机器码中的摆放方式。</p>
+<p>下图是 RISC-V 的指令格式，其中 r开头的是寄存器，imm开头的时立即数：</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20210805115309060.png" alt="image-20210805115309060"></p>
+<p>下图是 MIPS 的指令格式其中 r开头的是寄存器，imm开头的时立即数：</p>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/ee13be8639960bb50f578d679f922e4d.png" alt="img"></p>
+<p>从上面两图就可以明显地看出操作码和操作数摆放顺序的不同。</p>
+<h3 id="1-2-CISC-和-RISC"><a href="#1-2-CISC-和-RISC" class="headerlink" title="1.2 CISC 和 RISC"></a>1.2 CISC 和 RISC</h3><p>我们可能听说过 x86、ARM、MIPS、RISC-V等名词，但不清楚这些概念的意思。其中这些是四种不同的指令集架构，也就是 ISA 的具体实现。其中 x86 属于 CISC；其他三种属于 RISC。下面我们来看看 CISC 和 RISC 是什么。</p>
+<p><strong>CISC(Complex Instruction Set Computer)，即“复杂指令系统计算机”</strong>，CISC 是最开始的指令风格，目前个人计算机流行的 x86 体系结构也是 CISC 的一种。CISC 指令系统复杂，指令条数多，寻址方式多，指令风格多而复杂，指令长度可变，操作码长度可变。因为过于复杂，导致其实现复杂。不仅增加了研发周期成本，而且难以保证正确性，而且只能使用慢速的微程序控制器，而不能使用硬连线路控制器。</p>
+<p>而且 CISC 中各种指令的使用频率悬殊，最常使用的只有指令系统的 20%，但它们占程序代码的 80% 以上。实现这些指令需要大量硬件逻辑支持，其他 80% 的指令使用频率低，但却占据了大量的硬件资源，这是很不划算的。因此在 7、80年代，提出了 RISC 的概念。</p>
+<p><strong>RISC(Reduced Instruction Set Computer)，即“精简指令集计算机”</strong>，是一种执行较少类型计算机指令的微处理器。这种指令风格指令数目少、指令格式整齐，非常适合流水线方式执行。</p>
+<p>RISC、CISC风格区别如下：</p>
+<table>
+<thead>
+<tr>
+<th>RISC</th>
+<th>CISC</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>以软件为中心的指令集设计</td>
+<td>以硬件为中心的指令集设计</td>
+</tr>
+<tr>
+<td>少量指令数</td>
+<td>大量指令数</td>
+</tr>
+<tr>
+<td>固定大小的指令</td>
+<td>可变大小指令</td>
+</tr>
+<tr>
+<td>需要更多寄存器，频繁使用寄存器和内存</td>
+<td>需要更少寄存器，高效使用内存和寄存器</td>
+</tr>
+<tr>
+<td>指令在单个时钟周期内执行</td>
+<td>指令需要超过一个时钟周期</td>
+</tr>
+<tr>
+<td>只能执行 Register to Register 算术运算</td>
+<td>可以执行 REG 到 REG 或 REG 到 MEM 或 MEM 到 MEM</td>
+</tr>
+</tbody></table>
+<p>从上面看，我们可能会觉得 RISC 会优于 CISC，其实不然。这两种风格只是在用不同方式来提高 CPU 性能 。</p>
+<p>我们开看看 CPU 性能公式(只是看看，具体推导可以之后学习)：<br>$$<br>CPU时间 = 指令数 × CPI × 时钟周期长度<br>$$<br>其中，CPI 是单条指令所需的时钟周期平均数。</p>
+<p>时钟周期长度(时钟频率的倒数)从 CPU 产生就是固定的，想要提高 CPU 性能，只能减少指令数或者降低 CPI。CISC 和 RISC 就是在用不同的方式来提高 CPU 性能。</p>
+<ul>
+<li><strong>RISC：</strong>通过降低 CPI 来提高 CPU 性能，代价是一个程序的需要的指令数会增加（因为 RISC 指令数量少）。</li>
+<li><strong>CISC：</strong> 通过减少程序指令数来提高 CPU 性能，代价是 CPI 增加（因为 CISC 指令集丰富，可以使用少量指令来描述程序，但一条指令可能要多个周期完成）</li>
+</ul>
+<p>而且根据《Power Struggles: Revisiting the RISC vs. CISC Debate on Contemporary ARM and x86 Architectures》这篇论文的结论发现，ARM 和 x86 之间的功耗差异，并不是来自于 CISC 和 RISC 的指令集差异，而是因为两类芯片的设计。因为芯片设计之初，就是针对不同的性能目标而进行的，和指令集是 CISC 还是 RISC 并没有什么关系。</p>
+<h3 id="1-3-为什么ISA很重要？"><a href="#1-3-为什么ISA很重要？" class="headerlink" title="1.3 为什么ISA很重要？"></a>1.3 为什么ISA很重要？</h3><ul>
+<li>了解指令集可以做什么以及编译器如何使用这些指令可以帮助开发人员编写更高效的代码。</li>
+<li>高级语言抽象层太高，隐藏了许多机器级程序的行为细节。大多数程序员不能很好地利用于机器结构相关的一些优化方法来提升程序的性能，不能很好地预见和防止潜在的安全漏洞。</li>
+</ul>
+<h2 id="三、ARM-汇编简述"><a href="#三、ARM-汇编简述" class="headerlink" title="三、ARM 汇编简述"></a>三、ARM 汇编简述</h2><p>（待完善）</p>
+<h2 id="四、汇编实现排序算法"><a href="#四、汇编实现排序算法" class="headerlink" title="四、汇编实现排序算法"></a>四、汇编实现排序算法</h2><p>使用ARM thumb2汇编语言，在flash区定义10个大小不同的数据，对其进行排序并写入到RAM区。</p>
+<p>（待完善）</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li>袁春风、余子濠《计算机系统基础》</li>
+<li>胡伟武、汪文祥等《计算机体系结构基础》</li>
+<li><a href="https://www.geeksforgeeks.org/computer-organization-risc-and-cisc/">https://www.geeksforgeeks.org/computer-organization-risc-and-cisc/</a></li>
+<li><a href="https://cs.stanford.edu/people/eroberts/courses/soco/projects/risc/risccisc/">https://cs.stanford.edu/people/eroberts/courses/soco/projects/risc/risccisc/</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>计算机系统</category>
+      </categories>
+  </entry>
+  <entry>
     <title>RISC-V特权架构</title>
     <url>/RISC-V%E7%89%B9%E6%9D%83%E6%9E%B6%E6%9E%84/</url>
     <content><![CDATA[<p>RISC-V 的官方标准主要分成两部分：<strong>用户指令集</strong>（User-Level Instruction Set Architecture）与<strong>特权架构</strong>（Privileged Architecture）。其目的是希望不同特权架构的处理器可以在 ABI(Application Binary Interface) 互相兼容。也就是说，支持同一用户指令集的处理器可以根据实际需求而在特权架构的设计上采取不同的策略。</p>
