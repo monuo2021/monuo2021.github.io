@@ -1032,78 +1032,6 @@
       </tags>
   </entry>
   <entry>
-    <title>程序转换处理过程</title>
-    <url>/%E7%A8%8B%E5%BA%8F%E8%BD%AC%E6%8D%A2%E5%A4%84%E7%90%86%E8%BF%87%E7%A8%8B/</url>
-    <content><![CDATA[<p>一个由高级语言编写的程序，必须转换成二进制代码，才能在机器上运行。这种可以在机器上运行是二进制代码被称为<strong>可执行目标文件</strong>。</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/sp20210723_083211_152.png" alt="源程序处理过程"></p>
-<p>上述过程可分为四步：</p>
-<ul>
-<li><strong>预处理</strong></li>
-<li><strong>编译</strong></li>
-<li><strong>汇编</strong></li>
-<li><strong>链接</strong></li>
-</ul>
-<h2 id="一、预处理"><a href="#一、预处理" class="headerlink" title="一、预处理"></a>一、预处理</h2><p>预处理过程主要<strong>处理源文件中以“#”开头的预编译指令</strong>，如：</p>
-<ul>
-<li>删除“#define”并展开所定义的宏。</li>
-<li>处理所有条件预编译指令，如“#if”,“#ifdef”, “#endif”等。</li>
-<li>插入头文件到“#include”处，可以递归方式进行处理。</li>
-<li>删除所有的注释“//”和“/* */”。</li>
-<li> 添加行号和文件名标识，以便编译时编译器产生调试用的行号信息。</li>
-<li>保留所有#pragma编译指令（编译器需要用）</li>
-</ul>
-<p>经过预处理后得到的是 <strong>.i 文件</strong>（预处理文件），该文件是一个可读的文本文件 ，但不包含任何宏定义。</p>
-<h3 id="预处理命令"><a href="#预处理命令" class="headerlink" title="预处理命令"></a>预处理命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc –E hello.c –o hello.i</span><br></pre></td></tr></table></figure>
-
-<p>或者</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cpp hello.c &gt; hello.i</span><br></pre></td></tr></table></figure>
-
-<h2 id="二、编译"><a href="#二、编译" class="headerlink" title="二、编译"></a>二、编译</h2><p>编译过程就是将预处理后得到的预处理文件（如 hello.i）进行一系列分析，<strong>生成汇编代码文件</strong>的过程。用来进行编译处理的程序称为<strong>编译程序（编译器，Compiler）</strong></p>
-<p>编译包括以下过程：</p>
-<ul>
-<li>词法分析</li>
-<li>语法分析</li>
-<li>语义分析</li>
-<li>中间代码生成</li>
-<li>代码优化</li>
-</ul>
-<p>经过编译后，得到**.s文件**（汇编代码文件）还是可读的文本文件，CPU无法理解和执行它。</p>
-<h3 id="编译命令"><a href="#编译命令" class="headerlink" title="编译命令"></a>编译命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc -S hello.i -o hello.s</span><br></pre></td></tr></table></figure>
-
-<p>或</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc -S hello.c -o hello.s</span><br></pre></td></tr></table></figure>
-
-<p>或</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">/user/lib/gcc/i486-linux-gnu/4.1/cc1 hello.c</span><br></pre></td></tr></table></figure>
-
-<h2 id="三、汇编"><a href="#三、汇编" class="headerlink" title="三、汇编"></a>三、汇编</h2><p>汇编是<strong>将汇编语言源程序转换为机器指令序列</strong>，每条汇编语句几乎都对应一条机器指令。汇编过程相比编译较为简单，没有复杂的语法，没有语义，也不需要指令优化，只需根据汇编指令和机器指令的对照表一一翻译即可。</p>
-<p>汇编结果是一个 <strong>.o 文件（可重定位目标文件）</strong>，其中包含的是不可读的二进制代码。</p>
-<h3 id="汇编命令"><a href="#汇编命令" class="headerlink" title="汇编命令"></a>汇编命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc –c hello.s –o hello.o</span><br></pre></td></tr></table></figure>
-
-<p>或</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">gcc –c hello.c –o hello.o</span><br></pre></td></tr></table></figure>
-
-<p>或（as是一个汇编程序）</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">as hello.s –o hello.o</span><br></pre></td></tr></table></figure>
-
-<h2 id="四、链接"><a href="#四、链接" class="headerlink" title="四、链接"></a>四、链接</h2><p>链接过程<strong>将多个可重定位目标文件合并以生成可执行目标文件</strong>。</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/sp20210723_101021_361.png" alt="sp20210723_101021_361"></p>
-<h3 id="链接命令"><a href="#链接命令" class="headerlink" title="链接命令"></a>链接命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc –static –o myproc main.o swap.o</span><br></pre></td></tr></table></figure>
-
-<p>或</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ld –static –o myproc main.o swap.o</span><br></pre></td></tr></table></figure>
-
-<p>其中，static 表示静态链接，如果不指定 -o 选项，则可执行文件名 为“a.out”。</p>
-<p><strong>a.out 就是最终的可执行文件。</strong></p>
-]]></content>
-      <categories>
-        <category>链接、装载与库</category>
-      </categories>
-      <tags>
-        <tag>程序员的自我修养</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>物理内存管理：连续内存分配</title>
     <url>/%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%EF%BC%9A%E8%BF%9E%E7%BB%AD%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D/</url>
     <content><![CDATA[<h2 id="固定分区分配"><a href="#固定分区分配" class="headerlink" title="固定分区分配"></a>固定分区分配</h2><p>固定分区分配时最简单的一种可运行多道程序的储存管理方式。用户空间被划分为若干个固定的大小区域，每个分区只装入一道作业，这样一来，可以几道作业并发运行。当一有空闲时，可以从外存的后备作业队列中选择一个适当大小的作业装入该分区，由此往复运行作业。</p>
@@ -1214,6 +1142,78 @@
       </tags>
   </entry>
   <entry>
+    <title>程序转换处理过程</title>
+    <url>/%E7%A8%8B%E5%BA%8F%E8%BD%AC%E6%8D%A2%E5%A4%84%E7%90%86%E8%BF%87%E7%A8%8B/</url>
+    <content><![CDATA[<p>一个由高级语言编写的程序，必须转换成二进制代码，才能在机器上运行。这种可以在机器上运行是二进制代码被称为<strong>可执行目标文件</strong>。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/sp20210723_083211_152.png" alt="源程序处理过程"></p>
+<p>上述过程可分为四步：</p>
+<ul>
+<li><strong>预处理</strong></li>
+<li><strong>编译</strong></li>
+<li><strong>汇编</strong></li>
+<li><strong>链接</strong></li>
+</ul>
+<h2 id="一、预处理"><a href="#一、预处理" class="headerlink" title="一、预处理"></a>一、预处理</h2><p>预处理过程主要<strong>处理源文件中以“#”开头的预编译指令</strong>，如：</p>
+<ul>
+<li>删除“#define”并展开所定义的宏。</li>
+<li>处理所有条件预编译指令，如“#if”,“#ifdef”, “#endif”等。</li>
+<li>插入头文件到“#include”处，可以递归方式进行处理。</li>
+<li>删除所有的注释“//”和“/* */”。</li>
+<li> 添加行号和文件名标识，以便编译时编译器产生调试用的行号信息。</li>
+<li>保留所有#pragma编译指令（编译器需要用）</li>
+</ul>
+<p>经过预处理后得到的是 <strong>.i 文件</strong>（预处理文件），该文件是一个可读的文本文件 ，但不包含任何宏定义。</p>
+<h3 id="预处理命令"><a href="#预处理命令" class="headerlink" title="预处理命令"></a>预处理命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc –E hello.c –o hello.i</span><br></pre></td></tr></table></figure>
+
+<p>或者</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cpp hello.c &gt; hello.i</span><br></pre></td></tr></table></figure>
+
+<h2 id="二、编译"><a href="#二、编译" class="headerlink" title="二、编译"></a>二、编译</h2><p>编译过程就是将预处理后得到的预处理文件（如 hello.i）进行一系列分析，<strong>生成汇编代码文件</strong>的过程。用来进行编译处理的程序称为<strong>编译程序（编译器，Compiler）</strong></p>
+<p>编译包括以下过程：</p>
+<ul>
+<li>词法分析</li>
+<li>语法分析</li>
+<li>语义分析</li>
+<li>中间代码生成</li>
+<li>代码优化</li>
+</ul>
+<p>经过编译后，得到**.s文件**（汇编代码文件）还是可读的文本文件，CPU无法理解和执行它。</p>
+<h3 id="编译命令"><a href="#编译命令" class="headerlink" title="编译命令"></a>编译命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc -S hello.i -o hello.s</span><br></pre></td></tr></table></figure>
+
+<p>或</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc -S hello.c -o hello.s</span><br></pre></td></tr></table></figure>
+
+<p>或</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">/user/lib/gcc/i486-linux-gnu/4.1/cc1 hello.c</span><br></pre></td></tr></table></figure>
+
+<h2 id="三、汇编"><a href="#三、汇编" class="headerlink" title="三、汇编"></a>三、汇编</h2><p>汇编是<strong>将汇编语言源程序转换为机器指令序列</strong>，每条汇编语句几乎都对应一条机器指令。汇编过程相比编译较为简单，没有复杂的语法，没有语义，也不需要指令优化，只需根据汇编指令和机器指令的对照表一一翻译即可。</p>
+<p>汇编结果是一个 <strong>.o 文件（可重定位目标文件）</strong>，其中包含的是不可读的二进制代码。</p>
+<h3 id="汇编命令"><a href="#汇编命令" class="headerlink" title="汇编命令"></a>汇编命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc –c hello.s –o hello.o</span><br></pre></td></tr></table></figure>
+
+<p>或</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">gcc –c hello.c –o hello.o</span><br></pre></td></tr></table></figure>
+
+<p>或（as是一个汇编程序）</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">as hello.s –o hello.o</span><br></pre></td></tr></table></figure>
+
+<h2 id="四、链接"><a href="#四、链接" class="headerlink" title="四、链接"></a>四、链接</h2><p>链接过程<strong>将多个可重定位目标文件合并以生成可执行目标文件</strong>。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/sp20210723_101021_361.png" alt="sp20210723_101021_361"></p>
+<h3 id="链接命令"><a href="#链接命令" class="headerlink" title="链接命令"></a>链接命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc –static –o myproc main.o swap.o</span><br></pre></td></tr></table></figure>
+
+<p>或</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ld –static –o myproc main.o swap.o</span><br></pre></td></tr></table></figure>
+
+<p>其中，static 表示静态链接，如果不指定 -o 选项，则可执行文件名 为“a.out”。</p>
+<p><strong>a.out 就是最终的可执行文件。</strong></p>
+]]></content>
+      <categories>
+        <category>链接、装载与库</category>
+      </categories>
+      <tags>
+        <tag>程序员的自我修养</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>符号与符号表</title>
     <url>/%E7%AC%A6%E5%8F%B7%E4%B8%8E%E7%AC%A6%E5%8F%B7%E8%A1%A8/</url>
     <content><![CDATA[<p>我们知道链接操作的第一步：</p>
@@ -1292,77 +1292,6 @@
       <tags>
         <tag>程序员的自我修养</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>计算机系统概述</title>
-    <url>/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%BF%B0/</url>
-    <content><![CDATA[<h1 id="计算机系统概述"><a href="#计算机系统概述" class="headerlink" title="计算机系统概述"></a>计算机系统概述</h1><h2 id="一、从-hello-c-开始"><a href="#一、从-hello-c-开始" class="headerlink" title="一、从 hello.c 开始"></a>一、从 hello.c 开始</h2><p>对于程序员来说，我们往往会学习一门语言进入计算机世界，如 C/C++、python、Java等。这些语言被称为<strong>高级程序设计语言</strong>，是一类比较接近我们日常书面语言的程序语言。只要学习一定的语法，就可以像阅读书籍一样阅读程序。而日常使用的软件就是我们使用这类高级语言，完成一定的数据结构和算法设计出来的。</p>
-<p>但人类的思维方式和计算机硬件的思维方式是完全不同的。高级语言利于我们编写和阅读，但是，计算机是无法直接理解和执行高级程序语言程序的。因此计算机首先使用<strong>翻译程序</strong>将高级语言翻译成计算机可以理解执行的<strong>机器语言</strong>，再将机器语言“理解”成<strong>控制信号</strong>，程序才能在计算机上执行。</p>
-<p>OK，我们现在从<strong>源代码 –&gt; 可执行文件</strong>的过程出发，开看看计算机系统究竟是什么样子，引出计算机系统的相关概念。下面是每个人都非常熟悉的 hello.c 程序。</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;hello, world\n&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>在这里需要插一句。</p>
-<p>hello.c 文件是以 ASCII 码的形式存储的，也就是用一个唯一的单字节大小的整<strong>数值</strong>来表示每个字符。下图是 hello.c 程序的 ASCII 码表示。类似 hello.c 这样只由 ASCII 字符构成的文件称为<strong>文本文件</strong>，而其他文件都称为<strong>二进制文件</strong>。</p>
-<p><img src="https://1087580735-files.gitbook.io/~/files/v0/b/gitbook-28427.appspot.com/o/assets%2F-MHt_spaxGgCbp2POnfq%2Fsync%2Fb21fa77cbcdfba62be01af7b13234cf5eed3c055.png?generation=1624553050781139&alt=media" alt="img"></p>
-</blockquote>
-<p>![img](<a href="https://1087580735-files.gitbook.io/~/files/v0/b/gitbook-28427.appspot.com/o/assets%2F-MHt_spaxGgCbp2POnfq%2F-MHzZfEIY91yIzOD0Rce%2F-MHzZpZI-gs8CNcwHIyv%2F01-03">https://1087580735-files.gitbook.io/~/files/v0/b/gitbook-28427.appspot.com/o/assets%2F-MHt_spaxGgCbp2POnfq%2F-MHzZfEIY91yIzOD0Rce%2F-MHzZpZI-gs8CNcwHIyv%2F01-03</a> compilation systems.png?alt=media&amp;token=91ca688e-1cfc-4ec6-8b99-d52e672bbac7)</p>
-<p>hello.c 经过<strong>预处理</strong>、<strong>编译</strong>、<strong>汇编</strong>和<strong>链接</strong>，生成可执行文件。</p>
-<ul>
-<li><strong>预处理阶段：</strong>预处理阶段主要处理源文件中以“#”开头的预编译指令。例如 hello.c 中，预处理器读取系统头文件 stdio.h 的内容，并把它直接插入#include &lt;stdio.h&gt;的位置中。</li>
-<li><strong>编译阶段：</strong>编译阶段将文本文件 hello.i 翻译成文本文件 hello.s，它包含一个<strong>汇编语言程序</strong>(还是文本)。汇编程序是可阅读的，只是阅读难度比高级程序语言大。</li>
-<li><strong>汇编阶段：</strong>汇编阶段将 hello.s 中的指令逐条翻译成机器语言，生成<strong>可重定位目标程序</strong> hello.o 中。hello.o 文件是一个二进制文件，不可读，所以打开看到的是乱码。</li>
-<li><strong>链接阶段。</strong>链接过程将多个可重定位目标文件合并以生成<strong>可执行目标文件</strong>，该文件可以被加载到内存中由系统执行。hello.c 程序调用了 printf 函数，而 printf 函数存在于一个名为 printf.o 的单独的可重定位目标程序中，链接阶段将 hello.o 和 printf.o 合并生成 hello。</li>
-</ul>
-<p>这里简略地将了源程序 –&gt; 可执行文件的过程，详细点的可以阅读<a href="https://monuo2021.github.io/%E7%A8%8B%E5%BA%8F%E8%BD%AC%E6%8D%A2%E5%A4%84%E7%90%86%E8%BF%87%E7%A8%8B/">程序转换处理过程</a>，更详细地请阅读《程序员的自我修养》。</p>
-<h2 id="二、计算机系统层次结构"><a href="#二、计算机系统层次结构" class="headerlink" title="二、计算机系统层次结构"></a>二、计算机系统层次结构</h2><p>我们已经知道了源程序 –&gt; 可执行文件的大致过程，现在我们从这个过程出发，来看看计算机系统的结构。</p>
-<p>程序在不同的阶段有不同的存在形式，总结起来就是三类：高级语言 –&gt; 汇编语言 –&gt; 机器语言 –&gt; 控制信号。在袁春风老师的《计算机系统基础》中是这样描绘不同层次语言之间的等价转换的：</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/20190809145638721.png" alt="不同层次语言之间的等价转换"></p>
-<p>在我看来，汇编语言和机器语言都是由一条一条的指令构成，为了方便，我称它们为“<strong>指令型语言</strong>”。因此，我们可以将语言转换过程再精炼一下，如下图所示：</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20220307175808283.png" alt="image-20220307175808283"></p>
-<p>按照不同阶段的语言类型，我们将计算机描绘出我们都知道的两层：软件层和硬件层。高级语言是用于编写应用程序的，属于软件层的范围；而控制信号是对硬件逻辑门的控制，属于硬件层的。</p>
-<p>而“指令型语言”就是沟通软件和硬件的关键，是软件层和硬件层的桥梁。这一层我们抽象出来，称为<strong>指令集体系结构(Instruction Set Architecture，简称 ISA)<strong>。ISA 是一种规范（Specification），主要目的是规定了如何使用硬件。它有很多规定，其中和“指令型语言”相关的就有：</strong>指令格式</strong>、<strong>操作种类(加法还是减法)<strong>、</strong>操作数类型(立即数还是寄存器)<strong>、通用寄存器个数。当然这些规定现在听起来有些模糊，之后会详细讲述的。我们目前只要知道，</strong>ISA 是软硬件接口</strong>即可。</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20220307172520018.png" alt="image-20220307172520018"></p>
-<p>我们虽然知道计算机分为软件层、硬件层以及沟通它们的桥梁 ISA，但并不知道软件层、硬件层具体包括哪些东西，现在我来看看计算机系统具体包括什么。</p>
-<h3 id="2-1-软件层"><a href="#2-1-软件层" class="headerlink" title="2.1 软件层"></a>2.1 软件层</h3><p>当我们打开电脑时，除了看到品牌的标志外，第一眼看到了是什么？没错，就是 Windows 或 Linux 等操作系统的开机图标。似乎开机运行的第一个程序就是<strong>操作系统</strong>(操作系统也是软件)，而其他应用程序都是在操作系统运行之后才开始运行。这种感觉没有错，其他应用程序都是“运行”在操作系统之上的，所以我们可以在 ISA 上面再抽象出一层——操作系统。</p>
-<img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20220307182457614.png" alt="image-20220307182457614" style="zoom:150%;" />
-
-<p>那么为什么要操作系统呢？难道应用程序要在不能直接运行在计算机上吗？因为应用程序要使用硬件资源，如果直接运行再硬件上，那么编写应用程序要时刻注意硬件资源，并且要非常熟悉硬件知识。同时，针对不同的机器还要编写不同的应用程序。这对程序员来说无疑是巨大的负担。所以就有了操作系统这个系统软件，来帮我们<strong>管理硬件资源</strong>。我们编写程序时，就不需要过多地考虑硬件，只要说明我们需要什么资源，操作系统可以帮我们协调这些资源。也就是说，操作系统是来管理和协调硬件资源的。这样，我们又再一次远离了硬件，在计算机系统上又抽象了一层。</p>
-<p>OK！知道操作系统概念之后，我们便可以将整个计算机软件层抽象层下面的结构。</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20220307191453823.png" alt="计算机系统抽象层"></p>
-<p>有人就会问了，既然操作系统在这上面都有了，那怎么没有我们熟悉的数据库和网络呢？因为数据库管理系统(DBMS)和 web 服务器(程序)属于应用程序的范畴。我们可以使用下图理解：</p>
-<img src="C:\Users\谭梁\AppData\Roaming\Typora\typora-user-images\image-20220307193550417.png" alt="image-20220307193550417" style="zoom: 67%;" />
-
-<h3 id="2-2-硬件层"><a href="#2-2-硬件层" class="headerlink" title="2.2 硬件层"></a>2.2 硬件层</h3><p>硬件层无需过多的赘述，这里直接给出计算机硬件层的抽象，想要详细了解的可以阅读《编码：隐匿在计算机软硬件背后的语言》，这是一本入门计算机硬件知识的好书。</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20220307194728212.png" alt="image-20220307194728212"></p>
-<h2 id="三、计算机课程之间的关系"><a href="#三、计算机课程之间的关系" class="headerlink" title="三、计算机课程之间的关系"></a>三、计算机课程之间的关系</h2><p>在此之前，我们通过跟踪 hello.c 程序的生命周期，得出了计算机系统的层次结构。</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20220307195911745.png" alt="image-20220307195911745"></p>
-<p>但是同学们仍然会有疑问，不知道数据结构、计算机组成原理、操作系统、计算机网络、数据库、Web开发这些课程之间是什么关系，对整个计算机领域还是比较模糊。因此，我打算从另一角度来说明它们之间的关系。</p>
-<h3 id="3-1-计算机领域核心——数据的计算和存储"><a href="#3-1-计算机领域核心——数据的计算和存储" class="headerlink" title="3.1 计算机领域核心——数据的计算和存储"></a>3.1 计算机领域核心——数据的计算和存储</h3><p>每个人对计算机领域有每个人的看法。有人认为操作系统是计算机系统的核心，也有人认为 CPU 是计算机系统发核心。我个人认为计算机领域的核心是数据，具体点说是<strong>数据的计算和存储</strong>。如果将计算机领域的一切都从数据的计算和存储视角来看，你就会觉得计算机领域是有规律可循的。</p>
-<p><strong>图灵机</strong>是计算机理论模型，其他像冯诺依曼结构、哈弗结构都是基于该理论的一种实现。所以，我们先来看看图灵机，了解计算机原理上是否符合我的看法。</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/Universal_Turing_machine.svg.png" alt="Universal_Turing_machine"></p>
-<p>图灵机内部的**状态转移图(table of U)<strong>定义了一套运算规则(这套规则蕴含着指令)，进行着数据的计算；T</strong>APE(纸带)**上存放了数据。而冯诺依曼结构中，table of U对应运算单元、Control Unit对应运算单元、读写头对应输入输出设备，并且创造性地将指令和数据放在了存储器里面。从这里可以看出，现代计算机创造之初就是从考虑数据计算和存储开始的。这一点证明了我的观点。</p>
-<p>好！既然计算机领域的核心是数据的计算和存储这一观点暂时没有错误的话，那我们来看看如何按照这条线来理一理计算机的课程。</p>
-<p><strong>数据结构</strong>是对数据的组织，是为了更好地管理数据，也是为了更好地实现算法，从而进行更好的数据计算。</p>
-<p><strong>计算机组成原理</strong>主要是介绍数据计算和存储的工具，因此计算机组成本质上就是清楚并掌握计算机资源，如何高效利用这些资源来更好的完成数据计算和存储。计算机组成很多方案的提出，都是因为资源不够，但又要进行高效的计算和存储，如局部性原理、虚拟内存、多核处理器。</p>
-<p><strong>操作系统</strong>主要是来管理硬件资源的。由于计算机资源有限，且要使每个程序都能够高效正确地进行计算存储，操作系统就产生了进程管理的概念。进程管理很大程度上是操作系统的核心(内存管理是基石)。</p>
-<p>下面的思维导图是一个总结。</p>
-<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20220308161012916.png" alt="image-20220308161012916"></p>
-<p>（这里插一句，数据交互也是计算机的一个核心，但我更愿意将交互纳入“计算”的范畴）</p>
-<p><strong>Web 开发</strong>分为前端和后端。前端主要是更好地将数据展示给我们看(html、css、js也是数据的一种)；后端主要负责与数据库的交互，比如用户名和密码、增删改查一些数据等。<strong>计算机网络</strong>就是实现不同设备间的数据交互。</p>
-<p><strong>数据库</strong>顾名思义，是结构化数据的有组织的集合。</p>
-<p>OK！现在我们按照计算机领域的核心是<strong>数据的计算和存储</strong>，基本上将这些领域串联起来了。其他像分布式、云计算、人工智能其实都可以这样理解的。当然这一点是我学习过程中得出的一个观点，是为了方便理解串联知，不认同也不要紧。随着学习的深入，其他人产生自己对计算机的理解，这是最好不过的了。</p>
-<p>下一节，我们将从<strong>软硬件接口——ISA</strong> 出发，正式进入计算机系统吧！</p>
-<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
-<li><p><a href="https://hansimov.gitbook.io/csapp/">深入理解计算机系统</a></p>
-</li>
-<li><p>计算机系统基础</p>
-</li>
-</ul>
-]]></content>
-      <categories>
-        <category>计算机系统</category>
-      </categories>
   </entry>
   <entry>
     <title>软硬件接口——ISA</title>
@@ -1574,6 +1503,77 @@
 <li>胡伟武、汪文祥等《计算机体系结构基础》</li>
 <li><a href="https://www.geeksforgeeks.org/computer-organization-risc-and-cisc/">https://www.geeksforgeeks.org/computer-organization-risc-and-cisc/</a></li>
 <li><a href="https://cs.stanford.edu/people/eroberts/courses/soco/projects/risc/risccisc/">https://cs.stanford.edu/people/eroberts/courses/soco/projects/risc/risccisc/</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>计算机系统</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>计算机系统概述</title>
+    <url>/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%BF%B0/</url>
+    <content><![CDATA[<h1 id="计算机系统概述"><a href="#计算机系统概述" class="headerlink" title="计算机系统概述"></a>计算机系统概述</h1><h2 id="一、从-hello-c-开始"><a href="#一、从-hello-c-开始" class="headerlink" title="一、从 hello.c 开始"></a>一、从 hello.c 开始</h2><p>对于程序员来说，我们往往会学习一门语言进入计算机世界，如 C/C++、python、Java等。这些语言被称为<strong>高级程序设计语言</strong>，是一类比较接近我们日常书面语言的程序语言。只要学习一定的语法，就可以像阅读书籍一样阅读程序。而日常使用的软件就是我们使用这类高级语言，完成一定的数据结构和算法设计出来的。</p>
+<p>但人类的思维方式和计算机硬件的思维方式是完全不同的。高级语言利于我们编写和阅读，但是，计算机是无法直接理解和执行高级程序语言程序的。因此计算机首先使用<strong>翻译程序</strong>将高级语言翻译成计算机可以理解执行的<strong>机器语言</strong>，再将机器语言“理解”成<strong>控制信号</strong>，程序才能在计算机上执行。</p>
+<p>OK，我们现在从<strong>源代码 –&gt; 可执行文件</strong>的过程出发，开看看计算机系统究竟是什么样子，引出计算机系统的相关概念。下面是每个人都非常熟悉的 hello.c 程序。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;hello, world\n&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>在这里需要插一句。</p>
+<p>hello.c 文件是以 ASCII 码的形式存储的，也就是用一个唯一的单字节大小的整<strong>数值</strong>来表示每个字符。下图是 hello.c 程序的 ASCII 码表示。类似 hello.c 这样只由 ASCII 字符构成的文件称为<strong>文本文件</strong>，而其他文件都称为<strong>二进制文件</strong>。</p>
+<p><img src="https://1087580735-files.gitbook.io/~/files/v0/b/gitbook-28427.appspot.com/o/assets%2F-MHt_spaxGgCbp2POnfq%2Fsync%2Fb21fa77cbcdfba62be01af7b13234cf5eed3c055.png?generation=1624553050781139&alt=media" alt="img"></p>
+</blockquote>
+<p>![img](<a href="https://1087580735-files.gitbook.io/~/files/v0/b/gitbook-28427.appspot.com/o/assets%2F-MHt_spaxGgCbp2POnfq%2F-MHzZfEIY91yIzOD0Rce%2F-MHzZpZI-gs8CNcwHIyv%2F01-03">https://1087580735-files.gitbook.io/~/files/v0/b/gitbook-28427.appspot.com/o/assets%2F-MHt_spaxGgCbp2POnfq%2F-MHzZfEIY91yIzOD0Rce%2F-MHzZpZI-gs8CNcwHIyv%2F01-03</a> compilation systems.png?alt=media&amp;token=91ca688e-1cfc-4ec6-8b99-d52e672bbac7)</p>
+<p>hello.c 经过<strong>预处理</strong>、<strong>编译</strong>、<strong>汇编</strong>和<strong>链接</strong>，生成可执行文件。</p>
+<ul>
+<li><strong>预处理阶段：</strong>预处理阶段主要处理源文件中以“#”开头的预编译指令。例如 hello.c 中，预处理器读取系统头文件 stdio.h 的内容，并把它直接插入#include &lt;stdio.h&gt;的位置中。</li>
+<li><strong>编译阶段：</strong>编译阶段将文本文件 hello.i 翻译成文本文件 hello.s，它包含一个<strong>汇编语言程序</strong>(还是文本)。汇编程序是可阅读的，只是阅读难度比高级程序语言大。</li>
+<li><strong>汇编阶段：</strong>汇编阶段将 hello.s 中的指令逐条翻译成机器语言，生成<strong>可重定位目标程序</strong> hello.o 中。hello.o 文件是一个二进制文件，不可读，所以打开看到的是乱码。</li>
+<li><strong>链接阶段。</strong>链接过程将多个可重定位目标文件合并以生成<strong>可执行目标文件</strong>，该文件可以被加载到内存中由系统执行。hello.c 程序调用了 printf 函数，而 printf 函数存在于一个名为 printf.o 的单独的可重定位目标程序中，链接阶段将 hello.o 和 printf.o 合并生成 hello。</li>
+</ul>
+<p>这里简略地将了源程序 –&gt; 可执行文件的过程，详细点的可以阅读<a href="https://monuo2021.github.io/%E7%A8%8B%E5%BA%8F%E8%BD%AC%E6%8D%A2%E5%A4%84%E7%90%86%E8%BF%87%E7%A8%8B/">程序转换处理过程</a>，更详细地请阅读《程序员的自我修养》。</p>
+<h2 id="二、计算机系统层次结构"><a href="#二、计算机系统层次结构" class="headerlink" title="二、计算机系统层次结构"></a>二、计算机系统层次结构</h2><p>我们已经知道了源程序 –&gt; 可执行文件的大致过程，现在我们从这个过程出发，来看看计算机系统的结构。</p>
+<p>程序在不同的阶段有不同的存在形式，总结起来就是三类：高级语言 –&gt; 汇编语言 –&gt; 机器语言 –&gt; 控制信号。在袁春风老师的《计算机系统基础》中是这样描绘不同层次语言之间的等价转换的：</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/20190809145638721.png" alt="不同层次语言之间的等价转换"></p>
+<p>在我看来，汇编语言和机器语言都是由一条一条的指令构成，为了方便，我称它们为“<strong>指令型语言</strong>”。因此，我们可以将语言转换过程再精炼一下，如下图所示：</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20220307175808283.png" alt="image-20220307175808283"></p>
+<p>按照不同阶段的语言类型，我们将计算机描绘出我们都知道的两层：软件层和硬件层。高级语言是用于编写应用程序的，属于软件层的范围；而控制信号是对硬件逻辑门的控制，属于硬件层的。</p>
+<p>而“指令型语言”就是沟通软件和硬件的关键，是软件层和硬件层的桥梁。这一层我们抽象出来，称为<strong>指令集体系结构(Instruction Set Architecture，简称 ISA)<strong>。ISA 是一种规范（Specification），主要目的是规定了如何使用硬件。它有很多规定，其中和“指令型语言”相关的就有：</strong>指令格式</strong>、<strong>操作种类(加法还是减法)<strong>、</strong>操作数类型(立即数还是寄存器)<strong>、通用寄存器个数。当然这些规定现在听起来有些模糊，之后会详细讲述的。我们目前只要知道，</strong>ISA 是软硬件接口</strong>即可。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20220307172520018.png" alt="image-20220307172520018"></p>
+<p>我们虽然知道计算机分为软件层、硬件层以及沟通它们的桥梁 ISA，但并不知道软件层、硬件层具体包括哪些东西，现在我来看看计算机系统具体包括什么。</p>
+<h3 id="2-1-软件层"><a href="#2-1-软件层" class="headerlink" title="2.1 软件层"></a>2.1 软件层</h3><p>当我们打开电脑时，除了看到品牌的标志外，第一眼看到了是什么？没错，就是 Windows 或 Linux 等操作系统的开机图标。似乎开机运行的第一个程序就是<strong>操作系统</strong>(操作系统也是软件)，而其他应用程序都是在操作系统运行之后才开始运行。这种感觉没有错，其他应用程序都是“运行”在操作系统之上的，所以我们可以在 ISA 上面再抽象出一层——操作系统。</p>
+<img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20220307182457614.png" alt="image-20220307182457614" style="zoom:150%;" />
+
+<p>那么为什么要操作系统呢？难道应用程序要在不能直接运行在计算机上吗？因为应用程序要使用硬件资源，如果直接运行再硬件上，那么编写应用程序要时刻注意硬件资源，并且要非常熟悉硬件知识。同时，针对不同的机器还要编写不同的应用程序。这对程序员来说无疑是巨大的负担。所以就有了操作系统这个系统软件，来帮我们<strong>管理硬件资源</strong>。我们编写程序时，就不需要过多地考虑硬件，只要说明我们需要什么资源，操作系统可以帮我们协调这些资源。也就是说，操作系统是来管理和协调硬件资源的。这样，我们又再一次远离了硬件，在计算机系统上又抽象了一层。</p>
+<p>OK！知道操作系统概念之后，我们便可以将整个计算机软件层抽象层下面的结构。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20220307191453823.png" alt="计算机系统抽象层"></p>
+<p>有人就会问了，既然操作系统在这上面都有了，那怎么没有我们熟悉的数据库和网络呢？因为数据库管理系统(DBMS)和 web 服务器(程序)属于应用程序的范畴。我们可以使用下图理解：</p>
+<img src="C:\Users\谭梁\AppData\Roaming\Typora\typora-user-images\image-20220307193550417.png" alt="image-20220307193550417" style="zoom: 67%;" />
+
+<h3 id="2-2-硬件层"><a href="#2-2-硬件层" class="headerlink" title="2.2 硬件层"></a>2.2 硬件层</h3><p>硬件层无需过多的赘述，这里直接给出计算机硬件层的抽象，想要详细了解的可以阅读《编码：隐匿在计算机软硬件背后的语言》，这是一本入门计算机硬件知识的好书。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20220307194728212.png" alt="image-20220307194728212"></p>
+<h2 id="三、计算机课程之间的关系"><a href="#三、计算机课程之间的关系" class="headerlink" title="三、计算机课程之间的关系"></a>三、计算机课程之间的关系</h2><p>在此之前，我们通过跟踪 hello.c 程序的生命周期，得出了计算机系统的层次结构。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20220307195911745.png" alt="image-20220307195911745"></p>
+<p>但是同学们仍然会有疑问，不知道数据结构、计算机组成原理、操作系统、计算机网络、数据库、Web开发这些课程之间是什么关系，对整个计算机领域还是比较模糊。因此，我打算从另一角度来说明它们之间的关系。</p>
+<h3 id="3-1-计算机领域核心——数据的计算和存储"><a href="#3-1-计算机领域核心——数据的计算和存储" class="headerlink" title="3.1 计算机领域核心——数据的计算和存储"></a>3.1 计算机领域核心——数据的计算和存储</h3><p>每个人对计算机领域有每个人的看法。有人认为操作系统是计算机系统的核心，也有人认为 CPU 是计算机系统发核心。我个人认为计算机领域的核心是数据，具体点说是<strong>数据的计算和存储</strong>。如果将计算机领域的一切都从数据的计算和存储视角来看，你就会觉得计算机领域是有规律可循的。</p>
+<p><strong>图灵机</strong>是计算机理论模型，其他像冯诺依曼结构、哈弗结构都是基于该理论的一种实现。所以，我们先来看看图灵机，了解计算机原理上是否符合我的看法。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/Universal_Turing_machine.svg.png" alt="Universal_Turing_machine"></p>
+<p>图灵机内部的**状态转移图(table of U)<strong>定义了一套运算规则(这套规则蕴含着指令)，进行着数据的计算；T</strong>APE(纸带)**上存放了数据。而冯诺依曼结构中，table of U对应运算单元、Control Unit对应运算单元、读写头对应输入输出设备，并且创造性地将指令和数据放在了存储器里面。从这里可以看出，现代计算机创造之初就是从考虑数据计算和存储开始的。这一点证明了我的观点。</p>
+<p>好！既然计算机领域的核心是数据的计算和存储这一观点暂时没有错误的话，那我们来看看如何按照这条线来理一理计算机的课程。</p>
+<p><strong>数据结构</strong>是对数据的组织，是为了更好地管理数据，也是为了更好地实现算法，从而进行更好的数据计算。</p>
+<p><strong>计算机组成原理</strong>主要是介绍数据计算和存储的工具，因此计算机组成本质上就是清楚并掌握计算机资源，如何高效利用这些资源来更好的完成数据计算和存储。计算机组成很多方案的提出，都是因为资源不够，但又要进行高效的计算和存储，如局部性原理、虚拟内存、多核处理器。</p>
+<p><strong>操作系统</strong>主要是来管理硬件资源的。由于计算机资源有限，且要使每个程序都能够高效正确地进行计算存储，操作系统就产生了进程管理的概念。进程管理很大程度上是操作系统的核心(内存管理是基石)。</p>
+<p>下面的思维导图是一个总结。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/image-20220308161012916.png" alt="image-20220308161012916"></p>
+<p>（这里插一句，数据交互也是计算机的一个核心，但我更愿意将交互纳入“计算”的范畴）</p>
+<p><strong>Web 开发</strong>分为前端和后端。前端主要是更好地将数据展示给我们看(html、css、js也是数据的一种)；后端主要负责与数据库的交互，比如用户名和密码、增删改查一些数据等。<strong>计算机网络</strong>就是实现不同设备间的数据交互。</p>
+<p><strong>数据库</strong>顾名思义，是结构化数据的有组织的集合。</p>
+<p>OK！现在我们按照计算机领域的核心是<strong>数据的计算和存储</strong>，基本上将这些领域串联起来了。其他像分布式、云计算、人工智能其实都可以这样理解的。当然这一点是我学习过程中得出的一个观点，是为了方便理解串联知，不认同也不要紧。随着学习的深入，其他人产生自己对计算机的理解，这是最好不过的了。</p>
+<p>下一节，我们将从<strong>软硬件接口——ISA</strong> 出发，正式进入计算机系统吧！</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><p><a href="https://hansimov.gitbook.io/csapp/">深入理解计算机系统</a></p>
+</li>
+<li><p>计算机系统基础</p>
+</li>
 </ul>
 ]]></content>
       <categories>
@@ -2057,5 +2057,140 @@
       <tags>
         <tag>数据模型</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>计算机硬件结构概述</title>
+    <url>/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A1%AC%E4%BB%B6%E7%BB%93%E6%9E%84%E6%A6%82%E8%BF%B0/</url>
+    <content><![CDATA[<h2 id="一、概述"><a href="#一、概述" class="headerlink" title="一、概述"></a>一、概述</h2><p>作为计算机专业的学生，必须知道一个程序在计算机上发生了什么。而想知道发生了什么，就必须了解计算机的硬件组成，知道计算机是由哪些部件组成。就好比警察追踪犯人，如果不知道城市的建筑构造，又怎么能发现犯人的踪迹呢？下图是一个典型系统的硬件组成。但鉴于大家相比于硬件更熟悉软件，我们从观察一个程序生命周期开始，了解计算机硬件结构。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/%E4%B8%80%E4%B8%AA%E5%85%B8%E5%9E%8B%E7%B3%BB%E7%BB%9F%E7%9A%84%E7%A1%AC%E4%BB%B6%E7%BB%84%E6%88%90.JPEG" alt="一个典型系统的硬件组成"></p>
+<p>当我们编写了一个 hello.c 文件后，使用该命令将它转换成可执行文件 hello：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">linux&gt;</span><span class="bash"> gcc -o hello hello.c</span></span><br></pre></td></tr></table></figure>
+
+<p>生成的 hello 文件会被存储在磁盘中，磁盘属于<strong>存储器</strong>层次的一类。</p>
+<p>当我们要执行这个程序时，在键盘上输入：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">linux&gt; ./hello</span><br></pre></td></tr></table></figure>
+
+<p>shell 程序（linux&gt; 是一个正在运行的 shell 程序）接收到 ./hello 字符后，并将这些字符读入在 CPU 中的<strong>寄存器</strong>里，然后把 hello 字符(./ 只是表示当前目录，因为 hello 文件存放在当前目录)存放到内存中。</p>
+<p><img src="https://note-1310215887.cos.ap-nanjing.myqcloud.com/img/EE6C8AFE2CD29FB41D06925C5E18A4BF.png" alt="EE6C8AFE2CD29FB41D06925C5E18A4BF"></p>
+<p>当我们在键盘敲下 enter 键时，shell 程序就知道结束命令的输入，就会将加载 hello 文件，也就是把 hello 文件中的代码（指令）和数据（比如需要输出到屏幕上的”hello World!\n”字符串）复制到<strong>内存</strong>。内存是也是存储层次中的一类，专门存放程序和程序处理的数据。下图显示的是利用<strong>直接存储器存取（DMA）</strong>方式不经过处理器将数据直接从磁盘负责制到内存。</p>
+<p><img src="https://note-1310215887.cos.ap-nanjing.myqcloud.com/img/A7FE520BA92BBAC1900336E7F9A6197D.png" alt="A7FE520BA92BBAC1900336E7F9A6197D"></p>
+<p>当 hello 代码和数据被加载到内存，处理器就会立刻执行 hello 程序的机器语言指令。PC 会首先指向第一条指令，然后通过总线将指令复制到处理器中，经过一系列步骤后执行，PC指向下一条指令的位置。hello 程序中的指令会将“hello Word!\n”字符串的字节从内存中复制到寄存器文件，再从寄存器文件中复制到<strong>显示设备</strong>，最后显示显示屏上。</p>
+<p><img src="https://note-1310215887.cos.ap-nanjing.myqcloud.com/img/C7321F36D9D046FE7E822AD54BC3701C.png" alt="C7321F36D9D046FE7E822AD54BC3701C"></p>
+<p>好！我们从 hello 程序运行周期出发，大致地看到了计算机的硬件结构，下面总结一些计算机硬件到底有哪些东西：</p>
+<ul>
+<li><p>CPU</p>
+<p><strong>中央处理单元</strong>（CPU），简称处理器，是执行存储在主存中指令的引擎。处理器主要由 PC 寄存器、寄存器文件、ALU 组成（寄存器是一个字的存储设备）。PC 寄存器是其核心。在任何时刻，PC 都指向主存中的某条机器语言指令（即该寄存器存有该条指令的地址）。系统从通电开始，处理器一直在不断地执行程序计数器指向的指令，再更新程序计数器，使其指向下一条指令。</p>
+</li>
+<li><p>存储器：寄存器、内存、磁盘</p>
+<p><strong>主存</strong>是一个临时存储设备，在处理器执行程序时，用来存放程序和程序相关的数据。从物理上来说，主存是由一组<strong>动态随机存取存储器</strong>（DRAM）芯片组成的。从逻辑上来说，存储器是一个线性的字节数组，每个字节都有其唯一的地址（数组索引），这些地址是从零开始。</p>
+</li>
+<li><p>输入设备：鼠标、键盘</p>
+</li>
+<li><p>输出设备：显示屏</p>
+<p>I/O（输入/输出）设备是系统与外部世界的联系通道。每个 I/O 设备都通过一个<strong>控制器</strong>或<strong>适配器</strong>与 I/O 总线相连。控制器和适配器之间的区别主要在于它们的封装方式。控制器是 I/O 设备本身或者系统的主印制电路板（通常称作主板）上的芯片组。而适配器则是一块插在主板插槽上的卡。无论如何，它们的功能都是在 I/O 总线和 I/O 设备之间传递信息。</p>
+</li>
+</ul>
+<p>这不就是我们之前提过的冯·诺依曼结构吗？下面我们来介绍以下冯·诺依曼结构和同样比较重要的哈弗结构。</p>
+<h2 id="二、冯·诺依曼结构"><a href="#二、冯·诺依曼结构" class="headerlink" title="二、冯·诺依曼结构"></a>二、冯·诺依曼结构</h2><p><img src="https://foxsen.github.io/archbase/images/chapter5/von_architecture.png" alt="冯·诺依曼计算机体系结构"></p>
+<p>现代计算机基本都采用冯·诺依曼结构，这是世界上第一个完整的计算机体系结构。</p>
+<p>冯·诺依曼结构的主要特点是：</p>
+<ul>
+<li>计算机由存储器、运算器、控制器、输入设备和输出设备五部分组成，其中运算器和控制器合称为中央处理器（CPU）。</li>
+<li>指令和数据混合存储在同一个存储器中。</li>
+<li>以运算器为中心，输入输出设备与存储器之间的数据传送都经过运算器。</li>
+</ul>
+<p>随着技术的进步，冯·诺依曼结构得到了持续的改进，主要包括以下几个方面：</p>
+<ul>
+<li>从以运算器为中心变为以存储器为中心。</li>
+<li>从适应串行到适应并行。出现了流水线处理器、超标量处理器、向量处理器、多核处理器。</li>
+<li>出现为适应特殊需要的专用计算机，如图形处理器（GPU）。</li>
+</ul>
+<h3 id="2-1-哈佛结构"><a href="#2-1-哈佛结构" class="headerlink" title="2.1 哈佛结构"></a>2.1 哈佛结构</h3><p><img src="data:image/png;base64,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" alt="哈佛和冯诺依曼架构| as3522"></p>
+<p>哈佛结构和冯·诺依曼结构最主要的区别是<strong>程序和数据分别存储</strong>。控制器使用两条独立的总线读取程序和访问数据，程序空间和数据空间完成分开。</p>
+<h2 id="三、处理器"><a href="#三、处理器" class="headerlink" title="三、处理器"></a>三、处理器</h2><p>处理器是计算机系统中的重中之重。在计算机组成和计算机体系结构课程中，处理器都是重点之一。在此之前，我们可以看看这个<a href="https://www.bilibili.com/video/BV1wU4y1b7jL/?spm_id_from=333.788.recommend_more_video.0">高端芯片完整的制造工艺</a>视频，了解一下芯片的制作过程。</p>
+<p><strong>中央处理单元</strong>（CPU），简称<strong>处理器</strong>，是解释（或执行）存储在主存中指令的引擎。处理器的核心是一个大小为一个字的存储设备（或<strong>寄存器</strong>），称为<strong>程序计数器</strong>（PC）。在任何时刻，PC 都指向主存中的某条机器语言指令（即含有该条指令的地址）。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/7167C4192B3D14BD7E175BA5ED55CBB7.png" alt="7167C4192B3D14BD7E175BA5ED55CBB7"></p>
+<p>在上图模型机的 CPU 中，主要由以下部件：</p>
+<ul>
+<li>自动取出指令并进行译码的<strong>控制部件</strong></li>
+<li>存储下一条指令地址的<strong>程序计数器</strong>（Program Counter，PC）</li>
+<li>进行算数逻辑运算的<strong>算术逻辑部件</strong>（Arithmetic Logic Unit，<strong>ALU</strong>）</li>
+<li>临时存放从主存取来的数据或运算结果的<strong>通用寄存器组</strong>（GPRs）</li>
+<li>存储标志的<strong>标志寄存器</strong>。这些标志是指 ALU 计算产生的标志信息，如结果是否为 0（零标志 ZF）、是否为负数（符号标志 SF）等。标志寄存器在有些 RISC 架构中是没有的，如 RISC-V。</li>
+</ul>
+<p>从系统通电开始，直到系统断电，处理器一直在不断地执行程序计数器指向的指令，再更新程序计数器，使其指向下一条指令。详细地来说，一条指令会经历以下五个步骤：</p>
+<ul>
+<li><p><strong>取指令（fetch）</strong></p>
+<p>根据 PC 寄存器内的值，将一条指令从主存中取到指令寄存器的过程。</p>
+</li>
+<li><p><strong>译码（decode）</strong></p>
+<p>指令译码器按照上一节讲过的指令格式，对取回的指令进行拆分和解释，识别区分出不同的指令类别（指令码）以及各种获取操作数的方法（寻址方式）。</p>
+</li>
+<li><p><strong>执行（execute）</strong></p>
+<p> 对指令进行真正运算的过程。此阶段的任务是完成指令所规定的各种操作，具体实现指令的功能。如加法操作、乘法操作等。</p>
+</li>
+<li><p><strong>访存（memory access）</strong></p>
+<p>根据指令需要，有可能要访问主存。或将数据从存储器中读出，或者写入存储器。</p>
+</li>
+<li><p><strong>写回（write back）</strong></p>
+<p>指将指令执行的结果写回通用寄存器组的过程。如果是普通运算指令，该结果值来自于“执行”阶段计算的结果：如果是存储器读指令，该结果来自于“访存”阶段从存储器中读取出来的数据。</p>
+</li>
+</ul>
+<p>下一节我们会更深入地学习处理器相关知识。</p>
+<h2 id="四、存储器"><a href="#四、存储器" class="headerlink" title="四、存储器"></a>四、存储器</h2><p>在之前我们提到过，存储器在计算机占有非常重要的地位。甚至可以说，处理器和存储器是计算机的最主要的部件。上图几乎包含了我们之前提到过的几种存储部件，如寄存器、主存、磁盘。</p>
+<p>由于技术的限制，处理器处理速度非常快，而内存处理速度非常慢，这样会导致存储访问延迟。于是科学家们设计出来一种方案，在处理器和主存间插入一个更小更快的存储设备（Cache）。这样我可以预先将主存中的一些数据提前放入 Cache 中，处理器可以直接从 Cache 中取得数据，这样起到减少延迟的效果。</p>
+<p>基于这种思想，每个计算机系统中的存储设备都被组织成了一个存储器层次结构。</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/DB4767A7CD3EF5F1314941541FC6B0F4.png" alt="DB4767A7CD3EF5F1314941541FC6B0F4"></p>
+<p>由于考虑到技术和成本问题，越往上的层级，速度越快，但成本越高，容量越小；越往下的层级，速度越慢，但成本越低，容量越大。</p>
+<p>存储器层次结构的思想简单来说，就是上一层的存储器作为下一层存储器的高速缓存。因此，寄存器文件是 L1 Cache 的缓存，L1 是 L2 的缓存，依次类推。这种思想叫作局部性原理，它在计算机各个领域都发挥着巨大的作</p>
+<h3 id="4-1-局部性原理"><a href="#4-1-局部性原理" class="headerlink" title="4.1 局部性原理"></a>4.1 局部性原理</h3><p><strong>局部性原理</strong> </p>
+<p>局部性原理分为空间局部性和时间局部性</p>
+<ul>
+<li><p>时间局部性：某个数据项在被访问之后可能很快被再次访问</p>
+<p>比如你在写论文，你参考一篇论文，之后你可能还需要参考这篇论文。所以你不如把这篇论文放在身边，防止以后还要用。</p>
+</li>
+<li><p>空间局部性：某个数据项在被访问之后，与其地址相近的数据项可能很快被访问。</p>
+<p>比如你在写论文，你参考了一位教授的一篇论文，你之后可能还会参考他的其他论文，所以不如把这个教授所以论文都放在身边。</p>
+</li>
+</ul>
+<p>利用局部性原理可以将计算机存储器组织为<strong>存储器层次结构</strong>。</p>
+<h3 id="4-2-存储器的四种技术"><a href="#4-2-存储器的四种技术" class="headerlink" title="4.2 存储器的四种技术"></a>4.2 存储器的四种技术</h3><p>构建存储层次结构主要由 4 种技术:</p>
+<ul>
+<li>SRAM（静态随机访问存储器）</li>
+<li>DRAM（动态随机访问存储器）</li>
+<li>闪存</li>
+<li>磁盘</li>
+</ul>
+<p>由于存储器技术设计大量电子相关的知识，在这里我不会展开叙述，只是总结性地提炼出关键点。</p>
+<h4 id="4-2-1-SRAM"><a href="#4-2-1-SRAM" class="headerlink" title="4.2.1 SRAM"></a>4.2.1 SRAM</h4><ul>
+<li>每一位存储在<strong>双稳态</strong>存储单元中，每个存储单元由 6 个晶体管电路实现。</li>
+<li>由于双稳态,只要<strong>有电</strong>，信息就可长时间<strong>保持</strong>。</li>
+<li>存取速度快、集成度低、价格高。</li>
+<li>常用于高速缓冲存储器Cache。</li>
+</ul>
+<h4 id="4-2-2-DRAM"><a href="#4-2-2-DRAM" class="headerlink" title="4.2.2 DRAM"></a>4.2.2 DRAM</h4><ul>
+<li>使用<strong>电容保存电荷</strong>，以此表示比特。</li>
+<li>由于电容保存数据，<strong>不能长时间保持数据</strong>，所以被称为动态。</li>
+<li>存取速度慢、集成度高、价格低。</li>
+<li>用用作主存（内存条）</li>
+</ul>
+<h4 id="4-2-3-闪存"><a href="#4-2-3-闪存" class="headerlink" title="4.2.3 闪存"></a>4.2.3 闪存</h4><p>闪存是基于 EEPROM 的一种存储技术。和 EEPROM 一样，写操作会使存储位损耗，为了应对该限制，闪存使用了<strong>损耗均衡</strong>的技术。</p>
+<blockquote>
+<p>损耗均衡：将写操作从已经写入很多次的块中，映射到写入次数少的块中，从而使写操作尽量分散。</p>
+</blockquote>
+<h4 id="4-2-4-磁盘"><a href="#4-2-4-磁盘" class="headerlink" title="4.2.4 磁盘"></a>4.2.4 磁盘</h4><p>硬盘主要由盘体、控制电路板和接口部件等组成。盘体是一个密封的腔体，硬盘的内部结构通常是指盘体的内部结构；控制电路板上主要有硬盘BIOS、硬盘缓存（即CACHE）和主控制芯片等单元；硬盘接口包括电源插座、数据接口和主、从跳线。</p>
+<p>硬盘首先在逻辑上被划分为磁道、柱面以及扇区。磁盘在格式化时被划分成许多同心圆，这些同心圆轨迹叫做磁道（Track），磁道从外向内从0开始顺序编号；所有盘面上的同一磁道构成一个圆柱，通常称做柱面（Cylinder），每个圆柱上的磁头由上而下从“0”开始编号；每个磁道会被分成许多段圆弧，每段圆弧叫做一个扇区，扇区从“1”开始编号，每个扇区中的数据作为一个单元同时读出或写入，操作系统以扇区（Sector）形式将信息存储在硬盘上，每个扇区包括512个字节的数据和一些其他信息；</p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/2-1Q012154JE59.jpg" alt="机械硬盘结构"></p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/2-1Q012154TC11.jpg" alt="磁盘盘片"></p>
+<p><img src="https://gitee.com/tanliang-TL/blogpic/raw/master/img/2-1Q1091102459A.gif" alt="磁道、柱面、扇区"></p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li>深入理解计算机系统</li>
+<li>袁春风、余子濠《计算机系统基础》</li>
+<li>胡伟武、汪文祥等《计算机体系结构基础》</li>
+</ul>
+]]></content>
+      <categories>
+        <category>计算机系统</category>
+      </categories>
   </entry>
 </search>
