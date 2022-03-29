@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.lug.ustc.edu.cn/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic|Roboto Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"monuo2021.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="程序的执行">
+<meta property="og:type" content="article">
+<meta property="og:title" content="程序的执行">
+<meta property="og:url" content="https://monuo2021.github.io/%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%89%A7%E8%A1%8C/index.html">
+<meta property="og:site_name" content="飞光">
+<meta property="og:description" content="程序的执行">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://note-1310215887.cos.ap-nanjing.myqcloud.com/img/image-20220328135802108.png">
+<meta property="og:image" content="https://note-1310215887.cos.ap-nanjing.myqcloud.com/img/20191020215216922.png">
+<meta property="og:image" content="https://note-1310215887.cos.ap-nanjing.myqcloud.com/img/c913cf64eafb076561f7cb1ae123c32b.png">
+<meta property="og:image" content="https://note-1310215887.cos.ap-nanjing.myqcloud.com/img/image-20220328194509163.png">
+<meta property="article:published_time" content="2022-03-29T14:23:04.000Z">
+<meta property="article:modified_time" content="2022-03-29T14:32:24.288Z">
+<meta property="article:author" content="monuo">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://note-1310215887.cos.ap-nanjing.myqcloud.com/img/image-20220328135802108.png">
+
+<link rel="canonical" href="https://monuo2021.github.io/%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%89%A7%E8%A1%8C/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>程序的执行 | 飞光</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">飞光</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://monuo2021.github.io/%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%89%A7%E8%A1%8C/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="monuo">
+      <meta itemprop="description" content="悲莫悲兮生别离，乐莫乐兮新相知">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="飞光">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          程序的执行
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-03-29 22:23:04 / 修改时间：22:32:24" itemprop="dateCreated datePublished" datetime="2022-03-29T22:23:04+08:00">2022-03-29</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index"><span itemprop="name">计算机系统</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description">程序的执行</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>在此之前，我们学习了程序的生命周期、程序的实质（指令序列）、计算机的硬件构造。现在是时候我们开始学习程序具体是如何执行的。</p>
+<p>在之前讲述 ISA 和运行 hello 程序将 “hello world!” 打印到显示屏时，我们可以看到：</p>
+<ul>
+<li>不同指令集架构，指令格式不同。程序执行首先要对指令格式“解析”。</li>
+<li>CPU 是指令执行的核心。程序的执行和 CPU 的构造密切相关。</li>
+<li>程序相关数据在存储器、主存、寄存器中传递。因此，数据的路径（数据通路）也是程序执行的关键之一。</li>
+</ul>
+<p>因此，接下来我们会就程序/指令执行、CPU 构造、数据通路进行介绍。</p>
+<h2 id="一、程序-指令的执行"><a href="#一、程序-指令的执行" class="headerlink" title="一、程序/指令的执行"></a>一、程序/指令的执行</h2><p>计算机功能通过程序的执行实现，程序是由指令组成。CPU 通过对执行一条条指令完成功能的实现。所以明白指令是如何执行的，就明白了程序是如何运行的。下图是指令执行的流程，来自袁春风书籍《计算机系统基础》P223.</p>
+<p><img src="https://note-1310215887.cos.ap-nanjing.myqcloud.com/img/image-20220328135802108.png" alt="图片来自袁春风书籍《计算机系统基础》"></p>
+<p>一条指令的执行过程总结起来，有五个过程：取指、译码、执行、访存、写回。但详细起来，可以有：取指令、指令译码、计算源操作数地址并取操作数、执行数据操作、计算目的操作数地址并存结果、计算下条指令地址等步骤。</p>
+<ul>
+<li><p><strong>取指令（fetch）</strong></p>
+<p>马上要执行的指令的地址存放在程序计数器（PC）内。取指令操作是将 PC 指向的存储单元中的指令加载到指令寄存器中（IR）。</p>
+</li>
+<li><p><strong>译码（decode）</strong></p>
+<p>译码阶段包括：指令译码、计算源操作数地址并取操作数、计算目的操作数地址。</p>
+<p><strong>指令译码：</strong>不同指令功能不同，指令的执行过程也会不同。所以需要按照指令集规定的格式对指令进行译码，也就是将指令“翻译”成正确的含义。在这个过程中，可以识别出这条指令的操作类型、操作数以及寻址方式。</p>
+<p><strong>计算源操作数地址：</strong>根据寻址方式确定源操作数地址计算方式，若是存储器内数据，则需要一次或多次访存；如果是寄存器的数据，可以直接进行下一步数据操作步骤。</p>
+<p><strong>计算目的操作数地址：</strong>在该阶段，和计算源操作数地址一样，也可以确定目的操作数地址。</p>
+</li>
+<li><p><strong>执行（execute）</strong></p>
+<p>对指令进行真正运算的过程。此阶段的任务是完成指令所规定的各种操作，具体实现指令的功能。如加法操作、乘法操作等。</p>
+</li>
+<li><p><strong>访存（memory access）</strong></p>
+<p>根据指令需要，有可能要访问主存。或将数据从存储器中读出，或者写入存储器。</p>
+</li>
+<li><p><strong>写回（write back）</strong></p>
+<p>指将指令执行的结果写回通用寄存器组的过程。如果是普通运算指令，该结果值来自于“执行”阶段计算的结果：如果是存储器读指令，该结果来自于“访存”阶段从存储器中读取出来的数据。</p>
+</li>
+</ul>
+<h2 id="二、CPU-构造"><a href="#二、CPU-构造" class="headerlink" title="二、CPU 构造"></a>二、CPU 构造</h2><p>来自袁春风书籍《计算机系统基础》</p>
+<p><img src="https://note-1310215887.cos.ap-nanjing.myqcloud.com/img/20191020215216922.png" alt="在这里插入图片描述"></p>
+<p>其实，上述的很多部件上次都讲过，三条总线可能会陌生一些。<strong>地址总线、数据总线、控制总线</strong>是用来 CPU 和 外设进行传递信息的，信息主要包括数据（包括数据和指令）、地址、控制信号三类。</p>
+<p>下面按照上图来仔细讲解 CPU 部件：</p>
+<ul>
+<li>PC 寄存器：存放即将执行指令的地址。PC 中的地址一般是 PC + “1” 得到的。但如果指令是转移类指令（如 j 指令）就会经过 j 指令规定的方式计算下条指令的地址并存放在 PC。</li>
+<li>指令寄存器（IR）：存放即将执行的指令。</li>
+<li>译码寄存器（ID）：对指令寄存器中的操作数进行“翻译”。</li>
+<li>总线控制逻辑：实现对总线的控制。控制数据和地址的传输等。</li>
+<li>中断机制：实现异常、中断的处理。</li>
+</ul>
+<h2 id="三、数据通路"><a href="#三、数据通路" class="headerlink" title="三、数据通路"></a>三、数据通路</h2><p>指令执行过程中数据经过的路径称为<strong>数据通路</strong>。从之前学过的可以知道，数据通常会经过 ALU、通用寄存器、状态寄存器、Cache被称为<strong>功能部件</strong>，也是数据通路的一部分。</p>
+<h3 id="3-1-单总线数据通路"><a href="#3-1-单总线数据通路" class="headerlink" title="3.1 单总线数据通路"></a>3.1 单总线数据通路</h3><p><img src="https://note-1310215887.cos.ap-nanjing.myqcloud.com/img/c913cf64eafb076561f7cb1ae123c32b.png" alt="数据通路与总线结构 硬布线控制器_计算机组成原理_10"></p>
+<p>图片来自<a target="_blank" rel="noopener" href="https://blog.51cto.com/u_15298563/3087593">数据通路与总线结构 硬布线控制器</a></p>
+<p>从图中就可以看出，单总线数据通路就是用一组总线连接整个计算机各大功能部件，功能部件之间的信息传输都会通过这组总线。使用这种方式，优点是设计简单；缺点是会导致竞争资源。</p>
+<p>在单总线数据通路结构中，有四种组成所有指令功能的基本操作（考虑到初学，下面代码没有关于控制信号的操作）：</p>
+<ol>
+<li><p>寄存器与寄存器间传输数据</p>
+<p>例如将数据从 PC -&gt; DR：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">PC -&gt; Bus</span><br><span class="line">Bus -&gt; DR</span><br></pre></td></tr></table></figure></li>
+<li><p>算数/逻辑运算</p>
+<p>从内存和寄存器各取一个值，相加结果写入另一个寄存器。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Ad(IR) -&gt; Bus -&gt; AR，   </span><br><span class="line">MEM -&gt; Bus -&gt; DR    </span><br><span class="line">DR -&gt; Bus -&gt; X -&gt; A    </span><br><span class="line">R0 -&gt; Bus -&gt; B   </span><br><span class="line">A + B -&gt; Z -&gt; Bus -&gt; R1      </span><br></pre></td></tr></table></figure></li>
+<li><p>主存和 CPU 之间的数据传送</p>
+<p>CPU 从 men 取指令操作：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">PC -&gt; Bus -&gt; AR</span><br><span class="line">MEM(AR) -&gt; DR</span><br><span class="line">DR -&gt; Bus -&gt; IR</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="3-2-三总线数据通路"><a href="#3-2-三总线数据通路" class="headerlink" title="3.2 三总线数据通路"></a>3.2 三总线数据通路</h3><img src="https://note-1310215887.cos.ap-nanjing.myqcloud.com/img/image-20220328194509163.png" alt="image-20220328194509163" style="zoom:50%;" />
+
+<p>从图中就可以看出，在三总线数据通路中，所有功能部件连接在多条公共通路上。和单总线结构相比，它的好处就是可以同时传送不同的数据，提高效率。</p>
+<h2 id="参考书籍"><a href="#参考书籍" class="headerlink" title="参考书籍"></a>参考书籍</h2><ul>
+<li>《计算机系统基础》</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A1%AC%E4%BB%B6%E7%BB%93%E6%9E%84%E6%A6%82%E8%BF%B0/" rel="prev" title="计算机硬件结构概述">
+      <i class="fa fa-chevron-left"></i> 计算机硬件结构概述
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/%E4%B8%AD%E5%BA%B8%E7%AC%94%E8%AE%B0/" rel="next" title="中庸笔记">
+      中庸笔记 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E7%A8%8B%E5%BA%8F-%E6%8C%87%E4%BB%A4%E7%9A%84%E6%89%A7%E8%A1%8C"><span class="nav-text">一、程序&#x2F;指令的执行</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81CPU-%E6%9E%84%E9%80%A0"><span class="nav-text">二、CPU 构造</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E6%95%B0%E6%8D%AE%E9%80%9A%E8%B7%AF"><span class="nav-text">三、数据通路</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E5%8D%95%E6%80%BB%E7%BA%BF%E6%95%B0%E6%8D%AE%E9%80%9A%E8%B7%AF"><span class="nav-text">3.1 单总线数据通路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E4%B8%89%E6%80%BB%E7%BA%BF%E6%95%B0%E6%8D%AE%E9%80%9A%E8%B7%AF"><span class="nav-text">3.2 三总线数据通路</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E4%B9%A6%E7%B1%8D"><span class="nav-text">参考书籍</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="monuo"
+      src="/images/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">monuo</p>
+  <div class="site-description" itemprop="description">悲莫悲兮生别离，乐莫乐兮新相知</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">19</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/monuo2021" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;monuo2021" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">monuo</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/medium-zoom@1/dist/medium-zoom.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
