@@ -1,214 +1,32 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  
-  
-  <title>大学四年的阅读感受 | Hexo</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="对我来说，杭电的图书馆是我大学生活中最值得回忆的地方。在进入大学之前，各种环境原因，我并不能随心所欲地阅读。刚踏入大学校园的那段日子里，我无目的地阅读了许多自己喜欢的文学和历史书籍，也很开心地与同学们交流喜欢的作家和书籍。 但是身为计算机专业的学生，从大二开始，我开始忙于专业课，自学各种计算机技术，随波逐流参加比赛，以期一年后能有一个好的实习机会、毕业后找到一份理想的工作。每当身心俱疲地躺在床上，">
-<meta property="og:type" content="article">
-<meta property="og:title" content="大学四年的阅读感受">
-<meta property="og:url" content="http://example.com/2023/06/20/%E5%A4%A7%E5%AD%A6%E5%9B%9B%E5%B9%B4%E7%9A%84%E9%98%85%E8%AF%BB%E6%84%9F%E5%8F%97/index.html">
-<meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="对我来说，杭电的图书馆是我大学生活中最值得回忆的地方。在进入大学之前，各种环境原因，我并不能随心所欲地阅读。刚踏入大学校园的那段日子里，我无目的地阅读了许多自己喜欢的文学和历史书籍，也很开心地与同学们交流喜欢的作家和书籍。 但是身为计算机专业的学生，从大二开始，我开始忙于专业课，自学各种计算机技术，随波逐流参加比赛，以期一年后能有一个好的实习机会、毕业后找到一份理想的工作。每当身心俱疲地躺在床上，">
-<meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2023-06-20T06:42:38.000Z">
-<meta property="article:modified_time" content="2023-06-20T06:43:03.593Z">
-<meta property="article:author" content="John Doe">
-<meta name="twitter:card" content="summary">
-  
-    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
-  
-  
-    <link rel="shortcut icon" href="/favicon.png">
-  
-  
-    
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+extends includes/layout.pug
 
-  
-  
-<link rel="stylesheet" href="/css/style.css">
+block content
+  #post
+    if top_img === false
+      include includes/header/post-info.pug
 
-  
-    
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+    article#article-container.post-content!=page.content
+    include includes/post/post-copyright.pug
+    .tag_share
+      if (theme.post_meta.post.tags)
+        .post-meta__tag-list
+          each item, index in page.tags.data
+            a(href=url_for(item.path)).post-meta__tags #[=item.name]
+      include includes/third-party/share/index.pug
+        
+    if theme.reward.enable && theme.reward.QR_code
+      !=partial('includes/post/reward', {}, {cache: true})
 
-  
-  
-<meta name="generator" content="Hexo 6.3.0"></head>
+    //- ad
+    if theme.ad && theme.ad.post
+      .ads-wrap!=theme.ad.post
 
-<body>
-  <div id="container">
-    <div id="wrap">
-      <header id="header">
-  <div id="banner"></div>
-  <div id="header-outer" class="outer">
-    <div id="header-title" class="inner">
-      <h1 id="logo-wrap">
-        <a href="/" id="logo">Hexo</a>
-      </h1>
+    if theme.post_pagination
+      include includes/pagination.pug
+    if theme.related_post && theme.related_post.enable
+      != related_posts(page,site.posts)
+
+    if page.comments !== false && theme.comments && theme.comments.use
+      - var commentsJsLoad = true
+      !=partial('includes/third-party/comments/index', {}, {cache: true})
       
-    </div>
-    <div id="header-inner" class="inner">
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
-        
-          <a class="main-nav-link" href="/">Home</a>
-        
-          <a class="main-nav-link" href="/archives">Archives</a>
-        
-      </nav>
-      <nav id="sub-nav">
-        
-        
-          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
-        
-        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
-      </nav>
-      <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
-      </div>
-    </div>
-  </div>
-</header>
-
-      <div class="outer">
-        <section id="main"><article id="post-大学四年的阅读感受" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2023/06/20/%E5%A4%A7%E5%AD%A6%E5%9B%9B%E5%B9%B4%E7%9A%84%E9%98%85%E8%AF%BB%E6%84%9F%E5%8F%97/" class="article-date">
-  <time class="dt-published" datetime="2023-06-20T06:42:38.000Z" itemprop="datePublished">2023-06-20</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 class="p-name article-title" itemprop="headline name">
-      大学四年的阅读感受
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>对我来说，杭电的图书馆是我大学生活中最值得回忆的地方。在进入大学之前，各种环境原因，我并不能随心所欲地阅读。刚踏入大学校园的那段日子里，我无目的地阅读了许多自己喜欢的文学和历史书籍，也很开心地与同学们交流喜欢的作家和书籍。</p>
-<p>但是身为计算机专业的学生，从大二开始，我开始忙于专业课，自学各种计算机技术，随波逐流参加比赛，以期一年后能有一个好的实习机会、毕业后找到一份理想的工作。每当身心俱疲地躺在床上，我都会思考：大学教育的意义在哪？是流水线培养工人以便企业“开箱即用”吗？难道我一生只是在重复前人的经历吗？读书十余年，打工几十年，最后抱着衰老的身体苟活十几年吗？普通人就像一只在时代洪流中的纸船，运气好的可以随波逐流汇入大海；运气差的中途便在时代洪流中悄无身息地消失。在不断的精神内耗中，我开始有目的地进行阅读，希望能够更清晰地认识自己，了解自己这只“纸船”多么坚硬或者多么脆弱。也希望能够认识到自己在时代中的定位，以期自己这只纸船能够主动前进。</p>
-<p>我也曾硬着头皮看过一些名家的原著，如康德的《纯粹理性批判》、黑格尔的《精神现象学》和恩格斯的《路德维希 · 费尔巴哈和德国古典哲学的终结》等。阅读过程极为痛苦，阅读后一知半解、鲜有收获。没有扎实的基础，直接阅读大部头书籍，很难有真正的收获。所以后来在入门一个新领域时，我都会选择阅读该领域的导论性书籍。很多人可能对阅读导论书籍不屑一顾，认为这种书籍过于简单，对知识点浅尝而止。但是内容简单，反而能在极小篇幅中建立起该领域的知识框架。对知识点浅尝而止，反而能认识到自己感兴趣的方向，同时促使我们思考。</p>
-<p>大学四年的阅读并不一定能够解决所有疑问，但能构建出一套灵活的处理问题的思维方式。大学本身还是象牙塔，缺乏真正的实践。而理论没有经过实践的验证，也只是虚无缥缈、不知对错的理论。但处理问题的思维方式在当今信息指数级增长的时代可以让我们快速认识问题并解决问题，这比教条主义的理论更为重要。而这也是我在大学最大的收获。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2023/06/20/%E5%A4%A7%E5%AD%A6%E5%9B%9B%E5%B9%B4%E7%9A%84%E9%98%85%E8%AF%BB%E6%84%9F%E5%8F%97/" data-id="clj3x5uaa000154a2ecmx5b06" data-title="大学四年的阅读感受" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-    
-<nav id="article-nav">
-  
-  
-    <a href="/2023/06/20/hello-world/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">Hello World</div>
-    </a>
-  
-</nav>
-
-  
-</article>
-
-
-</section>
-        
-          <aside id="sidebar">
-  
-    
-
-  
-    
-
-  
-    
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">June 2023</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2023/06/20/%E5%A4%A7%E5%AD%A6%E5%9B%9B%E5%B9%B4%E7%9A%84%E9%98%85%E8%AF%BB%E6%84%9F%E5%8F%97/">大学四年的阅读感受</a>
-          </li>
-        
-          <li>
-            <a href="/2023/06/20/hello-world/">Hello World</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
-
-  
-</aside>
-        
-      </div>
-      <footer id="footer">
-  
-  <div class="outer">
-    <div id="footer-info" class="inner">
-      
-      &copy; 2023 John Doe<br>
-      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
-    </div>
-  </div>
-</footer>
-
-    </div>
-    <nav id="mobile-nav">
-  
-    <a href="/" class="mobile-nav-link">Home</a>
-  
-    <a href="/archives" class="mobile-nav-link">Archives</a>
-  
-</nav>
-    
-
-
-<script src="/js/jquery-3.6.4.min.js"></script>
-
-
-
-  
-<script src="/fancybox/jquery.fancybox.min.js"></script>
-
-
-
-
-<script src="/js/script.js"></script>
-
-
-
-
-
-  </div>
-</body>
-</html>
