@@ -1,0 +1,239 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>中断与异常 | 飞光</title><meta name="author" content="monuo"><meta name="copyright" content="monuo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="一、什么是中断&#x2F;异常中断和异常是指系统、处理器在执行指令过程中突然被别的请求打断而终止当前的程序，转而去处理其他程序。待该中断处理程序处理完后回到该程序中断点继续执行之前程序。  二、异常与中断向量为了有助于处理异常和中断，每个需要被处理的异常和中断条件被赋予一个标识号，这个标识号就是向量。处理器将这些向量用作中断描述符 IDT 中的一个索引号，来定位一个异常或中断的处理入口点位置。 允">
+<meta property="og:type" content="article">
+<meta property="og:title" content="中断与异常">
+<meta property="og:url" content="http://example.com/2023/07/02/%E4%B8%AD%E6%96%AD%E4%B8%8E%E5%BC%82%E5%B8%B8/index.html">
+<meta property="og:site_name" content="飞光">
+<meta property="og:description" content="一、什么是中断&#x2F;异常中断和异常是指系统、处理器在执行指令过程中突然被别的请求打断而终止当前的程序，转而去处理其他程序。待该中断处理程序处理完后回到该程序中断点继续执行之前程序。  二、异常与中断向量为了有助于处理异常和中断，每个需要被处理的异常和中断条件被赋予一个标识号，这个标识号就是向量。处理器将这些向量用作中断描述符 IDT 中的一个索引号，来定位一个异常或中断的处理入口点位置。 允">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://note-1310215887.cos.ap-nanjing.myqcloud.com/img/marek-piwnicki-geC1KN701Lw-unsplash.jpg">
+<meta property="article:published_time" content="2023-07-02T00:36:50.000Z">
+<meta property="article:modified_time" content="2023-07-02T00:38:35.860Z">
+<meta property="article:author" content="monuo">
+<meta property="article:tag" content="中断异常处理">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://note-1310215887.cos.ap-nanjing.myqcloud.com/img/marek-piwnicki-geC1KN701Lw-unsplash.jpg"><link rel="shortcut icon" href="https://note-1310215887.cos.ap-nanjing.myqcloud.com/img/logo.png"><link rel="canonical" href="http://example.com/2023/07/02/%E4%B8%AD%E6%96%AD%E4%B8%8E%E5%BC%82%E5%B8%B8/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '中断与异常',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-07-02 08:38:35'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://note-1310215887.cos.ap-nanjing.myqcloud.com/img/meteor.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">4</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">3</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/photos/"><i class="fa-fw fa fa-camera-retro"></i><span> 相册</span></a></li><li><a class="site-page child" href="/books/"><i class="fa-fw fa-solid fa-book"></i><span> 书籍</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 影视</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://note-1310215887.cos.ap-nanjing.myqcloud.com/img/marek-piwnicki-geC1KN701Lw-unsplash.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="飞光"><span class="site-name">飞光</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/photos/"><i class="fa-fw fa fa-camera-retro"></i><span> 相册</span></a></li><li><a class="site-page child" href="/books/"><i class="fa-fw fa-solid fa-book"></i><span> 书籍</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 影视</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">中断与异常</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-07-02T00:36:50.000Z" title="发表于 2023-07-02 08:36:50">2023-07-02</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-07-02T00:38:35.860Z" title="更新于 2023-07-02 08:38:35">2023-07-02</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/">计算机体系结构</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="中断与异常"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="一、什么是中断-x2F-异常"><a href="#一、什么是中断-x2F-异常" class="headerlink" title="一、什么是中断&#x2F;异常"></a>一、什么是中断&#x2F;异常</h2><p>中断和异常是指系统、处理器在执行指令过程中突然被别的请求打断而终止当前的程序，转而去处理其他程序。待该中断处理程序处理完后回到该程序中断点继续执行之前程序。</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://note-1310215887.cos.ap-nanjing.myqcloud.com/img/hhwtv31p.bmp"></p>
+<h2 id="二、异常与中断向量"><a href="#二、异常与中断向量" class="headerlink" title="二、异常与中断向量"></a>二、异常与中断向量</h2><p>为了有助于处理异常和中断，每个需要被处理的异常和中断条件被赋予一个<strong>标识号</strong>，这个标识号就是<strong>向量</strong>。处理器将这些向量用作<strong>中断描述符 IDT</strong> 中的一个<strong>索引号</strong>，来定位一个异常或中断的处理入口点位置。</p>
+<p>允许的向量号范围是 0 到 255。其中 0 到 31 保留用作 80X86 处理器定义的异常与中断。范围在 32 到 255 的向量号用于用户定义的中断。对于每个异常，该表给出了异常类型以及是否产生一个错误码并保存在堆栈上。</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://note-1310215887.cos.ap-nanjing.myqcloud.com/img/wrq0ugjw.bmp"></p>
+<h2 id="三、中断和异常源及其分类"><a href="#三、中断和异常源及其分类" class="headerlink" title="三、中断和异常源及其分类"></a>三、中断和异常源及其分类</h2><h3 id="3-1-中断源"><a href="#3-1-中断源" class="headerlink" title="3.1 中断源"></a>3.1 中断源</h3><ul>
+<li><p><strong>外部(硬件)中断</strong></p>
+<p>外部中断通过处理器芯片上两个引脚(INTR 和 NMI)接收。其中，NMI 为不可屏蔽中断，INTR 为可屏蔽中断。</p>
+</li>
+</ul>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://note-1310215887.cos.ap-nanjing.myqcloud.com/img/3u107l8j.bmp"></p>
+<p>  可屏蔽中断受标志寄存器 EFLAGS 的中断标志 IF(Interrupt enable Flag)控制。当 IF&#x3D;0 时，处理器禁止发送到 INTR 引脚的的中断；当 IF&#x3D;1 时。则发送到 INTR 引脚的中断信号会被处理器进行处理。</p>
+<p>  <img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://note-1310215887.cos.ap-nanjing.myqcloud.com/img/x3iwf4vo.bmp"></p>
+<p>  IF 标志可以使用指令 STI 和 CLI 来设置或清除。</p>
+<ul>
+<li><p><strong>软件中断</strong></p>
+<p>通过在指令操作数中提供中断向量号。INT n 指令可用于从软件中产生中断。</p>
+</li>
+</ul>
+<h3 id="3-2-异常分类"><a href="#3-2-异常分类" class="headerlink" title="3.2 异常分类"></a>3.2 异常分类</h3><ul>
+<li><p><strong>Fault(故障)</strong></p>
+<p>一种通常可以被纠正的异常，并且一旦被纠正，程序可以继续执行。</p>
+<p>当出现一个 Fault，处理器会把机器状态恢复到产生 Fault 的指令之前的状态。此时异常处理程序的<strong>返回地址会指向产生 Fault 的指令</strong>，而不是其后面一条指令。</p>
+</li>
+<li><p><strong>Trap(陷阱)</strong></p>
+<p>陷阱通常认为是“有意”的异常。陷阱通常由处理器正在执行的现行指令引起。陷阱处理程序提供的服务为当前进程所用。<strong>返回执行下一条指令</strong>。</p>
+</li>
+<li><p><strong>Abort(中止)</strong></p>
+<p>一种不会总是报告导致异常的指令的精确位置的异常，并且不允许导致异常的程序重新继续执行。</p>
+<p>Abort 用于报告严重错误，例如硬件错误以及系统表存在不一致性或非法值。</p>
+</li>
+</ul>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://note-1310215887.cos.ap-nanjing.myqcloud.com/img/apz1y0cs.bmp"></p>
+<h3 id="3-3-异常和中断的优先级"><a href="#3-3-异常和中断的优先级" class="headerlink" title="3.3 异常和中断的优先级"></a>3.3 异常和中断的优先级</h3><p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://note-1310215887.cos.ap-nanjing.myqcloud.com/img/4iepq2tt.bmp"></p>
+<h2 id="四、中断描述符表"><a href="#四、中断描述符表" class="headerlink" title="四、中断描述符表"></a>四、中断描述符表</h2><h3 id="4-1-IDT"><a href="#4-1-IDT" class="headerlink" title="4.1 IDT"></a>4.1 IDT</h3><p><strong>中断描述符表 IDT</strong>(Interrupt Description Table)将每个异常或中断向量分别与它们的处理过程联系起来。向量号×8 就可以找到相应的门描述符。由于只有 256 个中断会异常，所以 IDT 不必包含多于 256 个描述符。</p>
+<p>由于 IDT 可以驻留在地址空间的任何位置，处理器使用 <strong>IDTR 寄存器</strong>来定位 IDT 的位置，IDTR 寄存器结构如下。它包含 32 位的基地址和 16 位的限长值。限长值表示 IDT 的长度。</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://note-1310215887.cos.ap-nanjing.myqcloud.com/img/fmj90oyp.bmp"></p>
+<h3 id="4-2-IDT-描述符"><a href="#4-2-IDT-描述符" class="headerlink" title="4.2 IDT 描述符"></a>4.2 IDT 描述符</h3><p>IDT 表中可以存放三种类型的门描述符：</p>
+<ul>
+<li>中断门描述符</li>
+<li>陷阱门描述符</li>
+<li>任务门描述符</li>
+</ul>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://note-1310215887.cos.ap-nanjing.myqcloud.com/img/6vdvsh9y.bmp"></p>
+<p>当相应一个异常或中断时，处理器使用异常或中断的向量表作为 IDT 表的索引。对应的门描述符中的段选择符指向 GDT 或者 LDT 中可执行的代码描述符。偏移字段指向异常或中断处理过程的开始处。这个过程有很多保护模式的知识，在这里就不赘述。</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://note-1310215887.cos.ap-nanjing.myqcloud.com/img/nu59weew.bmp"></p>
+<h2 id="五、中断与异常处理过程"><a href="#五、中断与异常处理过程" class="headerlink" title="五、中断与异常处理过程"></a>五、中断与异常处理过程</h2><p>对于整个中断处理，我们可以总结出以下几个步骤：</p>
+<ul>
+<li><strong>中断请求阶段</strong></li>
+<li><strong>中断响应阶段</strong></li>
+<li><strong>中断服务阶段</strong></li>
+<li><strong>中断返回阶段</strong></li>
+</ul>
+<h3 id="5-1-中断请求阶段"><a href="#5-1-中断请求阶段" class="headerlink" title="5.1 中断请求阶段"></a>5.1 中断请求阶段</h3><p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://note-1310215887.cos.ap-nanjing.myqcloud.com/img/i0i92hlq.bmp"></p>
+<h4 id="5-1-1-硬件中断请求"><a href="#5-1-1-硬件中断请求" class="headerlink" title="5.1.1 硬件中断请求"></a>5.1.1 硬件中断请求</h4><p>当设备向处理器提出(中断)服务请求时，处理器会在执行完当前的一条指令后立刻应答设备的请求，并转而执行该设备的相关服务程序。当服务程序执行完成后，处理器会接着去做刚才被中断的程序。这种处理方式就叫做中断(interrupt)方法，而设备向处理器发出的服务请求则称为<strong>中断请求(IRQ- Interrupt Reqμuest)<strong>。处理器响应请求而执行的设备相关程序则被称为</strong>中断服务程序</strong>或中断服务过程(ISR- Interrupt Service routine)。<br><strong>可编程中断控制器</strong>(PIC- Programmable Interrupt Controller)是用来管理设备中断请求的。它负责接收设备中断请求并将其发送给处理器。</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://note-1310215887.cos.ap-nanjing.myqcloud.com/img/33my5ost.bmp"></p>
+<h4 id="5-1-2-软件中断请求"><a href="#5-1-2-软件中断请求" class="headerlink" title="5.1.2 软件中断请求"></a>5.1.2 软件中断请求</h4><p>发生在 CPU 内部的中断，不需要中断请求，CPU 内部的中断控制逻辑直接接收处理。</p>
+<h3 id="5-2-中断响应阶段"><a href="#5-2-中断响应阶段" class="headerlink" title="5.2 中断响应阶段"></a>5.2 中断响应阶段</h3><ul>
+<li>关中断；</li>
+<li>保护断点；</li>
+<li>获得中断服务程序的入口地址。</li>
+</ul>
+<p>处理器根据中断向量在中断描述符表找到相应的门描述符，并通过描述符表 GDT&#x2F;LDT 找到对应的异常或中断处理过程。</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://note-1310215887.cos.ap-nanjing.myqcloud.com/img/gd064q4g.bmp"></p>
+<h3 id="5-3-中断服务过程"><a href="#5-3-中断服务过程" class="headerlink" title="5.3 中断服务过程"></a>5.3 中断服务过程</h3><ul>
+<li>保护现场。在中断服务程序的起始部分安排若干条入栈指令，将各寄存器的内容压入堆栈保存。</li>
+<li>开中断。 在中断服务程序执行期间允许级别更高的中断请求中断现 行的中断服务程序，实现中断嵌套。</li>
+<li>中断服务。 完成中断源的具体要求。</li>
+<li>恢复现场。 中断服务程序结束前，必须恢复主程序的中断现场。通常是将保存在堆栈中的现场信息弹出到原来的寄存器中。</li>
+<li>中断返回。 返回到原程序的断点处，继续执行原程序。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">_divide_error:</span><br><span class="line">	pushl $_do_divide_error</span><br><span class="line">no_error_code:</span><br><span class="line">	xchgl %eax,(%esp)</span><br><span class="line">	pushl %ebx</span><br><span class="line">	pushl %ecx</span><br><span class="line">	pushl %edx</span><br><span class="line">	pushl %edi</span><br><span class="line">	pushl %esi</span><br><span class="line">	pushl %ebp</span><br><span class="line">	push %ds</span><br><span class="line">	push %es</span><br><span class="line">	push %fs</span><br><span class="line">	pushl $0		# &quot;error code&quot;</span><br><span class="line">	lea 44(%esp),%edx</span><br><span class="line">	pushl %edx</span><br><span class="line">	movl $0x10,%edx</span><br><span class="line">	mov %dx,%ds</span><br><span class="line">	mov %dx,%es</span><br><span class="line">	mov %dx,%fs</span><br><span class="line">	call *%eax</span><br><span class="line">	addl $8,%esp</span><br><span class="line">	pop %fs</span><br><span class="line">	pop %es</span><br><span class="line">	pop %ds</span><br><span class="line">	popl %ebp</span><br><span class="line">	popl %esi</span><br><span class="line">	popl %edi</span><br><span class="line">	popl %edx</span><br><span class="line">	popl %ecx</span><br><span class="line">	popl %ebx</span><br><span class="line">	popl %eax</span><br><span class="line">	iret</span><br></pre></td></tr></table></figure>
+
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://note-1310215887.cos.ap-nanjing.myqcloud.com/img/gt0azrke.bmp"></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://example.com">monuo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2023/07/02/%E4%B8%AD%E6%96%AD%E4%B8%8E%E5%BC%82%E5%B8%B8/">http://example.com/2023/07/02/%E4%B8%AD%E6%96%AD%E4%B8%8E%E5%BC%82%E5%B8%B8/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">飞光</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E4%B8%AD%E6%96%AD%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/">中断异常处理</a></div><div class="post_share"><div class="social-share" data-image="https://note-1310215887.cos.ap-nanjing.myqcloud.com/img/marek-piwnicki-geC1KN701Lw-unsplash.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2023/06/22/%E4%B8%80%E3%80%81%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%BF%B0/" title="一、计算机系统概述"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://note-1310215887.cos.ap-nanjing.myqcloud.com/img/marek-piwnicki-geC1KN701Lw-unsplash.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">一、计算机系统概述</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://note-1310215887.cos.ap-nanjing.myqcloud.com/img/meteor.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">monuo</div><div class="author-info__description">一万年太久，只争朝夕</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">4</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">3</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/monuo2021"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="mailto:tanliangmonuo@163.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E4%BB%80%E4%B9%88%E6%98%AF%E4%B8%AD%E6%96%AD-x2F-%E5%BC%82%E5%B8%B8"><span class="toc-number">1.</span> <span class="toc-text">一、什么是中断&#x2F;异常</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%BC%82%E5%B8%B8%E4%B8%8E%E4%B8%AD%E6%96%AD%E5%90%91%E9%87%8F"><span class="toc-number">2.</span> <span class="toc-text">二、异常与中断向量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E4%B8%AD%E6%96%AD%E5%92%8C%E5%BC%82%E5%B8%B8%E6%BA%90%E5%8F%8A%E5%85%B6%E5%88%86%E7%B1%BB"><span class="toc-number">3.</span> <span class="toc-text">三、中断和异常源及其分类</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E4%B8%AD%E6%96%AD%E6%BA%90"><span class="toc-number">3.1.</span> <span class="toc-text">3.1 中断源</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E5%BC%82%E5%B8%B8%E5%88%86%E7%B1%BB"><span class="toc-number">3.2.</span> <span class="toc-text">3.2 异常分类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-%E5%BC%82%E5%B8%B8%E5%92%8C%E4%B8%AD%E6%96%AD%E7%9A%84%E4%BC%98%E5%85%88%E7%BA%A7"><span class="toc-number">3.3.</span> <span class="toc-text">3.3 异常和中断的优先级</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E4%B8%AD%E6%96%AD%E6%8F%8F%E8%BF%B0%E7%AC%A6%E8%A1%A8"><span class="toc-number">4.</span> <span class="toc-text">四、中断描述符表</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-IDT"><span class="toc-number">4.1.</span> <span class="toc-text">4.1 IDT</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-IDT-%E6%8F%8F%E8%BF%B0%E7%AC%A6"><span class="toc-number">4.2.</span> <span class="toc-text">4.2 IDT 描述符</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E4%B8%AD%E6%96%AD%E4%B8%8E%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%E8%BF%87%E7%A8%8B"><span class="toc-number">5.</span> <span class="toc-text">五、中断与异常处理过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-%E4%B8%AD%E6%96%AD%E8%AF%B7%E6%B1%82%E9%98%B6%E6%AE%B5"><span class="toc-number">5.1.</span> <span class="toc-text">5.1 中断请求阶段</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#5-1-1-%E7%A1%AC%E4%BB%B6%E4%B8%AD%E6%96%AD%E8%AF%B7%E6%B1%82"><span class="toc-number">5.1.1.</span> <span class="toc-text">5.1.1 硬件中断请求</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-1-2-%E8%BD%AF%E4%BB%B6%E4%B8%AD%E6%96%AD%E8%AF%B7%E6%B1%82"><span class="toc-number">5.1.2.</span> <span class="toc-text">5.1.2 软件中断请求</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-%E4%B8%AD%E6%96%AD%E5%93%8D%E5%BA%94%E9%98%B6%E6%AE%B5"><span class="toc-number">5.2.</span> <span class="toc-text">5.2 中断响应阶段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-3-%E4%B8%AD%E6%96%AD%E6%9C%8D%E5%8A%A1%E8%BF%87%E7%A8%8B"><span class="toc-number">5.3.</span> <span class="toc-text">5.3 中断服务过程</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2023/07/02/%E4%B8%AD%E6%96%AD%E4%B8%8E%E5%BC%82%E5%B8%B8/" title="中断与异常"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://note-1310215887.cos.ap-nanjing.myqcloud.com/img/marek-piwnicki-geC1KN701Lw-unsplash.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="中断与异常"/></a><div class="content"><a class="title" href="/2023/07/02/%E4%B8%AD%E6%96%AD%E4%B8%8E%E5%BC%82%E5%B8%B8/" title="中断与异常">中断与异常</a><time datetime="2023-07-02T00:36:50.000Z" title="发表于 2023-07-02 08:36:50">2023-07-02</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/06/22/%E4%B8%80%E3%80%81%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%BF%B0/" title="一、计算机系统概述"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://note-1310215887.cos.ap-nanjing.myqcloud.com/img/marek-piwnicki-geC1KN701Lw-unsplash.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="一、计算机系统概述"/></a><div class="content"><a class="title" href="/2023/06/22/%E4%B8%80%E3%80%81%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%BF%B0/" title="一、计算机系统概述">一、计算机系统概述</a><time datetime="2023-06-22T01:36:46.000Z" title="发表于 2023-06-22 09:36:46">2023-06-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/06/20/%E5%A4%A7%E5%AD%A6%E5%9B%9B%E5%B9%B4%E7%9A%84%E9%98%85%E8%AF%BB%E6%84%9F%E5%8F%97/" title="大学四年的阅读感受"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://note-1310215887.cos.ap-nanjing.myqcloud.com/img/marek-piwnicki-geC1KN701Lw-unsplash.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="大学四年的阅读感受"/></a><div class="content"><a class="title" href="/2023/06/20/%E5%A4%A7%E5%AD%A6%E5%9B%9B%E5%B9%B4%E7%9A%84%E9%98%85%E8%AF%BB%E6%84%9F%E5%8F%97/" title="大学四年的阅读感受">大学四年的阅读感受</a><time datetime="2023-06-20T06:42:38.000Z" title="发表于 2023-06-20 14:42:38">2023-06-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/06/20/hello-world/" title="Hello World"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://note-1310215887.cos.ap-nanjing.myqcloud.com/img/marek-piwnicki-geC1KN701Lw-unsplash.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Hello World"/></a><div class="content"><a class="title" href="/2023/06/20/hello-world/" title="Hello World">Hello World</a><time datetime="2023-06-20T01:47:39.316Z" title="发表于 2023-06-20 09:47:39">2023-06-20</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By monuo</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
